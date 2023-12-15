@@ -11,6 +11,8 @@ import InputBase from '@mui/material/InputBase';
 import SearchIcon from '@mui/icons-material/Search';
 
 import DashboardTable from '../components/Tables/DashboardTable';
+import TradesTable from '../components/Tables/TradesTable';
+import HistoryTable from '../components/Tables/HistoryTable';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -183,7 +185,7 @@ function Dashboard() {
                 />
               </Search>
             </div>
-            <DashboardTable />
+            <TradesTable />
           </div>
         </div>
       )}
@@ -201,7 +203,7 @@ function Dashboard() {
                 />
               </Search>
             </div>
-            <DashboardTable />
+            <HistoryTable />
           </div>
         </div>
       )}
