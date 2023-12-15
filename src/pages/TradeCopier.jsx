@@ -6,7 +6,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import AddIcon from '@mui/icons-material/Add';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 
-import TradeCopierTable from '../components/TradeCopierTable';
+import TradeCopierTable from '../components/Tables/TradeCopierTable';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',

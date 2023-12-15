@@ -4,7 +4,7 @@ import CreditCardIcon from '@mui/icons-material/CreditCard';
 import SearchIcon from '@mui/icons-material/Search';
 import { styled, alpha } from '@mui/material/styles';
 import InputBase from '@mui/material/InputBase';
-import SignalsTable from '../components/SignalsTable';
+import SignalsTable from '../components/Tables/SignalsTable';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',

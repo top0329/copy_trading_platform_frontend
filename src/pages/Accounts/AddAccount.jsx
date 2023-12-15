@@ -2,9 +2,10 @@ import * as React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Button from '@mui/material/Button';
 import ReplyRoundedIcon from '@mui/icons-material/ReplyRounded';
-import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+
+import api from '../../utils/api';
 
 function AddAccount() {
   const initialValues = {
@@ -29,8 +30,8 @@ function AddAccount() {
 
   const handleCreateAccount = async () => {
     try {
-      const result = await axios.post(
-        'http://localhost:5000/api/account/register-account',
+      const result = await api.post(
+        '/account/register-account',
         {
           login: values.login,
           password: values.password,

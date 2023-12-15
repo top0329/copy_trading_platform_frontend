@@ -10,7 +10,7 @@ import { styled, alpha } from '@mui/material/styles';
 import InputBase from '@mui/material/InputBase';
 import SearchIcon from '@mui/icons-material/Search';
 
-import DashboardTable from '../components/DashboardTable';
+import DashboardTable from '../components/Tables/DashboardTable';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -76,9 +76,14 @@ const useStyles = makeStyles((theme) => ({
 function Dashboard() {
   const [activeTab, setActiveTab] = React.useState(1);
 
+  React.useEffect(() => {
+
+  }, [])
+
   const handleTabClick = (id) => {
     setActiveTab(id);
   };
+
   const classes = useStyles();
 
   return (
@@ -164,8 +169,42 @@ function Dashboard() {
           </div>
         </div>
       )}
-      {activeTab === 2 && <div className="tab_panel">Second tab content</div>}
-      {activeTab === 3 && <div className="tab_panel">Third tab content</div>}
+      {activeTab === 2 && (
+        <div className="tab_panel">
+          <div className="mt-2 text-[#ccc] bg-[#2E353E] p-5 rounded">
+            <div className="flex justify-end w-full pb-3">
+              <Search>
+                <SearchIconWrapper>
+                  <SearchIcon />
+                </SearchIconWrapper>
+                <StyledInputBase
+                  placeholder="Search…"
+                  inputProps={{ 'aria-label': 'search' }}
+                />
+              </Search>
+            </div>
+            <DashboardTable />
+          </div>
+        </div>
+      )}
+      {activeTab === 3 && (
+        <div className="tab_panel">
+          <div className="mt-2 text-[#ccc] bg-[#2E353E] p-5 rounded">
+            <div className="flex justify-end w-full pb-3">
+              <Search>
+                <SearchIconWrapper>
+                  <SearchIcon />
+                </SearchIconWrapper>
+                <StyledInputBase
+                  placeholder="Search…"
+                  inputProps={{ 'aria-label': 'search' }}
+                />
+              </Search>
+            </div>
+            <DashboardTable />
+          </div>
+        </div>
+      )}
     </div>
   );
 }

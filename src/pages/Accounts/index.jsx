@@ -10,7 +10,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import AddIcon from '@mui/icons-material/Add';
 import { Link } from 'react-router-dom';
 
-import AccountsTable from '../../components/AccountsTable';
+import AccountsTable from '../../components/Tables/AccountsTable';
 import { useEffect, useState } from 'react';
 
 const Search = styled('div')(({ theme }) => ({
