@@ -9,6 +9,8 @@ import DefaultLayout from './layouts/DefaultLayout';
 import Root from './pages/root';
 import routes from './routes';
 
+import ToastProvider from './contexts/toastContext';
+
 function App() {
   const [loading, setLoading] = useState(true);
 
@@ -19,7 +21,7 @@ function App() {
   return loading ? (
     <Loader />
   ) : (
-    <>
+    <ToastProvider>
       <Routes>
         <Route path="/auth/login" element={<Login />} />
         <Route path="/auth/signup" element={<SignUp />} />
@@ -41,7 +43,7 @@ function App() {
           })}
         </Route>
       </Routes>
-    </>
+    </ToastProvider>
   );
 }
 

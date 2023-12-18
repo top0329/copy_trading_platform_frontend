@@ -1,14 +1,14 @@
 import * as React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-// import Button from '@mui/material/Button';
 import LoadingButton from '@mui/lab/LoadingButton';
 import ReplyRoundedIcon from '@mui/icons-material/ReplyRounded';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 
 import api from '../../utils/api';
+import useToast from '../../hooks/useToast';
 
 function AddAccount() {
+  const { showToast } = useToast();
+
   const initialValues = {
     login: '',
     password: '',
@@ -66,39 +66,17 @@ function AddAccount() {
         values.platform == '' ||
         values.copyFactoryRoles.length == 0
       ) {
-        toast.error('Please fill in all the information!', {
-          position: 'top-right',
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-        });
-        console.log('something error');
+        showToast('Please fill in all the information!', 'error');
       } else {
         setIsLoading(true);
         const result = await api.post('/account/register-account', values);
-        toast.success('Account created successfully!', {
-          position: 'top-right',
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-        });
-        navigate('/accounts');
+        showToast('Account created successfully!','success');
         console.log(result);
         setIsLoading(false);
+        navigate('/accounts');
       }
     } catch (err) {
-      toast.error('Account creation failed!', {
-        position: 'top-right',
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-      });
+      showToast('Account creation failed!', 'error');
       console.log(err);
       setIsLoading(false);
     }
@@ -504,17 +482,6 @@ function AddAccount() {
                   onClick={handleCreateAccount}
                   loading={isLoading}
                 >
-                  <ToastContainer
-                    position="top-right"
-                    autoClose={5000}
-                    hideProgressBar={false}
-                    newestOnTop
-                    closeOnClick
-                    rtl={false}
-                    pauseOnFocusLoss
-                    draggable
-                    pauseOnHover
-                  />
                   Create
                 </LoadingButton>
               </div>

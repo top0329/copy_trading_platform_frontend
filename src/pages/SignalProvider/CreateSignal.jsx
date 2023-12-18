@@ -1,14 +1,14 @@
 import * as React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-// import Button from '@mui/material/Button';
 import LoadingButton from '@mui/lab/LoadingButton';
 import ReplyRoundedIcon from '@mui/icons-material/ReplyRounded';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 
 import api from '../../utils/api';
+import useToast from '../../hooks/useToast';
 
 function CreateSignal() {
+  const { showToast } = useToast();
+
   const initialValues = {
     providerID: '',
     StrategyName: '',
@@ -50,40 +50,19 @@ function CreateSignal() {
         values.StrategyName == '' ||
         values.strategyDescription == ''
       ) {
-        toast.error('Please fill in all the information!', {
-          position: 'top-right',
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-        });
+        showToast('Please fill in all the information!', 'error');
         console.log('something error');
       } else {
         console.log(values);
         setIsLoading(true);
         const result = await api.post('/strategy/register-strategy', values);
-        toast.success('Strategy registered successfully!', {
-          position: 'top-right',
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-        });
-        navigate('/signal-provider');
+        showToast('Strategy registered successfully!','success');
         console.log(result);
         setIsLoading(false);
+        navigate('/signal-provider');
       }
     } catch (err) {
-      toast.error('Strategy registration failed!', {
-        position: 'top-right',
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-      });
+      showToast('Strategy registration failed!', 'error');
       console.log(err);
     }
   };
@@ -302,17 +281,6 @@ function CreateSignal() {
                   onClick={handleRegisterStrategy}
                   loading={isLoading}
                 >
-                  <ToastContainer
-                    position="top-right"
-                    autoClose={5000}
-                    hideProgressBar={false}
-                    newestOnTop
-                    closeOnClick
-                    rtl={false}
-                    pauseOnFocusLoss
-                    draggable
-                    pauseOnHover
-                  />
                   Create signal page
                 </LoadingButton>
               </div>
