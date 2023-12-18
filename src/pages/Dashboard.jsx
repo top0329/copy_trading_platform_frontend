@@ -13,6 +13,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import DashboardTable from '../components/Tables/DashboardTable';
 import TradesTable from '../components/Tables/TradesTable';
 import HistoryTable from '../components/Tables/HistoryTable';
+import InfoModal from '../components/modals/InfoModal';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -77,10 +78,9 @@ const useStyles = makeStyles((theme) => ({
 
 function Dashboard() {
   const [activeTab, setActiveTab] = React.useState(1);
+  const [exclamationModalShow, setExclamationModalShow] = React.useState(false);
 
-  React.useEffect(() => {
-
-  }, [])
+  React.useEffect(() => {}, []);
 
   const handleTabClick = (id) => {
     setActiveTab(id);
@@ -103,9 +103,13 @@ function Dashboard() {
             color="inherit"
             sx={{ backgroundColor: '#2e7d32', borderRadius: '4px' }}
             className={classes.infoButton}
+            onClick={() => setExclamationModalShow(true)}
           >
             <PriorityHighIcon fontSize="small" />
           </IconButton>
+          {exclamationModalShow && (
+              <InfoModal setExclamationModalShow={setExclamationModalShow} />
+          )}
           <Button
             className={classes.button}
             variant="contained"

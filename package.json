@@ -20,6 +20,8 @@
     "@mui/material": "^5.14.19",
     "@mui/styled-engine-sc": "^6.0.0-alpha.7",
     "axios": "^1.6.2",
+    "babel-plugin-macros": "^3.1.0",
+    "prop-types": "^15.8.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-hot-toast": "^2.4.1",
@@ -29,6 +31,7 @@
     "styled-components": "^6.1.1"
   },
   "devDependencies": {
+    "@iconify/react": "^4.1.1",
     "@types/react": "^18.2.37",
     "@types/react-dom": "^18.2.15",
     "@vitejs/plugin-react": "^4.2.0",

@@ -12,6 +12,7 @@ const Signals = lazy(() => import('../pages/Signals'));
 const TradeCopier = lazy(() => import('../pages/TradeCopier'));
 const SignalFollowers = lazy(() => import('../pages/SignalFollowers'));
 const SignalProvider = lazy(() => import('../pages/SignalProvider'));
+const CreateSignal = lazy(() => import('../pages/SignalProvider/CreateSignal'));
 
 const coreRoutes = [
   {
@@ -43,6 +44,11 @@ const coreRoutes = [
     path: '/signal-provider',
     title: 'Signal Provider',
     component: SignalProvider,
+  },
+  {
+    path: '/signal-provider/create-signal',
+    title: 'Create Signal',
+    component: CreateSignal,
   },
   {
     path: '/contact-support',
