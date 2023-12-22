@@ -1,7 +1,63 @@
+import * as React from 'react';
 import Logo from '../assets/img/logo.jpeg';
 import { Link } from 'react-router-dom';
+import validator from 'validator';
+import api from '../utils/api';
+import useToast from '../hooks/useToast';
+import { useNavigate } from 'react-router-dom';
 
 function Login() {
+  const { showToast } = useToast();
+  const initialValues = {
+    email: '',
+    fullName: '',
+    password: '',
+    confirm: '',
+  };
+  const [values, setValues] = React.useState(initialValues);
+  const [loginButtonClicked, setLoginButtonClicked] = React.useState(false);
+  const [isLoading, setIsLoading] = React.useState(false);
+
+  const navigate = useNavigate();
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setValues({
+      ...values,
+      [name]: value,
+    });
+  };
+
+  const handleSubmit = async () => {
+    // return console.log(values);
+    // // navigate('/dashboard');
+
+    // return;
+    try {
+      setLoginButtonClicked(true);
+      setIsLoading(true);
+      if (values.email == '' || values.password == '') {
+        showToast('Please fill in all the information!', 'error');
+      } else if (!validator.isEmail(values.email)) {
+        showToast('Invalid email format!', 'error');
+      } else if (values.password !== values.confirm) {
+        showToast('Confirm is not match!', 'error');
+      } else if (values.password.length < 6) {
+        showToast('Your password must be at least 6 characters long!', 'error');
+      } else {
+        // delete values.confirm;
+        const result = await api.post('/users/login', values);
+        showToast('Registration success!', 'success');
+        console.log(result);
+        navigate('/dashboard');
+      }
+    } catch (err) {
+      showToast('Account creation failed!', 'error');
+      console.log(err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
   return (
     <div className="w-screen h-screen flex flex-col items-center justify-center text-white">
       <div className="block max-w-md pt-2 w-full">
@@ -27,13 +83,14 @@ function Login() {
         </div>
       </div>
       <div className="block max-w-md rounded-md rounded-tr-none bg-[#2E353E] p-6 border-t-[5px] border-[#0088cc] px-8 pt-8 pb-12">
-        <form className="w-96 mx-auto">
+        <div className="w-96 mx-auto">
           <div className="mb-8">
             <label htmlFor="email" className="block mb-2 text-sm font-medium">
               Email
             </label>
             <input
               type="email"
+              name="email"
               id="email"
               className="shadow-sm text-base rounded-md block w-full p-2.5 bg-gray-700 border-gray-600 placeholder-gray-400  shadow-sm-light"
               required
@@ -57,6 +114,7 @@ function Login() {
             <input
               type="password"
               id="password"
+              name="password"
               className="shadow-sm text-base rounded-md block w-full p-2.5 bg-gray-700 border-gray-600 placeholder-gray-400 shadow-sm-light"
               required
             />
@@ -90,15 +148,13 @@ function Login() {
               </Link>
             </label>
           </div>
-          <Link to={'/dashboard'}>
-            <button
-              type="submit"
-              className="w-full text-center bg-[#0088cc] hover:bg-[#0088dd] focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-[4px] text-sm px-3 py-1.5 flex justify-center"
-            >
-              Login
-            </button>
-          </Link>
-        </form>
+          <button
+            className="w-full text-center bg-[#0088cc] hover:bg-[#0088dd] focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-[4px] text-sm px-3 py-1.5 flex justify-center"
+            onClick={handleSubmit}
+          >
+            Login
+          </button>
+        </div>
       </div>
     </div>
   );

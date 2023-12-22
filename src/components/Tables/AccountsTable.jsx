@@ -9,7 +9,7 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 
 const columns = [
-  { id: 'accountID', label: 'Account ID', minWidth: 100 },
+  { id: 'accountId', label: 'Account ID', minWidth: 100 },
   { id: 'copyFactoryRoles', label: 'CopyFactoryRoles', minWidth: 100 },
   { id: 'platform', label: 'Platform', minWidth: 100 },
   { id: 'login', label: 'Login', minWidth: 100 },
@@ -27,7 +27,7 @@ const columns = [
 ];
 
 function createData(
-  accountID,
+  accountId,
   copyFactoryRoles,
   platform,
   login,
@@ -35,7 +35,7 @@ function createData(
   server
 ) {
   return {
-    accountID,
+    accountId,
     copyFactoryRoles,
     platform,
     login,
@@ -88,13 +88,16 @@ function createData(
 //   // createData('Brazil', 'BR', 210147125, 8515767),
 // ];
 
-export default function AccountsTable(props) {
+export default function AccountsTable({ data }) {
   const [rows, setRows] = React.useState([]);
+  const [page, setPage] = React.useState(0);
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+
   React.useEffect(() => {
-    if (props.data) {
-      const temp = props.data.map((account) => {
+    if (data) {
+      const temp = dataFormat(data).map((account) => {
         return createData(
-          account.accountID,
+          account.accountId,
           account.copyFactoryRoles,
           account.platform,
           account.login,
@@ -104,9 +107,22 @@ export default function AccountsTable(props) {
       });
       setRows(temp);
     }
-  }, [props.data]);
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  }, [data]);
+
+  const dataFormat = (data) => {
+    let result = [];
+    for (let i = 0; i < data.length; i++) {
+      let temp = {};
+      temp.accountId = data[i].accountId;
+      temp.copyFactoryRoles = data[i].copyFactoryRoles.join(', ');
+      temp.platform = data[i].platform;
+      temp.login = data[i].login;
+      temp.name = data[i].name;
+      temp.server = data[i].server;
+      result.push(temp);
+    }
+    return result;
+  };
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);

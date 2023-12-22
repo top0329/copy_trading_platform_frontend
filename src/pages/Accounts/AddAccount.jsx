@@ -477,7 +477,7 @@ function AddAccount() {
                   size="small"
                   sx={{
                     textTransform: 'none',
-                    backgroundColor: '#1565C0!important',
+                    backgroundColor: '#0088CC!important',
                   }}
                   onClick={handleCreateAccount}
                   loading={isLoading}

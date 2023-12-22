@@ -212,7 +212,10 @@ function ContactSupport() {
                   <Button
                     variant="contained"
                     size="small"
-                    sx={{ textTransform: 'none' }}
+                    sx={{
+                      textTransform: 'none',
+                      backgroundColor: '#0088CC!important',
+                    }}
                   >
                     Send
                   </Button>

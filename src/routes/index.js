@@ -10,6 +10,7 @@ const EquityMonitors = lazy(() => import('../pages/EquityMonitors'));
 const KnowledgeBase = lazy(() => import('../pages/KnowledgeBase'));
 const Signals = lazy(() => import('../pages/Signals'));
 const TradeCopier = lazy(() => import('../pages/TradeCopier'));
+const CreateNewTradeCopier = lazy(() => import('../pages/TradeCopier/CreateNewTradeCopier'));
 const SignalFollowers = lazy(() => import('../pages/SignalFollowers'));
 const SignalProvider = lazy(() => import('../pages/SignalProvider'));
 const CreateSignal = lazy(() => import('../pages/SignalProvider/CreateSignal'));
@@ -79,6 +80,11 @@ const coreRoutes = [
     path: '/trade-copier',
     title: 'Copiers',
     component: TradeCopier,
+  },
+  {
+    path: '/trade-copier/create-new-trade-copier',
+    title: 'Create Copier',
+    component: CreateNewTradeCopier,
   },
 ];
 

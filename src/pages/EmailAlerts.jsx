@@ -63,13 +63,13 @@ function EmailAlerts() {
           variant="contained"
           size="small"
           startIcon={<AddIcon />}
-          sx={{ textTransform: 'none' }}
+          sx={{ textTransform: 'none', backgroundColor: '#0088CC!important' }}
         >
           Add Alert
         </Button>
         <Button
           variant="contained"
-          color='error'
+          color="error"
           size="small"
           sx={{ textTransform: 'none' }}
         >

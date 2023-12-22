@@ -7,141 +7,69 @@ import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+import Button from '@mui/material/Button';
+import AddIcon from '@mui/icons-material/Add';
 
 const columns = [
-  { id: 'sendToName', label: 'Send To Name', minWidth: 105 },
-  { id: 'sendToNumber', label: 'Send To Number', minWidth: 120 },
-  {
-    id: 'riskType',
-    label: 'Risk Type',
-    minWidth: 114,
-    // align: 'center',
-    // format: (value) => value.toLocaleString('en-US'),
-  },
-  {
-    id: 'direction',
-    label: 'Direction',
-    minWidth: 60,
-    // align: 'center',
-    // format: (value) => value.toLocaleString('en-US'),
-  },
+  { id: 'subscriberName', label: 'Subscriber Name', minWidth: 105 },
+  { id: 'subscriberAccount', label: 'Subscriber Account', minWidth: 120 },
   {
     id: 'options',
     label: '',
     minWidth: 145,
     maxWidth: 145,
     align: 'center',
-    // format: (value) => value.toFixed(2),
   },
-  // {
-  //   id: 'equityPercentage',
-  //   label: 'Equity %',
-  //   minWidth: 55,
-  //   align: 'center',
-  //   // format: (value) => value.toFixed(2),
-  // },
-  // {
-  //   id: 'openTrades',
-  //   label: 'Open Trades (Lots)',
-  //   minWidth: 133,
-  //   align: 'center',
-  //   // format: (value) => value.toFixed(2),
-  // },
-  // {
-  //   id: 'pending',
-  //   label: 'Pending',
-  //   minWidth: 51,
-  //   align: 'center',
-  //   // format: (value) => value.toFixed(2),
-  // },
-  // {
-  //   id: 'day',
-  //   label: 'Day',
-  //   minWidth: 24,
-  //   align: 'center',
-  //   // format: (value) => value.toFixed(2),
-  // },
-  // {
-  //   id: 'week',
-  //   label: 'Week',
-  //   minWidth: 35,
-  //   align: 'center',
-  //   // format: (value) => value.toFixed(2),
-  // },
-  // {
-  //   id: 'month',
-  //   label: 'Month',
-  //   minWidth: 42,
-  //   align: 'center',
-  //   // format: (value) => value.toFixed(2),
-  // },
-  // {
-  //   id: 'total',
-  //   label: 'Total',
-  //   minWidth: 32,
-  //   align: 'center',
-  //   // format: (value) => value.toFixed(2),
-  // },
-  // {
-  //   id: 'graph',
-  //   label: '',
-  //   minWidth: 16,
-  //   align: 'center',
-  //   // format: (value) => value.toFixed(2),
-  // },
 ];
 
 function createData(
-  sendToName,
-  sendToNumber,
-  riskType,
-  direction,
-  options,
+  subscriberName,
+  subscriberAccount,
+  // riskType,
+  // direction,
+  options
 ) {
   return {
-    sendToName,
-    sendToNumber,
-    riskType,
-    direction,
+    subscriberName,
+    subscriberAccount,
+    // riskType,
+    // direction,
     options,
   };
 }
 
-const rows = [
-  createData(
-    'Demo Account',
-    3013421,
-    'Fixed lot @ 0.10',
-    '➡',
-    '',
-  ),
-  // createData('Italy', 'IT', 60483973, 301340),
-  // createData('United States', 'US', 327167434, 9833520),
-  // createData('Canada', 'CA', 37602103, 9984670),
-  // createData('Australia', 'AU', 25475400, 7692024),
-  // createData('Germany', 'DE', 83019200, 357578),
-  // createData('Ireland', 'IE', 4857000, 70273),
-  // createData('Mexico', 'MX', 126577691, 1972550),
-  // createData('Japan', 'JP', 126317000, 377973),
-  // createData('France', 'FR', 67022000, 640679),
-  // createData('United Kingdom', 'GB', 67545757, 242495),
-  // createData('Russia', 'RU', 146793744, 17098246),
-  // createData('Nigeria', 'NG', 200962417, 923768),
-  // createData('Brazil', 'BR', 210147125, 8515767),
-];
+export default function TradeCopierTable({ data, groupName }) {
+  // const [page, setPage] = React.useState(0);
+  // const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [rows, setRows] = React.useState([]);
 
-export default function TradeCopierTable() {
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  React.useEffect(() => {
+    if (data) {
+      // console.log(data);
+      const temp = data.map((subscriber) => {
+        // console.log('subscriber', subscriber);
+        return createData(
+          subscriber.name,
+          subscriber.accountName
+          // subscriber.description
+          // subscriber.login,
+          // subscriber.name,
+          // subscriber.server
+        );
+      });
+      setRows(temp);
+      // console.log('temp', temp);
+    }
+  }, [data]);
 
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
-  };
+  // const handleChangePage = (event, newPage) => {
+  //   setPage(newPage);
+  // };
 
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(+event.target.value);
-    setPage(0);
-  };
+  // const handleChangeRowsPerPage = (event) => {
+  //   setRowsPerPage(+event.target.value);
+  //   setPage(0);
+  // };
 
   return (
     <Paper
@@ -155,8 +83,25 @@ export default function TradeCopierTable() {
           backgroundColor: '#2E353E',
           boxShadow: 'none',
         },
+        marginBottom: '16px',
       }}
     >
+      <div className="bg-[#282D36] h-[45px] text-[20px] font-bold p-[5px] flex justify-between items-center">
+        <h1 className="pl-[5px] mt-[5px] text-white">{groupName}</h1>
+        <Button
+          variant="contained"
+          size="small"
+          startIcon={<AddIcon />}
+          sx={{
+            textTransform: 'none',
+            height: '30px',
+            mr: '5px',
+            backgroundColor: '#0088CC!important',
+          }}
+        >
+          Group Copier
+        </Button>
+      </div>
       <TableContainer
         sx={{
           maxHeight: 440,
@@ -207,7 +152,7 @@ export default function TradeCopierTable() {
             }}
           >
             {rows
-              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+              // .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map((row) => {
                 return (
                   <TableRow
@@ -242,7 +187,7 @@ export default function TradeCopierTable() {
           </TableBody>
         </Table>
       </TableContainer>
-      <TablePagination
+      {/* <TablePagination
         rowsPerPageOptions={[10, 25, 50, 100]}
         component="div"
         count={rows.length}
@@ -277,7 +222,7 @@ export default function TradeCopierTable() {
             borderRadius: '4px',
           },
         }}
-      />
+      /> */}
     </Paper>
   );
 }

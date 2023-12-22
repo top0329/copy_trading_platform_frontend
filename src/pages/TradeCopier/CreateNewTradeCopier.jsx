@@ -6,28 +6,36 @@ import ReplyRoundedIcon from '@mui/icons-material/ReplyRounded';
 import api from '../../utils/api';
 import useToast from '../../hooks/useToast';
 
-function CreateSignal() {
+function CreateNewTradeCopier() {
   const { showToast } = useToast();
 
   const initialValues = {
-    providerID: '',
-    StrategyName: '',
-    strategyDescription: '',
+    copyFrom: '',
+    sendTo: '',
+    name: '',
   };
   const [values, setValues] = React.useState(initialValues);
-  const [accountData, setAccountData] = React.useState([]);
-  const [createSignalButtonClicked, setCreateSignalButtonClicked] =
+  const [isTermsAndConditionsChecked, setIsTermsAndConditionsChecked] =
+    React.useState(false);
+  const [createCopierButtonClicked, setCreateCopierButtonClicked] =
     React.useState(false);
   const [isLoading, setIsLoading] = React.useState(false);
+  const [accountData, setAccountData] = React.useState([]);
+  const [strategyData, setStrategyData] = React.useState([]);
 
   const navigate = useNavigate();
 
   React.useEffect(() => {
     async function fetchData() {
+      // let tempStrategy = [];
       const response = await api.get(
         'http://localhost:5000/api/account/all-accounts'
       );
+      const responseStrategyList = await api.get(
+        'http://localhost:5000/api/strategy/strategies'
+      );
       setAccountData(response.data);
+      setStrategyData(responseStrategyList.data);
     }
 
     fetchData();
@@ -39,31 +47,28 @@ function CreateSignal() {
       ...values,
       [name]: value,
     });
-    console.log(values);
   };
 
-  const handleRegisterStrategy = async () => {
+  const handleCreateCopierButtonClick = async () => {
     try {
-      setCreateSignalButtonClicked(true);
-      if (
-        values.providerID == '' ||
-        values.StrategyName == '' ||
-        values.strategyDescription == ''
-      ) {
+      setCreateCopierButtonClicked(true);
+      if (values.copyFrom == '' || values.sendTo == '' || values.name == '' || isTermsAndConditionsChecked == false) {
         showToast('Please fill in all the information!', 'error');
-        console.log('something error');
       } else {
-        console.log(values);
         setIsLoading(true);
-        const result = await api.post('/strategy/register-strategy', values);
-        showToast('Strategy registered successfully!', 'success');
-        console.log(result);
+        await api.post('/subscriber/update-signals', {
+          SubscriberName: values.name,
+          strategyIDs: [values.copyFrom],
+          SubscriberID: values.sendTo,
+        });
+        showToast('New copier created successfully!', 'success');
         setIsLoading(false);
-        navigate('/signal-provider');
+        navigate('/trade-copier');
       }
     } catch (err) {
-      showToast('Strategy registration failed!', 'error');
+      showToast('New copier creation failed!', 'error');
       console.log(err);
+      setIsLoading(false);
     }
   };
   return (
@@ -71,14 +76,14 @@ function CreateSignal() {
       <div style={{ padding: '0px 200px' }}>
         <div className="pb-3">
           <Link
-            to={'/signal-provider'}
+            to={'/trade-copier'}
             className="flex flex-row items-center font-extrabold"
           >
             <ReplyRoundedIcon
               fontSize="medium"
               sx={{ color: 'white', fontWeight: 'bold' }}
             />
-            <h1 className="text-white text-lg pl-2"> Signal Provider</h1>
+            <h1 className="text-white text-lg pl-2"> My Copiers</h1>
           </Link>
         </div>
         <div
@@ -86,7 +91,9 @@ function CreateSignal() {
           style={{ color: 'white' }}
         >
           <header className="p-[18px]">
-            <h2 className="mt-[5px] text-[20px] font-normal">Create Signal</h2>
+            <h2 className="mt-[5px] text-[20px] font-normal">
+              Create New Trade Copier
+            </h2>
           </header>
           <div
             className="p-[15px] bg-[#2E353E]"
@@ -114,7 +121,7 @@ function CreateSignal() {
                   maxWidth: '100%',
                 }}
               >
-                Signal Account
+                Copy from
               </label>
               <div
                 style={{
@@ -124,7 +131,94 @@ function CreateSignal() {
                 }}
               >
                 <select
-                  name="providerID"
+                  name="copyFrom"
+                  required
+                  className="bg-[#282d36] text-[#fff] px-3 py-1.5 rounded"
+                  style={{
+                    display: 'block',
+                    width: '100%',
+                    height: '34px',
+                    padding: '6px 12px',
+                    fontSize: '14px',
+                    borderRadius: '4px',
+                  }}
+                  onChange={handleInputChange}
+                >
+                  <optgroup label="Signals" className="text-gray-500">
+                    <option value="" disabled selected className="hidden">
+                      Select Account
+                    </option>
+                    {strategyData.length > 0 &&
+                      strategyData
+                        // .filter(
+                        //   (account) =>
+                        //     account.copyFactoryRoles.indexOf('PROVIDER') !== -1
+                        // )
+                        .map((account) => (
+                          <option
+                            key={account.accountId}
+                            value={account.strategyId}
+                            className="text-white"
+                          >{`${account.name}(${account.strategyId})`}</option>
+                        ))}
+                  </optgroup>
+                  {/* <optgroup label="My Accounts" className="text-gray-500">
+                    {accountData.length > 0 &&
+                      accountData
+                        .filter(
+                          (account) =>
+                            account.copyFactoryRoles.indexOf('SUBSCRIBER') !==
+                            -1
+                        )
+                        .map((account) => (
+                          <option
+                            key={account.accountId}
+                            value={account.accountId}
+                            className="text-white"
+                          >{`${account.name}(${account.login})`}</option>
+                        ))}
+                  </optgroup> */}
+                </select>
+                {values.copyFrom == '' && createCopierButtonClicked && (
+                  <p className="mt-2 text-xs text-red-600 dark:text-red-500">
+                    Copy from required!
+                  </p>
+                )}
+              </div>
+            </div>
+            <div
+              style={{
+                borderBottom: '1px solid #242830',
+                paddingBottom: '15px',
+                marginBottom: '15px',
+                display: 'flex',
+                justifyContent: 'start',
+              }}
+            >
+              <label
+                className="text-[#ccc] text-[13px]"
+                style={{
+                  textAlign: 'right',
+                  width: '25%',
+                  paddingTop: '7px',
+                  paddingRight: '15px',
+                  paddingLeft: '15px',
+                  display: 'inline-block',
+                  position: 'relative',
+                  maxWidth: '100%',
+                }}
+              >
+                Send to
+              </label>
+              <div
+                style={{
+                  width: '50%',
+                  paddingLeft: '15px',
+                  paddingRight: '15px',
+                }}
+              >
+                <select
+                  name="sendTo"
                   required
                   className="bg-[#282d36] text-[#fff] px-3 py-1.5 rounded"
                   style={{
@@ -144,18 +238,19 @@ function CreateSignal() {
                     accountData
                       .filter(
                         (account) =>
-                          account.copyFactoryRoles.indexOf('PROVIDER') !== -1
+                          account.copyFactoryRoles.indexOf('SUBSCRIBER') !== -1
                       )
                       .map((account) => (
                         <option
                           key={account.accountId}
                           value={account.accountId}
+                          className="text-white"
                         >{`${account.name}(${account.login})`}</option>
                       ))}
                 </select>
-                {values.providerID == '' && createSignalButtonClicked && (
+                {values.sendTo == '' && createCopierButtonClicked && (
                   <p className="mt-2 text-xs text-red-600 dark:text-red-500">
-                    Signal Account required!
+                    Send to required!
                   </p>
                 )}
               </div>
@@ -182,7 +277,7 @@ function CreateSignal() {
                   maxWidth: '100%',
                 }}
               >
-                Strategy Name
+                Name
               </label>
               <div
                 style={{
@@ -192,9 +287,10 @@ function CreateSignal() {
                 }}
               >
                 <input
-                  name="StrategyName"
+                  name="name"
                   type="text"
                   required
+                  minLength={2}
                   className="bg-[#282d36] text-[#fff] px-3 py-1.5 rounded"
                   style={{
                     display: 'block',
@@ -206,18 +302,15 @@ function CreateSignal() {
                   }}
                   onChange={handleInputChange}
                 />
-                {values.StrategyName == '' && createSignalButtonClicked && (
+                {values.name == '' && createCopierButtonClicked && (
                   <p className="mt-2 text-xs text-red-600 dark:text-red-500">
-                    Strategy Name required!
+                    Name required!
                   </p>
                 )}
               </div>
             </div>
             <div
               style={{
-                borderBottom: '1px solid #242830',
-                paddingBottom: '15px',
-                marginBottom: '15px',
                 display: 'flex',
                 justifyContent: 'start',
               }}
@@ -234,9 +327,7 @@ function CreateSignal() {
                   position: 'relative',
                   maxWidth: '100%',
                 }}
-              >
-                Strategy Description
-              </label>
+              ></label>
               <div
                 style={{
                   width: '50%',
@@ -244,31 +335,42 @@ function CreateSignal() {
                   paddingRight: '15px',
                 }}
               >
-                <input
-                  name="strategyDescription"
-                  type="text"
-                  required
-                  className="bg-[#282d36] text-[#fff] px-3 py-1.5 rounded"
-                  style={{
-                    display: 'block',
-                    width: '100%',
-                    height: '34px',
-                    padding: '6px 12px',
-                    fontSize: '14px',
-                    borderRadius: '4px',
-                  }}
-                  onChange={handleInputChange}
-                />
-                {values.strategyDescription == '' &&
-                  createSignalButtonClicked && (
+                <div className="flex items-center gap-1 pt-[7px]">
+                  <input
+                    name="subscriber"
+                    type="checkbox"
+                    required
+                    className="bg-[#282d36] text-[#fff] px-3 py-1.5 rounded w-4"
+                    onChange={() =>
+                      setIsTermsAndConditionsChecked(
+                        !isTermsAndConditionsChecked
+                      )
+                    }
+                  />
+                  <label
+                    className="text-[#ccc] text-[13px]"
+                    style={{
+                      width: '100%',
+                      paddingRight: '15px',
+                      paddingLeft: '5px',
+                      display: 'inline-block',
+                      position: 'relative',
+                      maxWidth: '100%',
+                    }}
+                  >
+                    I have read the T&C&apos;s
+                  </label>
+                </div>
+                {createCopierButtonClicked &&
+                  isTermsAndConditionsChecked == false && (
                     <p className="mt-2 text-xs text-red-600 dark:text-red-500">
-                      Strategy Description required!
+                      Please check T&C!
                     </p>
                   )}
               </div>
             </div>
           </div>
-          <div className="px-[15px] py-[10px]">
+          <footer className="px-[15px] py-[10px]">
             <div className="grid grid-cols-12 gap-3">
               <div className="col-start-4 col-span-4 pl-3.5">
                 <LoadingButton
@@ -278,18 +380,18 @@ function CreateSignal() {
                     textTransform: 'none',
                     backgroundColor: '#0088CC!important',
                   }}
-                  onClick={handleRegisterStrategy}
+                  onClick={handleCreateCopierButtonClick}
                   loading={isLoading}
                 >
-                  Create signal page
+                  Create Copier
                 </LoadingButton>
               </div>
             </div>
-          </div>
+          </footer>
         </div>
       </div>
     </div>
   );
 }
 
-export default CreateSignal;
+export default CreateNewTradeCopier;

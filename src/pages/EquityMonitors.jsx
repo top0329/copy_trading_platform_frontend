@@ -1,3 +1,4 @@
+import * as React from 'react';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import { makeStyles } from '@material-ui/core/styles';
@@ -71,6 +72,11 @@ const useStyles = makeStyles((theme) => ({
 
 function EquityMonitors() {
   const classes = useStyles();
+  const [activeTab, setActiveTab] = React.useState(1);
+
+  const handleTabClick = (id) => {
+    setActiveTab(id);
+  };
 
   return (
     <div className="w-auto text-[#ccc]">
@@ -86,7 +92,11 @@ function EquityMonitors() {
             className={classes.button}
             variant="contained"
             size="small"
-            sx={{ backgroundColor: '#282d36', textTransform: 'none' }}
+            sx={{
+              textTransform: 'none',
+              backgroundColor: activeTab == 1 ? '#0088CC' : '#282d36',
+            }}
+            onClick={() => handleTabClick(1)}
           >
             Active
           </Button>
@@ -94,7 +104,11 @@ function EquityMonitors() {
             className={classes.button}
             variant="contained"
             size="small"
-            sx={{ backgroundColor: '#282d36', textTransform: 'none' }}
+            sx={{
+              textTransform: 'none',
+              backgroundColor: activeTab == 2 ? '#0088CC' : '#282d36',
+            }}
+            onClick={() => handleTabClick(2)}
           >
             Concluded
           </Button>
@@ -104,26 +118,49 @@ function EquityMonitors() {
             variant="contained"
             size="small"
             startIcon={<AddIcon />}
-            sx={{ textTransform: 'none', height: '30px', mr: '5px' }}
+            sx={{
+              textTransform: 'none',
+              height: '30px',
+              mr: '5px',
+              backgroundColor: '#0088CC!important',
+            }}
           >
             Create Monitor
           </Button>
         </div>
       </Stack>
-      <div className="mt-2 text-[#ccc] bg-[#2E353E] p-5 rounded">
-        <div className="flex justify-end w-full pb-3">
-          <Search>
-            <SearchIconWrapper>
-              <SearchIcon />
-            </SearchIconWrapper>
-            <StyledInputBase
-              placeholder="Search…"
-              inputProps={{ 'aria-label': 'search' }}
-            />
-          </Search>
+      {activeTab === 1 && (
+        <div className="mt-2 text-[#ccc] bg-[#2E353E] p-5 rounded">
+          <div className="flex justify-end w-full pb-3">
+            <Search>
+              <SearchIconWrapper>
+                <SearchIcon />
+              </SearchIconWrapper>
+              <StyledInputBase
+                placeholder="Search…"
+                inputProps={{ 'aria-label': 'search' }}
+              />
+            </Search>
+          </div>
+          <EquityMonitorsTable />
         </div>
-        <EquityMonitorsTable />
-      </div>
+      )}
+      {activeTab === 2 && (
+        <div className="mt-2 text-[#ccc] bg-[#2E353E] p-5 rounded">
+          <div className="flex justify-end w-full pb-3">
+            <Search>
+              <SearchIconWrapper>
+                <SearchIcon />
+              </SearchIconWrapper>
+              <StyledInputBase
+                placeholder="Search…"
+                inputProps={{ 'aria-label': 'search' }}
+              />
+            </Search>
+          </div>
+          <EquityMonitorsTable />
+        </div>
+      )}
     </div>
   );
 }

@@ -1,10 +1,11 @@
-import React from 'react';
+import * as React from 'react';
 import Button from '@mui/material/Button';
 import CreditCardIcon from '@mui/icons-material/CreditCard';
 import SearchIcon from '@mui/icons-material/Search';
 import { styled, alpha } from '@mui/material/styles';
 import InputBase from '@mui/material/InputBase';
 import SignalsTable from '../components/Tables/SignalsTable';
+import api from '../utils/api';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -49,13 +50,35 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 function Signals() {
+  const [strategyData, setStrategyData] = React.useState();
+
+  React.useEffect(() => {
+    async function fetchData() {
+      const response = await api.get(
+        'http://localhost:5000/api/strategy/strategies'
+      );
+      console.log(response.data);
+      for (let i = 0; i < response.data.length; i++) {
+        const temp = await api.get(
+          `http://localhost:5000/api/account/${response.data[i].accountId}`
+        );
+        response.data[i].providerName = `${temp.data.name}(${temp.data.login})`;
+        response.data[
+          i
+        ].signal = `${response.data[i].name}(${response.data[i]._id})`;
+      }
+      setStrategyData(response.data);
+    }
+
+    fetchData();
+  }, []);
   return (
     <div className="w-auto text-[#ccc]">
       <Button
         variant="contained"
         size="small"
         startIcon={<CreditCardIcon />}
-        sx={{ textTransform: 'none' }}
+        sx={{ textTransform: 'none', backgroundColor: '#0088CC!important' }}
       >
         Manage Renewals
       </Button>
@@ -71,7 +94,7 @@ function Signals() {
             />
           </Search>
         </div>
-        <SignalsTable />
+        <SignalsTable data={strategyData} />
       </div>
     </div>
   );

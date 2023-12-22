@@ -129,38 +129,38 @@ function createData(
   };
 }
 
-const rows = [
-  createData(
-    '✔',
-    'Demo Account (846220)',
-    4,
-    100731.14,
-    100747.33,
-    100.02,
-    '5 (0.50)',
-    '0 (0.00)',
-    17.64,
-    163.87,
-    17.64,
-    703.68
-  ),
-  createData(
-    '✔',
-    'TradersNetworkClub (254738)',
-    4,
-    61724.44,
-    30034.12,
-    48.69,
-    '38 (7.67)',
-    '0 (0.00)',
-    28.39,
-    296.09,
-    28.39,
-    7010.2
-  ),
-];
+// const rows = [
+//   createData(
+//     '✔',
+//     'Demo Account (846220)',
+//     4,
+//     100731.14,
+//     100747.33,
+//     100.02,
+//     '5 (0.50)',
+//     '0 (0.00)',
+//     17.64,
+//     163.87,
+//     17.64,
+//     703.68
+//   ),
+//   createData(
+//     '✔',
+//     'TradersNetworkClub (254738)',
+//     4,
+//     61724.44,
+//     30034.12,
+//     48.69,
+//     '38 (7.67)',
+//     '0 (0.00)',
+//     28.39,
+//     296.09,
+//     28.39,
+//     7010.2
+//   ),
+// ];
 
-export default function HistoryTable() {
+export default function HistoryTable({ data }) {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
 

@@ -14,6 +14,7 @@ import DashboardTable from '../components/Tables/DashboardTable';
 import TradesTable from '../components/Tables/TradesTable';
 import HistoryTable from '../components/Tables/HistoryTable';
 import InfoModal from '../components/modals/InfoModal';
+import api from '../utils/api';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -79,8 +80,31 @@ const useStyles = makeStyles((theme) => ({
 function Dashboard() {
   const [activeTab, setActiveTab] = React.useState(1);
   const [exclamationModalShow, setExclamationModalShow] = React.useState(false);
+  const [accountData, setAccountData] = React.useState([]);
+  const [tradeData, setTradeData] = React.useState([]);
+  const [historyData, setHistoryData] = React.useState([]);
 
-  React.useEffect(() => {}, []);
+  React.useEffect(() => {
+    async function fetchData() {
+      const history = await api.get(
+        'http://localhost:5000/api/history'
+      );
+      // console.log(response.data);
+      // for (let i = 0; i < response.data.length; i++) {
+      //   const temp = await api.get(
+      //     `http://localhost:5000/api/account/${response.data[i].accountId}`
+      //   );
+      //   response.data[i].providerName = `${temp.data.name}(${temp.data.login})`;
+      //   response.data[
+      //     i
+      //   ].signal = `${response.data[i].name}(${response.data[i]._id})`;
+      // }
+      // setStrategyData(response.data);
+      setHistoryData(history.data);
+    }
+
+    fetchData();
+  }, []);
 
   const handleTabClick = (id) => {
     setActiveTab(id);
@@ -108,13 +132,16 @@ function Dashboard() {
             <PriorityHighIcon fontSize="small" />
           </IconButton>
           {exclamationModalShow && (
-              <InfoModal setExclamationModalShow={setExclamationModalShow} />
+            <InfoModal setExclamationModalShow={setExclamationModalShow} />
           )}
           <Button
             className={classes.button}
             variant="contained"
             size="small"
-            sx={{ backgroundColor: '#282d36', textTransform: 'none' }}
+            sx={{
+              backgroundColor: activeTab == 1 ? '#0088CC' : '#282d36',
+              textTransform: 'none',
+            }}
             onClick={() => handleTabClick(1)}
           >
             Accounts
@@ -123,7 +150,10 @@ function Dashboard() {
             className={classes.button}
             variant="contained"
             size="small"
-            sx={{ backgroundColor: '#282d36', textTransform: 'none' }}
+            sx={{
+              backgroundColor: activeTab == 2 ? '#0088CC' : '#282d36',
+              textTransform: 'none',
+            }}
             onClick={() => handleTabClick(2)}
           >
             Trades
@@ -132,7 +162,10 @@ function Dashboard() {
             className={classes.button}
             variant="contained"
             size="small"
-            sx={{ backgroundColor: '#282d36', textTransform: 'none' }}
+            sx={{
+              backgroundColor: activeTab == 3 ? '#0088CC' : '#282d36',
+              textTransform: 'none',
+            }}
             onClick={() => handleTabClick(3)}
           >
             History
@@ -143,7 +176,7 @@ function Dashboard() {
             variant="contained"
             size="small"
             startIcon={<FilterAltIcon />}
-            sx={{ textTransform: 'none' }}
+            sx={{ textTransform: 'none', backgroundColor: '#0088CC!important' }}
           >
             Filter
           </Button>
@@ -151,7 +184,7 @@ function Dashboard() {
             variant="contained"
             size="small"
             startIcon={<VisibilityOffIcon />}
-            sx={{ textTransform: 'none' }}
+            sx={{ textTransform: 'none', backgroundColor: '#0088CC!important' }}
           >
             Columns
           </Button>
@@ -207,7 +240,7 @@ function Dashboard() {
                 />
               </Search>
             </div>
-            <HistoryTable />
+            <HistoryTable data={historyData} />
           </div>
         </div>
       )}
