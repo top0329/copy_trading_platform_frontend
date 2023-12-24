@@ -3,8 +3,12 @@ import { Icon } from '@iconify/react';
 
 function InfoModal({ setExclamationModalShow }) {
   return (
-    <div className="fixed w-screen h-screen top-0 left-0 flex items-center justify-center z-[1201] bg-opacity-80 bg-[#1D2127]">
-      <section className="mb-[20px] rounded bg-[#282D36] w-[400px]">
+    <div className="fixed right-0 bottom-0 top-0 left-0 flex items-center justify-center z-[1201]">
+      <div
+        className="fixed right-0 bottom-0 top-0 left-0 flex items-center justify-center z-[1202] bg-opacity-80 bg-[#1D2127]"
+        onClick={() => setExclamationModalShow(false)}
+      ></div>
+      <section className="mb-[20px] rounded bg-[#282D36] w-[400px] z-[100000]">
         <header className="p-[18px] text-white flex justify-between items-center">
           <h2 className="mt-[5px] text-[20px] font-normal">
             Connection definitions
@@ -63,7 +67,7 @@ function InfoModal({ setExclamationModalShow }) {
                   Attempting to establish a connection to your account.
                 </span>
               </div>
-              <small>
+              <small className="text-[#ccc]">
                 **If your account has been in this state for over 2 minutes,
                 contact support <a href="#">here</a>.**
               </small>
@@ -83,7 +87,7 @@ function InfoModal({ setExclamationModalShow }) {
           <hr className="my-[20px] border-t-[1px] border-[#282d36]" />
           <p className="pb-[10px]">
             <b className="box-border">
-              <small>When your account has the </small>
+              <small className="text-[#ccc]">When your account has the </small>
               <Icon
                 icon="zondicons:exclamation-solid"
                 width="13"
@@ -91,7 +95,7 @@ function InfoModal({ setExclamationModalShow }) {
                 color="#d2322d"
                 style={{ display: 'inline-block' }}
               />
-              <small>
+              <small className="text-[#ccc]">
                 {' '}
                 status, visit the{' '}
                 <a href="#" className="text-[#47a447]">

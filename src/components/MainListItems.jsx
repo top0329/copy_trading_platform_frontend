@@ -21,7 +21,7 @@ import SwapHorizRoundedIcon from '@mui/icons-material/SwapHorizRounded';
 import Collapse from '@mui/material/Collapse';
 import { Link } from 'react-router-dom';
 
-function MainListItems() {
+function MainListItems({ open }) {
   const [openConfigurator, setOpenConfigurator] = React.useState(false);
   const [openHelpCenter, setOpenHelpCenter] = React.useState(false);
 
@@ -45,22 +45,22 @@ function MainListItems() {
       component="nav"
       aria-labelledby="nested-list-subheader"
     >
-      <ListItemButton>
-        <Link className="flex flex-row" to={'/dashboard'}>
+      <Link className="flex flex-row" to={'/dashboard'}>
+        <ListItemButton>
           <ListItemIcon>
             <SpeedIcon style={{ color: '#CCC' }} />
           </ListItemIcon>
           <ListItemText primary="Dashboard" />
-        </Link>
-      </ListItemButton>
-      <ListItemButton>
-        <Link className="flex flex-row" to={'/signals'}>
+        </ListItemButton>
+      </Link>
+      <Link className="flex flex-row" to={'/signals'}>
+        <ListItemButton>
           <ListItemIcon>
             <SignalCellularAltIcon style={{ color: '#CCC' }} />
           </ListItemIcon>
           <ListItemText primary="Signals" />
-        </Link>
-      </ListItemButton>
+        </ListItemButton>
+      </Link>
       <ListItemButton onClick={handleConfiguratorClick}>
         <ListItemIcon>
           <SettingsSuggestIcon style={{ color: '#CCC' }} />
@@ -69,70 +69,70 @@ function MainListItems() {
         {openConfigurator ? <ExpandLess /> : <ExpandMore />}
       </ListItemButton>
       <Collapse
-        in={openConfigurator}
+        in={openConfigurator && open}
         timeout="auto"
         unmountOnExit
         sx={{ backgroundColor: '#191C21' }}
       >
         <List component="div" disablePadding>
-          <ListItemButton sx={{ pl: 4 }}>
-            <Link className="flex flex-row" to={'/accounts'}>
+          <Link className="flex flex-row" to={'/accounts'}>
+            <ListItemButton sx={{ pl: 4 }}>
               <ListItemIcon>
                 <ListIcon sx={{ color: '#ccc' }} />
               </ListItemIcon>
               <ListItemText primary="Accounts" />
-            </Link>
-          </ListItemButton>
-          <ListItemButton sx={{ pl: 4 }}>
-            <Link className="flex flex-row" to={'/trade-copier'}>
+            </ListItemButton>
+          </Link>
+          <Link className="flex flex-row" to={'/trade-copier'}>
+            <ListItemButton sx={{ pl: 4 }}>
               <ListItemIcon>
                 <ShareIcon sx={{ color: '#ccc' }} />
               </ListItemIcon>
               <ListItemText primary="Trade Copier" />
-            </Link>
-          </ListItemButton>
-          <ListItemButton sx={{ pl: 4 }}>
-            <Link className="flex flex-row" to={'/equity-monitors'}>
+            </ListItemButton>
+          </Link>
+          <Link className="flex flex-row" to={'/equity-monitors'}>
+            <ListItemButton sx={{ pl: 4 }}>
               <ListItemIcon>
                 <MonitorHeartIcon sx={{ color: '#ccc' }} />
               </ListItemIcon>
               <ListItemText primary="Equity Monitors" />
-            </Link>
-          </ListItemButton>
-          <ListItemButton sx={{ pl: 4 }}>
-            <Link className="flex flex-row" to={'/email-alerts'}>
+            </ListItemButton>
+          </Link>
+          <Link className="flex flex-row" to={'/email-alerts'}>
+            <ListItemButton sx={{ pl: 4 }}>
               <ListItemIcon>
                 <EmailIcon sx={{ color: '#ccc' }} />
               </ListItemIcon>
               <ListItemText primary="Email Alerts" />
-            </Link>
-          </ListItemButton>
+            </ListItemButton>
+          </Link>
         </List>
       </Collapse>
-      <ListItemButton>
-        <Link className="flex flex-row" to={'/analysis'}>
+      <Link className="flex flex-row" to={'/analysis'}>
+        <ListItemButton>
           <ListItemIcon>
             <SearchIcon style={{ color: '#CCC' }} />
           </ListItemIcon>
           <ListItemText primary="Analysis" />
-        </Link>
-      </ListItemButton>
-      <ListItemButton>
-        <Link className="flex flex-row" to={'/signal-followers'}>
+        </ListItemButton>
+      </Link>
+      <Link className="flex flex-row" to={'/signal-followers'}>
+        <ListItemButton>
           <ListItemIcon>
             <ForwardRoundedIcon style={{ color: '#CCC' }} />
           </ListItemIcon>
           <ListItemText primary="Signal Followers" />
-        </Link>
-      </ListItemButton>
-      <ListItemButton>
-        <Link className="flex flex-row" to={'/signal-provider'}>
+        </ListItemButton>
+      </Link>
+      <Link className="flex flex-row" to={'/signal-provider'}>
+        <ListItemButton>
           <ListItemIcon>
             <SwapHorizRoundedIcon style={{ color: '#CCC' }} />
           </ListItemIcon>
           <ListItemText primary="Signal Provider" />
-        </Link>
-      </ListItemButton>
+        </ListItemButton>
+      </Link>
       <ListItemButton onClick={handleHelpCenterClick}>
         <ListItemIcon>
           <LayersIcon style={{ color: '#CCC' }} />
@@ -141,28 +141,28 @@ function MainListItems() {
         {openHelpCenter ? <ExpandLess /> : <ExpandMore />}
       </ListItemButton>
       <Collapse
-        in={openHelpCenter}
+        in={openHelpCenter && open}
         timeout="auto"
         unmountOnExit
         sx={{ backgroundColor: '#191C21' }}
       >
         <List component="div" disablePadding>
-          <ListItemButton sx={{ pl: 4 }}>
-            <Link className="flex flex-row" to={'/knowledge-base'}>
+          <Link className="flex flex-row" to={'/knowledge-base'}>
+            <ListItemButton sx={{ pl: 4 }}>
               <ListItemIcon>
                 <LibraryBooksIcon sx={{ color: '#ccc' }} />
               </ListItemIcon>
               <ListItemText primary="Knowledge Base" />
-            </Link>
-          </ListItemButton>
-          <ListItemButton sx={{ pl: 4 }}>
-            <Link className="flex flex-row" to={'/contact-support'}>
+            </ListItemButton>
+          </Link>
+          <Link className="flex flex-row" to={'/contact-support'}>
+            <ListItemButton sx={{ pl: 4 }}>
               <ListItemIcon>
                 <ChatBubbleIcon sx={{ color: '#ccc' }} />
               </ListItemIcon>
               <ListItemText primary="Contact Support" />
-            </Link>
-          </ListItemButton>
+            </ListItemButton>
+          </Link>
         </List>
       </Collapse>
     </List>

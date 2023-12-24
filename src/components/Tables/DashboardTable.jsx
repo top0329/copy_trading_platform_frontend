@@ -7,6 +7,10 @@ import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+import { Icon } from '@iconify/react';
+
+import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 
 const columns = [
   { id: 'accountStatus', label: '', minWidth: 15, align: 'center' },
@@ -216,7 +220,27 @@ export default function DashboardTable() {
                   style={{ minWidth: column.minWidth }}
                   sx={{ padding: '5px' }}
                 >
-                  {column.label}
+                  <div className="flex gap-2 items-center justify-center">
+                    {column.label}
+                    {/* <Icon
+                      icon="fa:sort"
+                      className="cursor-pointer"
+                      color="#ccc"
+                    /> */}
+                    <div className="flex flex-col width={11} cursor-pointer">
+                      <Icon
+                        icon="teenyicons:up-solid"
+                        color="#ccc"
+                        className="mb-[-4px]"
+                        width={11}
+                      />
+                      <Icon
+                        icon="teenyicons:down-solid"
+                        width={11}
+                        color="#ccc"
+                      />
+                    </div>
+                  </div>
                 </TableCell>
               ))}
             </TableRow>
@@ -265,7 +289,7 @@ export default function DashboardTable() {
           </TableBody>
         </Table>
       </TableContainer>
-      <TablePagination
+      {/* <TablePagination
         rowsPerPageOptions={[10, 25, 50, 100]}
         component="div"
         count={rows.length}
@@ -300,7 +324,7 @@ export default function DashboardTable() {
             borderRadius: '4px',
           },
         }}
-      />
+      /> */}
     </Paper>
   );
 }

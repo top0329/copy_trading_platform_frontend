@@ -50,10 +50,14 @@ function SignUp() {
         const result = await api.post('/users/register', values);
         showToast('Registration success!', 'success');
         console.log(result);
-        navigate('/dashboard');
+        navigate('/auth/login');
       }
     } catch (err) {
-      showToast('Account creation failed!', 'error');
+      let msg = "Registration failed";
+      if (err.response) {
+        msg = err.response.data.errors[0].msg;
+      }
+      showToast(msg, 'error');
       console.log(err);
     } finally {
       setIsLoading(false);
@@ -193,6 +197,7 @@ function SignUp() {
           <button
             className="w-full bg-[#0088cc] hover:bg-[#0088dd] focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-md text-base px-5 py-2.5 text-center flex justify-center"
             onClick={handleSubmit}
+            disabled={isLoading}
           >
             SignUp new account
           </button>

@@ -31,7 +31,6 @@ function AddAccount() {
       ...values,
       [name]: value,
     });
-    console.log(values);
   };
 
   React.useEffect(() => {

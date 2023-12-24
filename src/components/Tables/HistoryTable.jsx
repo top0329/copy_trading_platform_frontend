@@ -4,211 +4,261 @@ import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
-import TablePagination from '@mui/material/TablePagination';
+import { styled, alpha } from '@mui/material/styles';
+import InputBase from '@mui/material/InputBase';
+import SearchIcon from '@mui/icons-material/Search';
+import OutlinedInput from '@mui/material/OutlinedInput';
+import Typography from '@mui/material/Typography';
+// import InputLabel from '@mui/material/InputLabel';
+import api from '../../utils/api';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
+
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+import { Icon } from '@iconify/react';
+import Pagination from '@mui/material/Pagination';
 
-const columns = [
-  { id: 'id', label: 'ID', minWidth: 15, align: 'center' },
-  { id: 'ticket', label: 'Ticket', minWidth: 138 },
-  {
-    id: 'account',
-    label: 'Account',
-    minWidth: 35,
-    // align: 'center',
-    // format: (value) => value.toLocaleString('en-US'),
+const Search = styled('div')(({ theme }) => ({
+  position: 'relative',
+  borderRadius: theme.shape.borderRadius,
+  backgroundColor: alpha(theme.palette.common.white, 0.15),
+  '&:hover': {
+    backgroundColor: alpha(theme.palette.common.white, 0.25),
   },
-  {
-    id: 'openTime',
-    label: 'Open Time',
-    minWidth: 50,
-    // align: 'center',
-    // format: (value) => value.toLocaleString('en-US'),
+  marginLeft: 0,
+  width: '100%',
+  [theme.breakpoints.up('sm')]: {
+    marginLeft: theme.spacing(1),
+    width: 'auto',
   },
-  {
-    id: 'symbol',
-    label: 'Symbol',
-    minWidth: 46,
-    // align: 'center',
-    // format: (value) => value.toFixed(2),
+}));
+
+const SearchIconWrapper = styled('div')(({ theme }) => ({
+  padding: theme.spacing(0, 2),
+  height: '100%',
+  position: 'absolute',
+  pointerEvents: 'none',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+}));
+
+const StyledInputBase = styled(InputBase)(({ theme }) => ({
+  color: 'inherit',
+  '& .MuiInputBase-input': {
+    padding: theme.spacing(1, 1, 1, 0),
+    // vertical padding + font size from searchIcon
+    paddingLeft: `calc(1em + ${theme.spacing(4)})`,
+    transition: theme.transitions.create('width'),
+    width: '100%',
+    [theme.breakpoints.up('sm')]: {
+      width: '12ch',
+      '&:focus': {
+        width: '20ch',
+      },
+    },
   },
-  {
-    id: 'type',
-    label: 'Type',
-    minWidth: 55,
-    // align: 'center',
-    // format: (value) => value.toFixed(2),
-  },
-  {
-    id: 'lots',
-    label: 'Lots',
-    minWidth: 133,
-    // align: 'center',
-    // format: (value) => value.toFixed(2),
-  },
-  {
-    id: 'openPrice',
-    label: 'Open Price',
-    minWidth: 51,
-    // align: 'center',
-    // format: (value) => value.toFixed(2),
-  },
-  {
-    id: 'closeTime',
-    label: 'Close Time',
-    minWidth: 24,
-    // align: 'center',
-    // format: (value) => value.toFixed(2),
-  },
-  {
-    id: 'closePrice',
-    label: 'Close Price',
-    minWidth: 35,
-    // align: 'center',
-    // format: (value) => value.toFixed(2),
-  },
-  {
-    id: 'commission',
-    label: 'commission',
-    minWidth: 42,
-    // align: 'center',
-    // format: (value) => value.toFixed(2),
-  },
-  {
-    id: 'swap',
-    label: 'Swap',
-    minWidth: 32,
-    // align: 'center',
-    // format: (value) => value.toFixed(2),
-  },
-  {
-    id: 'profit',
-    label: 'Profit',
-    minWidth: 16,
-    // align: 'center',
-    // format: (value) => value.toFixed(2),
-  },
-  {
-    id: '',
-    label: 'detail',
-    minWidth: 16,
-    // align: 'center',
-    // format: (value) => value.toFixed(2),
-  },
+}));
+
+const headers = [
+  { id: 'positionId', label: 'ID' },
+  { id: 'account', label: 'Account' },
+  { id: 'openTime', label: 'Open Time' },
+  { id: 'closeTime', label: 'Open Time' },
+  { id: 'symbol', label: 'Symbol' },
+  { id: 'type', label: 'Type' },
+  { id: 'closePrice', label: 'ClosePrice' },
+  { id: 'volume', label: 'Lots' },
+  { id: 'openPrice', label: 'OpenPrice' },
+  { id: 'profit', label: 'Profit' },
+  { id: 'durationInMinutes', label: 'DurationInMinutes' },
+  { id: 'gain', label: 'Gain' },
+  { id: 'marketValue', label: 'MarketValue' },
+  { id: 'success', label: 'Success' },
+  { id: 'pips', label: 'Pips' },
+  // { id: 'riskInBalancePercent', label: 'RiskInBalancePercent' },
+  // { id: 'riskInPips', label: 'RiskInPips' },
+  // { id: 'type', label: '' },
 ];
 
-function createData(
-  accountStatus,
-  account,
-  mt,
-  balance,
-  equity,
-  equityPercentage,
-  openTrades,
-  pending,
-  day,
-  week,
-  month,
-  total,
-  graph
-) {
-  return {
-    accountStatus,
-    account,
-    mt,
-    balance,
-    equity,
-    equityPercentage,
-    openTrades,
-    pending,
-    day,
-    week,
-    month,
-    total,
-    graph,
-  };
-}
+export default function HistoryTable() {
+  const [sort, setSort] = React.useState({
+    id: '',
+    type: '',
+  });
 
-// const rows = [
-//   createData(
-//     '✔',
-//     'Demo Account (846220)',
-//     4,
-//     100731.14,
-//     100747.33,
-//     100.02,
-//     '5 (0.50)',
-//     '0 (0.00)',
-//     17.64,
-//     163.87,
-//     17.64,
-//     703.68
-//   ),
-//   createData(
-//     '✔',
-//     'TradersNetworkClub (254738)',
-//     4,
-//     61724.44,
-//     30034.12,
-//     48.69,
-//     '38 (7.67)',
-//     '0 (0.00)',
-//     28.39,
-//     296.09,
-//     28.39,
-//     7010.2
-//   ),
-// ];
+  const [count, setCount] = React.useState();
 
-export default function HistoryTable({ data }) {
-  const [page, setPage] = React.useState(0);
+  const [page, setPage] = React.useState(1);
+  const [data, setData] = React.useState([]);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
+  const handleChangeRowsPerPage = (e) => {
+    let config = JSON.parse(sessionStorage.getItem('dashboard'));
+    config.history.pagecount = e.target.value;
+    config.history.page = 1;
+    sessionStorage.setItem('dashboard', JSON.stringify(config));
+
+    setRowsPerPage(e.target.value);
+    handlePageChange(null, 1);
   };
 
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(+event.target.value);
-    setPage(0);
+  const handlePageChange = async (e, value) => {
+    setPage(value);
+
+    try {
+      let config = JSON.parse(sessionStorage.getItem('dashboard'));
+      config.history.page = value;
+      sessionStorage.setItem('dashboard', JSON.stringify(config));
+
+      const { page, pagecount, sort, type } = config.history;
+      console.log(page, pagecount, sort, type);
+      const res = await api.get(
+        `/history?page=${page}&pagecount=${pagecount}&sort=${sort}&type=${type}`
+      );
+      setData(res.data.data);
+      setCount(res.data.count);
+    } catch (e) {
+      console.log(e);
+    }
   };
+
+  React.useEffect(() => {
+    let config = JSON.parse(sessionStorage.getItem('dashboard')).history;
+    setPage(config.page);
+    setRowsPerPage(config.pagecount);
+    setSort({
+      id: config.sort,
+      type: config.type,
+    });
+
+    async function fetchData() {
+      const { page, pagecount, sort, type } = config;
+      const res = await api.get(
+        `/history?page=${page}&pagecount=${pagecount}&sort=${sort}&type=${type}`
+      );
+      setData(res.data.data);
+      setCount(res.data.count);
+    }
+
+    fetchData();
+  }, []);
 
   return (
-    <Paper
-      sx={{
-        width: '100%',
-        overflow: 'hidden',
-        backgroundColor: '#2E353E',
-        boxShadow: 'none',
-        '& .MuiPaper-root': {
-          color: '#ccc',
+    <div className="mt-2 text-[#ccc] bg-[#2E353E] p-5 rounded pb-[10px]">
+      <div className="flex justify-between w-full pb-3">
+        <div className="flex items-center gap-2">
+          <FormControl size="small">
+            <Select
+              displayEmpty
+              value={rowsPerPage}
+              onChange={handleChangeRowsPerPage}
+              input={
+                <OutlinedInput
+                  sx={{
+                    width: '80px',
+                    color: 'white',
+                    // borderColor: 'white!important',
+                    // '&: active': {
+                    //   border: '1px solid black',
+                    // },
+                  }}
+                />
+              }
+            >
+              <MenuItem value={10}>10</MenuItem>
+              <MenuItem value={25}>25</MenuItem>
+              <MenuItem value={50}>50</MenuItem>
+              <MenuItem value={100}>100</MenuItem>
+            </Select>
+          </FormControl>
+          <Typography>records per page</Typography>
+        </div>
+        <Search>
+          <SearchIconWrapper>
+            <SearchIcon />
+          </SearchIconWrapper>
+          <StyledInputBase
+            placeholder="Search…"
+            inputProps={{ 'aria-label': 'search' }}
+          />
+        </Search>
+      </div>
+      <Paper
+        sx={{
+          width: '100%',
+          // marginBottom: 10,
+          overflow: 'hidden',
           backgroundColor: '#2E353E',
           boxShadow: 'none',
-        },
-      }}
-    >
-      <TableContainer
-        sx={{
-          maxHeight: 440,
-          '.MuiTable-root': {
-            borderColor: '#282D36',
-            borderWidth: '1px',
+          '& .MuiPaper-root': {
+            color: '#ccc',
+            backgroundColor: '#2E353E',
+            boxShadow: 'none',
           },
         }}
       >
-        <Table
-          stickyHeader
-          aria-label="sticky table"
+        <TableContainer
           sx={{
-            '& .MuiTableCell-root': {
-              color: '#ccc',
-              backgroundColor: '#2E353E',
-              border: '#282D36',
+            // maxHeight: 440,
+            '.MuiTable-root': {
+              borderColor: '#282D36',
+              borderWidth: '1px',
             },
           }}
         >
-          <TableHead>
-            <TableRow
+          <Table
+            stickyHeader
+            aria-label="sticky table"
+            sx={{
+              '& .MuiTableCell-root': {
+                color: '#ccc',
+                backgroundColor: '#2E353E',
+                border: '#282D36',
+              },
+            }}
+          >
+            <TableHead>
+              <TableRow
+                sx={{
+                  '&:last-child td, &:last-child th': {
+                    border: 1,
+                    borderColor: '#282D36',
+                  },
+                }}
+              >
+                {headers.map(({ label, id }) => (
+                  <TableCell
+                    key={id}
+                    align="center"
+                    // style={{ minWidth: column.minWidth }}
+                    sx={{
+                      padding: '5px',
+                    }}
+                  >
+                    <div className="flex items-center justify-between p-[3px]">
+                      {label}
+                      <div className="flex flex-col width={11} cursor-pointer">
+                        <Icon
+                          icon="teenyicons:up-solid"
+                          color="#ccc"
+                          className="mb-[-4px]"
+                          width={11}
+                        />
+                        <Icon
+                          icon="teenyicons:down-solid"
+                          width={11}
+                          color="#ccc"
+                        />
+                      </div>
+                    </div>
+                  </TableCell>
+                ))}
+              </TableRow>
+            </TableHead>
+            <TableBody
               sx={{
                 '&:last-child td, &:last-child th': {
                   border: 1,
@@ -216,98 +266,78 @@ export default function HistoryTable({ data }) {
                 },
               }}
             >
-              {columns.map((column) => (
-                <TableCell
-                  key={column.id}
-                  align={column.align}
-                  style={{ minWidth: column.minWidth }}
-                  sx={{ padding: '5px' }}
-                >
-                  {column.label}
-                </TableCell>
-              ))}
-            </TableRow>
-          </TableHead>
-          <TableBody
+              {
+                // .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                data &&
+                  data.map((row) => {
+                    return (
+                      <TableRow
+                        hover
+                        role="checkbox"
+                        tabIndex={-1}
+                        key={row.id}
+                        // sx={{
+                        //   '&:last-child td, &:last-child th': {
+                        //     border: 1,
+                        //     borderColor: '#282D36',
+                        //   },
+                        // }}
+                      >
+                        {headers.map(({ id }) => {
+                          let value = row[id];
+                          if (id === 'account') {
+                            value = `${value[0].name}(${value[0].login})`;
+                            // } else if (id === 'openTime') {
+                            //   value = value.substring(0, 19);
+                          } else if (id === 'type') {
+                            value = value.split('_')[2];
+                          }
+                          return (
+                            <TableCell
+                              key={id}
+                              align="left"
+                              sx={{
+                                padding: '5px',
+                                paddingLeft: 2,
+                              }}
+                            >
+                              <div className="truncate">{value}</div>
+                            </TableCell>
+                          );
+                        })}
+                      </TableRow>
+                    );
+                  })
+              }
+            </TableBody>
+          </Table>
+        </TableContainer>
+
+        <div className="flex justify-between items-center">
+          <Typography sx={{ color: '#ccc', fontSize: 13 }}>
+            Showing {rowsPerPage * (page - 1) + 1} to{' '}
+            {rowsPerPage * page > count ? count : rowsPerPage * page} of {count}{' '}
+            entries
+          </Typography>
+          <Pagination
+            // className="text-white"
             sx={{
-              '&:last-child td, &:last-child th': {
-                border: 1,
-                borderColor: '#282D36',
-              },
+              paddingY: 2,
             }}
-          >
-            {rows
-              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((row) => {
-                return (
-                  <TableRow
-                    hover
-                    role="checkbox"
-                    tabIndex={-1}
-                    key={row.code}
-                    // sx={{
-                    //   '&:last-child td, &:last-child th': {
-                    //     border: 1,
-                    //     borderColor: '#282D36',
-                    //   },
-                    // }}
-                  >
-                    {columns.map((column) => {
-                      const value = row[column.id];
-                      return (
-                        <TableCell
-                          key={column.id}
-                          align={column.align}
-                          sx={{ padding: '5px' }}
-                        >
-                          {column.format && typeof value === 'number'
-                            ? column.format(value)
-                            : value}
-                        </TableCell>
-                      );
-                    })}
-                  </TableRow>
-                );
-              })}
-          </TableBody>
-        </Table>
-      </TableContainer>
-      <TablePagination
-        rowsPerPageOptions={[10, 25, 50, 100]}
-        component="div"
-        count={rows.length}
-        rowsPerPage={rowsPerPage}
-        labelRowsPerPage="records per page"
-        page={page}
-        onPageChange={handleChangePage}
-        onRowsPerPageChange={handleChangeRowsPerPage}
-        color=""
-        sx={{
-          marginTop: '10px',
-          '& .MuiTablePagination-displayedRows': {
-            color: '#ccc',
-            // bgcolor: '#282D36',
-          },
-          '& .MuiTablePagination-selectLabel': {
-            color: '#ccc',
-            // bgcolor: '#282D36',
-          },
-          '& .MuiTablePagination-select': {
-            color: '#ccc',
-            bgcolor: '#282D36',
-            borderRadius: '4px',
-            height: '25px',
-            width: '20px',
-            paddingRight: '28px',
-            paddingTop: '10px',
-          },
-          '& .MuiTablePagination-actions': {
-            color: '#ccc',
-            bgcolor: '#282D36',
-            borderRadius: '4px',
-          },
-        }}
-      />
-    </Paper>
+            count={
+              count % rowsPerPage === 0
+                ? count / rowsPerPage
+                : Math.floor(count / rowsPerPage) + 1
+            }
+            page={page}
+            onChange={handlePageChange}
+            variant="outlined"
+            shape="rounded"
+            showFirstButton
+            showLastButton
+          />
+        </div>
+      </Paper>
+    </div>
   );
 }

@@ -15,6 +15,7 @@ import TradesTable from '../components/Tables/TradesTable';
 import HistoryTable from '../components/Tables/HistoryTable';
 import InfoModal from '../components/modals/InfoModal';
 import api from '../utils/api';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -81,39 +82,60 @@ function Dashboard() {
   const [activeTab, setActiveTab] = React.useState(1);
   const [exclamationModalShow, setExclamationModalShow] = React.useState(false);
   const [accountData, setAccountData] = React.useState([]);
-  const [tradeData, setTradeData] = React.useState([]);
-  const [historyData, setHistoryData] = React.useState([]);
 
   React.useEffect(() => {
-    async function fetchData() {
-      const history = await api.get(
-        'http://localhost:5000/api/history'
-      );
-      // console.log(response.data);
-      // for (let i = 0; i < response.data.length; i++) {
-      //   const temp = await api.get(
-      //     `http://localhost:5000/api/account/${response.data[i].accountId}`
-      //   );
-      //   response.data[i].providerName = `${temp.data.name}(${temp.data.login})`;
-      //   response.data[
-      //     i
-      //   ].signal = `${response.data[i].name}(${response.data[i]._id})`;
-      // }
-      // setStrategyData(response.data);
-      setHistoryData(history.data);
-    }
+    api
+      .get('/account/all-accounts')
+      .then((res) => {
+        setAccountData(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
 
-    fetchData();
+  React.useEffect(() => {
+    let config = sessionStorage.getItem('dashboard');
+    if (!config) {
+      config = {
+        tab: 1,
+        accounts: {
+          page: 1,
+          pagecount: 10,
+          sort: '',
+          type: '',
+        },
+        trades: {
+          page: 1,
+          pagecount: 10,
+          sort: '',
+          type: '',
+        },
+        history: {
+          page: 1,
+          pagecount: 10,
+          sort: '',
+          type: '',
+        },
+      };
+      sessionStorage.setItem('dashboard', JSON.stringify(config));
+    } else {
+      config = JSON.parse(config);
+      setActiveTab(config.tab);
+    }
   }, []);
 
   const handleTabClick = (id) => {
     setActiveTab(id);
+    let config = JSON.parse(sessionStorage.getItem('dashboard'));
+    config.tab = id;
+    sessionStorage.setItem('dashboard', JSON.stringify(config));
   };
 
   const classes = useStyles();
 
   return (
-    <div className="w-auto text-[#ccc]">
+    <div className="w-auto text-[#ccc] pb-[100px]">
       <Stack
         direction="row"
         alignItems="center"
@@ -190,60 +212,9 @@ function Dashboard() {
           </Button>
         </div>
       </Stack>
-      {activeTab === 1 && (
-        <div className="tab_panel">
-          <div className="mt-2 text-[#ccc] bg-[#2E353E] p-5 rounded">
-            <div className="flex justify-end w-full pb-3">
-              <Search>
-                <SearchIconWrapper>
-                  <SearchIcon />
-                </SearchIconWrapper>
-                <StyledInputBase
-                  placeholder="Search…"
-                  inputProps={{ 'aria-label': 'search' }}
-                />
-              </Search>
-            </div>
-            <DashboardTable />
-          </div>
-        </div>
-      )}
-      {activeTab === 2 && (
-        <div className="tab_panel">
-          <div className="mt-2 text-[#ccc] bg-[#2E353E] p-5 rounded">
-            <div className="flex justify-end w-full pb-3">
-              <Search>
-                <SearchIconWrapper>
-                  <SearchIcon />
-                </SearchIconWrapper>
-                <StyledInputBase
-                  placeholder="Search…"
-                  inputProps={{ 'aria-label': 'search' }}
-                />
-              </Search>
-            </div>
-            <TradesTable />
-          </div>
-        </div>
-      )}
-      {activeTab === 3 && (
-        <div className="tab_panel">
-          <div className="mt-2 text-[#ccc] bg-[#2E353E] p-5 rounded">
-            <div className="flex justify-end w-full pb-3">
-              <Search>
-                <SearchIconWrapper>
-                  <SearchIcon />
-                </SearchIconWrapper>
-                <StyledInputBase
-                  placeholder="Search…"
-                  inputProps={{ 'aria-label': 'search' }}
-                />
-              </Search>
-            </div>
-            <HistoryTable data={historyData} />
-          </div>
-        </div>
-      )}
+      {activeTab === 1 && <DashboardTable />}
+      {activeTab === 2 && <TradesTable />}
+      {activeTab === 3 && <HistoryTable />}
     </div>
   );
 }

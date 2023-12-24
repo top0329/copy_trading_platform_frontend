@@ -28,14 +28,12 @@ function CreateNewTradeCopier() {
   React.useEffect(() => {
     async function fetchData() {
       // let tempStrategy = [];
-      const response = await api.get(
-        'http://localhost:5000/api/account/all-accounts'
-      );
-      const responseStrategyList = await api.get(
-        'http://localhost:5000/api/strategy/strategies'
-      );
-      setAccountData(response.data);
-      setStrategyData(responseStrategyList.data);
+      const response = await api.get('/account/my-accounts');
+      const responseStrategyList = await api.get('/strategy/strategies');
+      setAccountData(response.data.data);
+      setStrategyData(responseStrategyList.data.data);
+      console.log(response.data.data);
+      console.log(responseStrategyList.data.data);
     }
 
     fetchData();
@@ -52,7 +50,12 @@ function CreateNewTradeCopier() {
   const handleCreateCopierButtonClick = async () => {
     try {
       setCreateCopierButtonClicked(true);
-      if (values.copyFrom == '' || values.sendTo == '' || values.name == '' || isTermsAndConditionsChecked == false) {
+      if (
+        values.copyFrom == '' ||
+        values.sendTo == '' ||
+        values.name == '' ||
+        isTermsAndConditionsChecked == false
+      ) {
         showToast('Please fill in all the information!', 'error');
       } else {
         setIsLoading(true);
@@ -156,7 +159,7 @@ function CreateNewTradeCopier() {
                         // )
                         .map((account) => (
                           <option
-                            key={account.accountId}
+                            key={account.account[0]._id}
                             value={account.strategyId}
                             className="text-white"
                           >{`${account.name}(${account.strategyId})`}</option>

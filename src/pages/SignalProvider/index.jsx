@@ -9,9 +9,7 @@ function SignalProvider() {
   const [providerData, setProviderData] = useState();
   useEffect(() => {
     async function fetchData() {
-      const response = await api.get(
-        'http://localhost:5000/api/account/all-accounts'
-      );
+      const response = await api.get('/account/all-accounts');
       const data = response.data.filter(
         (account) => account.copyFactoryRoles.indexOf('PROVIDER') !== -1
       );

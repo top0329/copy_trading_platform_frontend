@@ -24,9 +24,7 @@ function CreateSignal() {
 
   React.useEffect(() => {
     async function fetchData() {
-      const response = await api.get(
-        'http://localhost:5000/api/account/all-accounts'
-      );
+      const response = await api.get('/account/all-accounts');
       setAccountData(response.data);
     }
 
@@ -39,7 +37,6 @@ function CreateSignal() {
       ...values,
       [name]: value,
     });
-    console.log(values);
   };
 
   const handleRegisterStrategy = async () => {
