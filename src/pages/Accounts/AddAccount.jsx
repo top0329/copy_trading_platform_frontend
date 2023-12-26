@@ -2,9 +2,15 @@ import * as React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import LoadingButton from '@mui/lab/LoadingButton';
 import ReplyRoundedIcon from '@mui/icons-material/ReplyRounded';
+import useUtils from '../../hooks/useUtils';
+
+import { useReducer } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 import api from '../../utils/api';
 import useToast from '../../hooks/useToast';
+
+// import utilsReducer from '../../store/reducers/utils';
 
 function AddAccount() {
   const { showToast } = useToast();
@@ -22,6 +28,12 @@ function AddAccount() {
   const [isProviderChecked, setIsProviderChecked] = React.useState(false);
   const [createButtonClicked, setCreateButtonClicked] = React.useState(false);
   const [isLoading, setIsLoading] = React.useState(false);
+
+  // const [utils, dispatch] = useReducer(utilsReducer);
+
+  // const { ids, setIds } = useUtils();
+  const dispatch = useDispatch();
+  const { ids } = useSelector((state) => state.utils);
 
   const navigate = useNavigate();
 
@@ -69,8 +81,13 @@ function AddAccount() {
       } else {
         setIsLoading(true);
         const result = await api.post('/account/register-account', values);
-        showToast('Account created successfully!','success');
-        console.log(result);
+        showToast('Account created successfully!', 'success');
+
+        dispatch({
+          type: 'ADD_ID',
+          payload: result.data.AccountRegister.id,
+        });
+
         setIsLoading(false);
         navigate('/accounts');
       }
@@ -80,6 +97,7 @@ function AddAccount() {
       setIsLoading(false);
     }
   };
+
   return (
     <div>
       <div style={{ padding: '0px 200px' }}>

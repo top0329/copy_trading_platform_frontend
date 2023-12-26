@@ -17,6 +17,8 @@ import InfoModal from '../components/modals/InfoModal';
 import api from '../utils/api';
 import { useNavigate, useLocation } from 'react-router-dom';
 
+import { useDispatch, useSelector } from 'react-redux';
+
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
   borderRadius: theme.shape.borderRadius,
@@ -82,6 +84,9 @@ function Dashboard() {
   const [activeTab, setActiveTab] = React.useState(1);
   const [exclamationModalShow, setExclamationModalShow] = React.useState(false);
   const [accountData, setAccountData] = React.useState([]);
+  const [intervalId, setIntervalId] = React.useState();
+  const dispatch = useDispatch();
+  const { ids } = useSelector((state) => state.utils);
 
   React.useEffect(() => {
     api
@@ -92,6 +97,73 @@ function Dashboard() {
       .catch((err) => {
         console.log(err);
       });
+  }, []);
+
+  React.useEffect(() => {
+    const _id = setInterval(async () => {
+      try {
+        let temp = [...ids];
+        if (temp.length === 0) {
+          clearInterval(_id);
+        }
+        console.log('untils======>', temp);
+        for (let i = 0; i < temp.length; i++) {
+          api
+            .put(`/account/update-account-information/${temp[i]}`)
+            .then((res) => {
+              console.log('success====>');
+
+              dispatch({
+                type: 'DELETE_ID',
+                payload: temp[i],
+              });
+            })
+            .catch((err) => {
+              console.log('failed ===>');
+            });
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    }, 3000);
+
+    // setIntervalId(_id);
+
+    return () => {
+      clearInterval(_id);
+      // console.log('clear interval ' + intervalId);
+    };
+  }, [ids]);
+
+  React.useEffect(() => {
+    let interval = setIntervalId(() => {
+      async function fetcher() {
+        try {
+          await api.put(`/account/update-all-accounts-information`);
+          console.log('updated success');
+        } catch (err) {
+          console.log(err);
+        }
+      }
+      fetcher();
+    }, 1000 * 60 * 30);
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, []);
+
+  React.useEffect(() => {
+    async function test() {
+      try {
+        const res = await api.get('/account/info');
+        console.log(res.data);
+      } catch (err) {
+        console.log(err);
+      }
+    }
+
+    test();
   }, []);
 
   React.useEffect(() => {

@@ -13,6 +13,7 @@ import CoreRoutes from './routes';
 
 import ToastProvider from './contexts/toastContext';
 import AuthProvider from './contexts/AuthContext';
+import UtilsProvider from './contexts/utilsContext';
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -26,7 +27,8 @@ function App() {
   ) : (
     <ToastProvider>
       <AuthProvider>
-        {/* <Routes>
+        <UtilsProvider>
+          {/* <Routes>
           <Route path="/auth/login" element={<Login />} />
           <Route path="/auth/signup" element={<SignUp />} />
           <Route index element={<Root />} />
@@ -47,7 +49,8 @@ function App() {
             })}
           </Route>
         </Routes> */}
-        <CoreRoutes />
+          <CoreRoutes />
+        </UtilsProvider>
       </AuthProvider>
     </ToastProvider>
   );

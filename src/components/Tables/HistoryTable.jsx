@@ -66,18 +66,18 @@ const headers = [
   { id: 'positionId', label: 'ID' },
   { id: 'account', label: 'Account' },
   { id: 'openTime', label: 'Open Time' },
-  { id: 'closeTime', label: 'Open Time' },
   { id: 'symbol', label: 'Symbol' },
   { id: 'type', label: 'Type' },
-  { id: 'closePrice', label: 'ClosePrice' },
   { id: 'volume', label: 'Lots' },
-  { id: 'openPrice', label: 'OpenPrice' },
-  { id: 'profit', label: 'Profit' },
+  { id: 'openPrice', label: 'Open Price' },
+  { id: 'closeTime', label: 'Close Time' },
+  { id: 'closePrice', label: 'Close Price' },
   { id: 'durationInMinutes', label: 'DurationInMinutes' },
   { id: 'gain', label: 'Gain' },
   { id: 'marketValue', label: 'MarketValue' },
-  { id: 'success', label: 'Success' },
   { id: 'pips', label: 'Pips' },
+  { id: 'success', label: 'Success' },
+  { id: 'profit', label: 'Profit' },
   // { id: 'riskInBalancePercent', label: 'RiskInBalancePercent' },
   // { id: 'riskInPips', label: 'RiskInPips' },
   // { id: 'type', label: '' },
@@ -114,7 +114,7 @@ export default function HistoryTable() {
       sessionStorage.setItem('dashboard', JSON.stringify(config));
 
       const { page, pagecount, sort, type } = config.history;
-      console.log(page, pagecount, sort, type);
+      // console.log(page, pagecount, sort, type);
       const res = await api.get(
         `/history?page=${page}&pagecount=${pagecount}&sort=${sort}&type=${type}`
       );
@@ -285,6 +285,8 @@ export default function HistoryTable() {
                       >
                         {headers.map(({ id }) => {
                           let value = row[id];
+                          // console.log(value)
+                          // console.log(row)
                           if (id === 'account') {
                             value = `${value[0].name}(${value[0].login})`;
                             // } else if (id === 'openTime') {

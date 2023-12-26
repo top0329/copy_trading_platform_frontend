@@ -23,6 +23,9 @@ const SignalProvider = Loadable(lazy(() => import('../pages/SignalProvider')));
 const CreateSignal = Loadable(
   lazy(() => import('../pages/SignalProvider/CreateSignal'))
 );
+const AccountAnalysis = Loadable(
+  lazy(() => import('../pages/Analysis/AccountAnalysis'))
+);
 
 const coreRoutes = {
   path: '/',
@@ -101,6 +104,11 @@ const coreRoutes = {
       path: '/trade-copier/create-new-trade-copier',
       // title: 'Create Copier',
       element: <CreateNewTradeCopier />,
+    },
+    {
+      path: '/analysis/analysis-account/:id',
+      // title: 'Create Copier',
+      element: <AccountAnalysis />,
     },
   ],
 };

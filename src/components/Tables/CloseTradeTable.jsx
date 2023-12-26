@@ -14,13 +14,12 @@ import api from '../../utils/api';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
-import IconButton from '@mui/material/IconButton';
 
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { Icon } from '@iconify/react';
 import Pagination from '@mui/material/Pagination';
-import { Link } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -65,47 +64,28 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 const headers = [
-  // { id: 'accountStatus', label: '', minWidth: 15, align: 'center' },
-  { id: 'account', label: 'Account', minWidth: 138 },
-  {
-    id: 'platform',
-    label: 'MT',
-  },
-  {
-    id: 'balance',
-    label: 'Balance',
-  },
-  {
-    id: 'equity',
-    label: 'Equity',
-  },
-  {
-    id: 'equityPercentage',
-    label: 'Equity %',
-  },
-  {
-    id: 'openTrades',
-    label: 'Open Trades (Lots)',
-  },
-  {
-    id: 'day',
-    label: 'Day',
-  },
-  {
-    id: 'week',
-    label: 'Week',
-  },
-  {
-    id: 'month',
-    label: 'Month',
-  },
-  {
-    id: 'total',
-    label: 'Total',
-  },
+  { id: 'positionId', label: 'ID' },
+  { id: 'account', label: 'Account' },
+  { id: 'openTime', label: 'Open Time' },
+  { id: 'closeTime', label: 'Open Time' },
+  { id: 'symbol', label: 'Symbol' },
+  { id: 'type', label: 'Type' },
+  { id: 'closePrice', label: 'ClosePrice' },
+  { id: 'volume', label: 'Lots' },
+  { id: 'openPrice', label: 'OpenPrice' },
+  { id: 'profit', label: 'Profit' },
+  { id: 'durationInMinutes', label: 'DurationInMinutes' },
+  { id: 'gain', label: 'Gain' },
+  { id: 'marketValue', label: 'MarketValue' },
+  { id: 'success', label: 'Success' },
+  { id: 'pips', label: 'Pips' },
+  // { id: 'riskInBalancePercent', label: 'RiskInBalancePercent' },
+  // { id: 'riskInPips', label: 'RiskInPips' },
+  // { id: 'type', label: '' },
 ];
 
-export default function TradesTable() {
+export default function CloseTradeTable() {
+  const { id } = useParams();
   const [sort, setSort] = React.useState({
     id: '',
     type: '',
@@ -118,27 +98,18 @@ export default function TradesTable() {
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
   const handleChangeRowsPerPage = (e) => {
-    let config = JSON.parse(sessionStorage.getItem('dashboard'));
-    config.accounts.pagecount = e.target.value;
-    config.accounts.page = 1;
-    sessionStorage.setItem('dashboard', JSON.stringify(config));
-
     setRowsPerPage(e.target.value);
-    handlePageChange(null, 1);
+    handlePageChange(null, 1, e.target.value);
   };
 
-  const handlePageChange = async (e, value) => {
+  const handlePageChange = async (e, value, pageCount) => {
     setPage(value);
 
     try {
-      let config = JSON.parse(sessionStorage.getItem('dashboard'));
-      config.accounts.page = value;
-      sessionStorage.setItem('dashboard', JSON.stringify(config));
-
-      const { page, pagecount, sort, type } = config.accounts;
-      // console.log(page, pagecount, sort, type);
       const res = await api.get(
-        `/account/accounts?page=${page}&pagecount=${pagecount}&sort=${sort}&type=${type}`
+        `/history/${id}?page=${value}&pagecount=${
+          pageCount ? pageCount : rowsPerPage
+        }&sort=${sort.id}&type=${sort.type}`
       );
       setData(res.data.data);
       setCount(res.data.count);
@@ -147,59 +118,17 @@ export default function TradesTable() {
     }
   };
 
-  const _calcProfitByDate = (data) => {
-    let { day, week, month } = { day: 0, week: 0, month: 0 };
-    data.forEach((profit) => {
-      const gap = new Date().getTime() - new Date(profit.closeTime).getTime();
-      if (gap < 3600 * 24 * 1000) {
-        day += profit.profit;
-      } else if (gap < 3600 * 24 * 1000 * 7) {
-        week += profit.profit;
-      } else if (gap < 3600 * 24 * 1000 * 30) {
-        month += profit.profit;
-      }
-    });
-
-    return { day, week, month };
-  };
-
   React.useEffect(() => {
-    let session = sessionStorage.getItem('dashboard');
-    async function fetchData(config) {
-      const { page, pagecount, sort, type } = config;
+    async function fetchData() {
       const res = await api.get(
-        `/account/accounts?page=${page}&pagecount=${pagecount}&sort=${sort}&type=${type}`
+        `/history/${id}?page=${page}&pagecount=${rowsPerPage}&sort=${sort.id}&type=${sort.type}`
       );
       setData(res.data.data);
       setCount(res.data.count);
     }
-    async function fetchData1() {
-      const res = await api.get(
-        `/account/accounts?page=${1}&pagecount=${10}&sort=${''}&type=${''}`
-      );
-      setData(res.data.data);
-      setCount(res.data.count);
-    }
-    if (session) {
-      let config = JSON.parse(session).accounts;
-      setPage(config.page);
-      setRowsPerPage(config.pagecount);
-      setSort({
-        id: config.sort,
-        type: config.type,
-      });
 
-      fetchData(config);
-    } else {
-      setPage(1);
-      setRowsPerPage(10);
-      setSort({
-        id: '',
-        type: '',
-      });
-      fetchData1();
-    }
-  }, []);
+    fetchData();
+  }, [id]);
 
   return (
     <div className="mt-2 text-[#ccc] bg-[#2E353E] p-5 rounded pb-[10px]">
@@ -311,14 +240,6 @@ export default function TradesTable() {
                     </div>
                   </TableCell>
                 ))}
-                <TableCell
-                  key={'ccc'}
-                  align="center"
-                  // style={{ minWidth: column.minWidth }}
-                  sx={{
-                    padding: '5px',
-                  }}
-                ></TableCell>
               </TableRow>
             </TableHead>
             <TableBody
@@ -347,17 +268,13 @@ export default function TradesTable() {
                         // }}
                       >
                         {headers.map(({ id }) => {
-                          const { day, week, month } = _calcProfitByDate(
-                            row.profit
-                          );
-                          row = { ...row, day, week, month };
                           let value = row[id];
                           if (id === 'account') {
-                            value = `${row.name}(${row.login})`;
-                          } else if (id === 'equityPercentage') {
-                            if (isNaN((row.equity / row.balance) * 100)) value = ''; else value = (row.equity / row.balance) * 100;
-                          } else if (id === 'openTrades') {
-                            value = `${row.count} (${row.volume})`;
+                            value = `${value[0].name}(${value[0].login})`;
+                            // } else if (id === 'openTime') {
+                            //   value = value.substring(0, 19);
+                          } else if (id === 'type') {
+                            value = value.split('_')[2];
                           }
                           return (
                             <TableCell
@@ -372,31 +289,6 @@ export default function TradesTable() {
                             </TableCell>
                           );
                         })}
-                        <TableCell
-                          key={row._id + 'goto'}
-                          align="left"
-                          sx={{
-                            padding: '5px',
-                            paddingLeft: 2,
-                          }}
-                        >
-                          <Link
-                            to={`/analysis/analysis-account/${row.accountId}`}
-                          >
-                            <IconButton
-                              size="small"
-                              color="inherit"
-                              sx={{
-                                backgroundColor: '#0088CC',
-                                borderRadius: '4px',
-                                fontSize: 12,
-                                padding: '8px 6px',
-                              }}
-                            >
-                              <Icon icon="fa:bar-chart" color="white" />
-                            </IconButton>
-                          </Link>
-                        </TableCell>
                       </TableRow>
                     );
                   })

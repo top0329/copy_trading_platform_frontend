@@ -51,9 +51,6 @@ const AuthProvider = ({ children }) => {
       } catch (err) {
         console.log(err);
         console.error(err);
-        // dispatch({
-        //   type: LOGOUT,
-        // });
       } finally {
         setIsInitialized(true);
       }

@@ -111,7 +111,7 @@ export default function TradesTable() {
       sessionStorage.setItem('dashboard', JSON.stringify(config));
 
       const { page, pagecount, sort, type } = config.trades;
-      console.log(page, pagecount, sort, type);
+      // console.log(page, pagecount, sort, type);
       const res = await api.get(
         `/trade?page=${page}&pagecount=${pagecount}&sort=${sort}&type=${type}`
       );
@@ -282,6 +282,7 @@ export default function TradesTable() {
                       >
                         {headers.map(({ id }) => {
                           let value = row[id];
+                          console.log(value === []);
                           if (id === 'account') {
                             value = `${value[0].name}(${value[0].login})`;
                             // } else if (id === 'openTime') {

@@ -31,10 +31,6 @@ function Login() {
   };
 
   const handleSubmit = async () => {
-    // return console.log(values);
-    // // navigate('/dashboard');
-
-    // return;
     try {
       setLoginButtonClicked(true);
       setIsLoading(true);

@@ -117,14 +117,14 @@ function MainListItems({ open }) {
           <ListItemText primary="Analysis" />
         </ListItemButton>
       </Link>
-      <Link className="flex flex-row" to={'/signal-followers'}>
+      {/* <Link className="flex flex-row" to={'/signal-followers'}>
         <ListItemButton>
           <ListItemIcon>
             <ForwardRoundedIcon style={{ color: '#CCC' }} />
           </ListItemIcon>
           <ListItemText primary="Signal Followers" />
         </ListItemButton>
-      </Link>
+      </Link> */}
       <Link className="flex flex-row" to={'/signal-provider'}>
         <ListItemButton>
           <ListItemIcon>
