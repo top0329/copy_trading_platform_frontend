@@ -16,15 +16,37 @@ const TradeCopier = Loadable(lazy(() => import('../pages/TradeCopier')));
 const CreateNewTradeCopier = Loadable(
   lazy(() => import('../pages/TradeCopier/CreateNewTradeCopier'))
 );
+const EditTradeCopier = Loadable(
+  lazy(() => import('../pages/TradeCopier/EditTradeCopier'))
+);
 const SignalFollowers = Loadable(
   lazy(() => import('../pages/SignalFollowers'))
 );
 const SignalProvider = Loadable(lazy(() => import('../pages/SignalProvider')));
-const CreateSignal = Loadable(
-  lazy(() => import('../pages/SignalProvider/CreateSignal'))
+const ConfigurePaymentProcessor = Loadable(lazy(() => import('../pages/SignalProvider/ConfigurePaymentProcessor')))
+const CreateSignalProvider = Loadable(
+  lazy(() => import('../pages/SignalProvider/CreateSignalProvider'))
+);
+const FollowerTerms = Loadable(
+  lazy(() => import('../pages/SignalProvider/FollowerTerms'))
+);
+const EditAccount = Loadable(
+  lazy(() => import('../pages/Accounts/EditAccount'))
+);
+const EditSignalProvider = Loadable(
+  lazy(() => import('../pages/SignalProvider/EditSignalProvider'))
 );
 const AccountAnalysis = Loadable(
   lazy(() => import('../pages/Analysis/AccountAnalysis'))
+);
+const Profile = Loadable(lazy(() => import('../pages/Profile')));
+const EmailVerificationPageForUpdate = Loadable(
+  lazy(() =>
+    import('../pages/EmailVerification/EmailVerificationPageForUpdate')
+  )
+);
+const EmailVerifyUpdate = Loadable(
+  lazy(() => import('../pages/EmailVerification/EmailVerifyUpdate'))
 );
 
 const coreRoutes = {
@@ -37,78 +59,116 @@ const coreRoutes = {
   children: [
     {
       path: '/dashboard',
-      // title: 'Dashboard',
+      title: 'Dashboard',
       element: <Dashboard />,
     },
     {
       path: '/accounts',
-      // title: 'Accounts',
+      title: 'Accounts',
       element: <Accounts />,
     },
     {
       path: '/accounts/add-account',
-      // title: 'Add Account',
+      title: 'Add Account',
       element: <AddAccount />,
     },
     {
+      path: '/accounts/edit/:id',
+      title: 'Manage Account',
+      element: <EditAccount />,
+    },
+    {
       path: '/analysis',
-      // title: 'Analysis',
+      title: 'Analysis',
       element: <Analysis />,
     },
     {
       path: '/signal-followers',
-      // title: 'Signal Followers',
+      title: 'Signal Followers',
       element: <SignalFollowers />,
     },
     {
       path: '/signal-provider',
-      // title: 'Signal Provider',
+      title: 'Signal Provider',
       element: <SignalProvider />,
     },
     {
-      path: '/signal-provider/create-signal',
-      // title: 'Create Signal',
-      element: <CreateSignal />,
+      path: '/signal-provider/create',
+      title: 'Create Signal Provider',
+      element: <CreateSignalProvider />,
+    },
+    {
+      path: '/signal-provider/edit/:strategyId',
+      title: 'Manage Signal Provider',
+      element: <EditSignalProvider />,
+    },
+    {
+      path: '/signal-provider/follower-terms/:strategyId',
+      title: 'Manage Signal Provider',
+      element: <FollowerTerms />,
+    },
+    {
+      path: '/signal-provider/configure-payment-processor',
+      title: 'Configure Payment Processor',
+      element: <ConfigurePaymentProcessor />,
     },
     {
       path: '/contact-support',
-      // title: 'Support',
+      title: 'Support',
       element: <ContactSupport />,
     },
     {
       path: '/email-alerts',
-      // title: 'Email Alerts',
+      title: 'Email Alerts',
       element: <EmailAlerts />,
     },
     {
       path: '/equity-monitors',
-      // title: 'Equity Monitors',
+      title: 'Equity Monitors',
       element: <EquityMonitors />,
     },
     {
       path: '/knowledge-base',
-      // title: 'Knowledge Base',
+      title: 'Knowledge Base',
       element: <KnowledgeBase />,
     },
     {
       path: '/signals',
-      // title: 'Signals',
+      title: 'Signals',
       element: <Signals />,
     },
     {
       path: '/trade-copier',
-      // title: 'Copiers',
+      title: 'Copiers',
       element: <TradeCopier />,
     },
     {
       path: '/trade-copier/create-new-trade-copier',
-      // title: 'Create Copier',
+      title: 'Create Copier',
       element: <CreateNewTradeCopier />,
     },
     {
+      path: '/trade-copier/edit/:subscriberId/:strategyId',
+      title: 'Manage Copier',
+      element: <EditTradeCopier />,
+    },
+    {
       path: '/analysis/analysis-account/:id',
-      // title: 'Create Copier',
+      title: 'Account Analysis',
       element: <AccountAnalysis />,
+    },
+    {
+      path: '/profile',
+      title: 'Profile',
+      element: <Profile />,
+    },
+    {
+      path: '/email-verification-page-for-update',
+      element: <EmailVerificationPageForUpdate />,
+    },
+    {
+      path: '/email-verify-update/:token',
+      element: <EmailVerifyUpdate />,
     },
   ],
 };

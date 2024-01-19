@@ -1,13 +1,4 @@
 import * as React from 'react';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TablePagination from '@mui/material/TablePagination';
-import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
-import { Icon } from '@iconify/react';
 
 const TradingStats = ({ data }) => {
   const [tab, setTab] = React.useState(1);
@@ -40,20 +31,6 @@ const TradingStats = ({ data }) => {
         </li>
       </ul>
       <div className="bg-[#2E353E] rounded-b p-[15px]">
-        {/* <div className="flex">
-          <div className="w-[20%] border-[#1D2127] text-[13px] p-[8px] text-[#ccc] font-[600] border">
-            asdfasdf
-          </div>
-          <div className="w-[30%] border-[#1D2127] text-[13px] p-[8px] text-[#ccc] font-[600] border">
-            asdfasdf
-          </div>
-          <div className="w-[20%] border-[#1D2127] text-[13px] p-[8px] text-[#ccc] font-[600] border">
-            asdfasdf
-          </div>
-          <div className="w-[30%] border-[#1D2127] text-[13px] p-[8px] text-[#ccc] font-[600] border">
-            asdfasdf
-          </div>
-        </div> */}
         <table
           className={`border-[#1D2127] border w-full ${tab !== 1 && 'hidden'}`}
         >
@@ -121,10 +98,10 @@ const TradingStats = ({ data }) => {
             </td>
             <td className="w-[30%] text-[13px] p-[8px] text-[#ccc] font-[600] border border-[#1D2127]">
               {Object.keys(data).length > 0 && (
-                <>
+                <React.Fragment>
                   {data.worstTrade.profit.toFixed(3)} USD (
                   {data.worstTrade.closeTime.substr(0, 10)})
-                </>
+                </React.Fragment>
               )}
             </td>
           </tr>
@@ -139,7 +116,9 @@ const TradingStats = ({ data }) => {
               Average Win
             </td>
             <td className="w-[30%] text-[13px] p-[8px] text-[#ccc] font-[600] border border-[#1D2127]">
-              {Object.keys(data).length > 0 && data.averageWin} USD
+              {Object.keys(data).length > 0 && (
+                <React.Fragment>{data.averageWin} USD</React.Fragment>
+              )}
             </td>
           </tr>
           <tr className="w-full">
@@ -158,7 +137,9 @@ const TradingStats = ({ data }) => {
               Average Loss
             </td>
             <td className="w-[30%] text-[13px] p-[8px] text-[#ccc] font-[600] border border-[#1D2127]">
-              {Object.keys(data).length > 0 && data.averageLoss} USD
+              {Object.keys(data).length > 0 && (
+                <React.Fragment>{data.averageLoss} USD</React.Fragment>
+              )}
             </td>
           </tr>
         </table>

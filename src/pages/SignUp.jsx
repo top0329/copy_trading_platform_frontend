@@ -48,9 +48,15 @@ function SignUp() {
       } else {
         // delete values.confirm;
         const result = await api.post('/users/register', values);
+        if(!localStorage.getItem('signupEmail')) {
+          localStorage.setItem('signupEmail', values.email);
+        } else {
+          localStorage.removeItem('signupEmail');
+          localStorage.setItem('signupEmail', values.email);
+        }
         showToast('Registration success!', 'success');
         console.log(result);
-        navigate('/auth/login');
+        navigate('/email-verification-page-for-signup');
       }
     } catch (err) {
       let msg = "Registration failed";
@@ -184,7 +190,7 @@ function SignUp() {
               )}
           </div>
           <div className="flex items-end justify-end mb-5">
-            <label className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">
+            <label className="ms-2 text-sm font-medium text-white dark:text-gray-300">
               Already have account?{' '}
               <Link
                 to={'/auth/login'}
@@ -199,7 +205,7 @@ function SignUp() {
             onClick={handleSubmit}
             disabled={isLoading}
           >
-            SignUp new account
+            Create new account
           </button>
         </div>
       </div>

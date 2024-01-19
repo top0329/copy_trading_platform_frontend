@@ -10,8 +10,8 @@ import useAuth from '../hooks/useAuth';
 
 function Login() {
   const { login } = useAuth();
-
   const { showToast } = useToast();
+
   const initialValues = {
     email: '',
     password: '',
@@ -40,9 +40,14 @@ function Login() {
         showToast('Invalid email format!', 'error');
       } else {
         // delete values.confirm;
+        if(!localStorage.getItem('loginEmail')) {
+          localStorage.setItem('loginEmail', values.email);
+        } else {
+          localStorage.removeItem('loginEmail');
+          localStorage.setItem('loginEmail', values.email);
+        }
         await login(values);
         showToast('Login success!', 'success');
-        // console.log(result);
         navigate('/dashboard');
       }
     } catch (err) {
@@ -56,6 +61,7 @@ function Login() {
       setIsLoading(false);
     }
   };
+
   return (
     <div className="w-screen h-screen flex flex-col items-center justify-center text-white">
       <div className="block max-w-md pt-2 w-full">
@@ -115,12 +121,12 @@ function Login() {
               >
                 Password
               </label>
-              <a
-                href="#"
+              <Link
+                to={'/forgot-password'}
                 className=" text-[13px] text-right w-full inline-block mb-2"
               >
                 Forgot password
-              </a>
+              </Link>
             </div>
             <input
               type="password"
@@ -154,14 +160,14 @@ function Login() {
               />
               <label
                 htmlFor="terms"
-                className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                className="ms-2 text-sm font-medium text-white dark:text-gray-300"
               >
                 Remember{' '}
               </label>
             </div>
             <label
               htmlFor="terms"
-              className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+              className="ms-2 text-sm font-medium text-white dark:text-gray-300"
             >
               Create new account?{' '}
               <Link

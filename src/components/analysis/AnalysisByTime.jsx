@@ -1,9 +1,6 @@
 import * as React from 'react';
 import ReactApexChart from 'react-apexcharts';
 
-import Radio from '@mui/material/Radio';
-import { Icon } from '@iconify/react';
-
 const _dateCompare = (a, b) => {
   const first = new Date(a);
   const second = new Date(b);
@@ -395,10 +392,10 @@ const AnalysisByTime = ({ data }) => {
           name="platform"
           required
           className="bg-[#282d36] text-[#fff] px-3 py-1.5 rounded text-[14px] h-[34px]"
-
           // onChange={handleInputChange}
         >
-          <option value={'2022'}>2023</option>
+          <option value={'2023'}>2023</option>
+          <option value={'2024'}>2024</option>
           {/* <option value={'2023'}>2022</option> */}
         </select>
         <ReactApexChart

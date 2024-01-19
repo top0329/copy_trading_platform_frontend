@@ -15,12 +15,15 @@ import api from '../utils/api';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
-
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { Icon } from '@iconify/react';
 import Pagination from '@mui/material/Pagination';
 import CreditCardIcon from '@mui/icons-material/CreditCard';
+import IconButton from '@mui/material/IconButton';
+import { makeStyles } from '@material-ui/core/styles';
+import DeleteSignalModal from '../components/modals/DeleteSignalModal';
+import useToast from '../hooks/useToast';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -64,6 +67,25 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
+const useStyles = makeStyles((theme) => ({
+  infoButton: {
+    '&:hover': {
+      backgroundColor: '#1B5E20',
+      boxShadow: 'none',
+    },
+  },
+  button: {
+    '&:hover': {
+      backgroundColor: '#242830',
+      boxShadow: 'none',
+    },
+    '&:active, &:focus ,&selected': {
+      backgroundColor: '#0088cc',
+      boxShadow: 'none',
+    },
+  },
+}));
+
 const headers = [
   { id: 'signal', label: 'Signal' },
   { id: 'account', label: 'provider Name' },
@@ -77,16 +99,20 @@ const headers = [
 ];
 
 export default function TradesTable() {
+  const classes = useStyles();
+  const { showToast } = useToast();
+
   const [sort, setSort] = React.useState({
     id: '',
     type: '',
   });
-
-  const [count, setCount] = React.useState();
-
+  const [count, setCount] = React.useState(0);
   const [page, setPage] = React.useState(1);
   const [data, setData] = React.useState([]);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [selectedSignalData, setSelectedSignalData] = React.useState({});
+  const [deleteSignalModalShow, setDeleteSignalModalShow] =
+    React.useState(false);
 
   const handleChangeRowsPerPage = (e) => {
     let config = JSON.parse(sessionStorage.getItem('signals'));
@@ -118,6 +144,24 @@ export default function TradesTable() {
     }
   };
 
+  const handleDeleteSignalButtonClicked = (accountData) => {
+    setSelectedSignalData(accountData);
+    setDeleteSignalModalShow(true);
+  };
+
+  const handleDeleteSignalModalButtonClicked = async () => {
+    try {
+      await api.delete(`/strategy/${selectedSignalData.strategyId}`);
+      showToast('Signal deleted successfully!', 'success');
+      handlePageChange(null, page);
+    } catch (err) {
+      showToast('Signal deletion failed!', 'error');
+      console.log(err);
+    } finally {
+      setDeleteSignalModalShow(false);
+    }
+  };
+
   React.useEffect(() => {
     let config = JSON.parse(sessionStorage.getItem('signals'));
 
@@ -144,7 +188,6 @@ export default function TradesTable() {
       const res = await api.get(
         `/strategy/strategies?page=${page}&pagecount=${pagecount}&sort=${sort}&type=${type}`
       );
-      console.log(res.data.data);
       setData(res.data.data);
       setCount(res.data.count);
     }
@@ -154,6 +197,15 @@ export default function TradesTable() {
 
   return (
     <div>
+      {deleteSignalModalShow && (
+        <DeleteSignalModal
+          deleteSignalModalShow={setDeleteSignalModalShow}
+          selectedSignalName={selectedSignalData.name}
+          handleDeleteSignalModalButtonClicked={
+            handleDeleteSignalModalButtonClicked
+          }
+        />
+      )}
       <Button
         variant="contained"
         size="small"
@@ -271,6 +323,13 @@ export default function TradesTable() {
                       </div>
                     </TableCell>
                   ))}
+                  <TableCell
+                    key={'option'}
+                    align="center"
+                    sx={{
+                      padding: '5px',
+                    }}
+                  ></TableCell>
                 </TableRow>
               </TableHead>
               <TableBody
@@ -286,6 +345,7 @@ export default function TradesTable() {
                   data &&
                     data.length > 0 &&
                     data.map((row) => {
+                      console.log(row);
                       return (
                         <TableRow
                           hover
@@ -307,6 +367,12 @@ export default function TradesTable() {
                               //   value = value.substring(0, 19);
                             } else if (id === 'signal') {
                               value = `${row.name}(${row.strategyId})`;
+                            } else if (
+                              id === 'createdAt' ||
+                              id === 'updatedAt'
+                            ) {
+                              value =
+                                value.substr(0, 10) + ' ' + value.substr(11, 8);
                             }
                             return (
                               <TableCell
@@ -321,6 +387,81 @@ export default function TradesTable() {
                               </TableCell>
                             );
                           })}
+                          <TableCell
+                            key={row.id + 'option'}
+                            align="left"
+                            sx={{
+                              width: '0',
+                              padding: '5px',
+                            }}
+                          >
+                            <div className="flex gap-1">
+                              {/* <IconButton
+                        size="small"
+                        color="inherit"
+                        sx={{
+                          backgroundColor: '#2e7d32',
+                          borderRadius: '4px',
+                          fontSize: 24,
+                          paddingX: '6px',
+                        }}
+                        className={classes.infoButton}
+                      >
+                        <Icon icon="mdi:play" color="white" />
+                      </IconButton> */}
+                              {/* <IconButton
+                                size="small"
+                                color="inherit"
+                                sx={{
+                                  backgroundColor: '#0099E6',
+                                  borderRadius: '4px',
+                                  fontSize: 13,
+                                  paddingX: '11px',
+                                }}
+                                className={classes.infoButton}
+                                onClick={() =>
+                                  handleConfigButtonClicked(row.accountId)
+                                }
+                              >
+                                <Icon icon="fa:cogs" color="white" />
+                              </IconButton> */}
+                              {/* <IconButton
+                        size="small"
+                        color="inherit"
+                        sx={{
+                          backgroundColor: '#0099E6',
+                          borderRadius: '4px',
+                          fontSize: 17,
+                          fontWeight: 800,
+                          paddingX: '9px',
+                        }}
+                        className={classes.infoButton}
+                      >
+                        <Icon icon="tabler:list" color="white" />
+                      </IconButton> */}
+                              <IconButton
+                                size="small"
+                                color="inherit"
+                                sx={{
+                                  backgroundColor: '#D64742',
+                                  borderRadius: '4px',
+                                  fontSize: 13,
+
+                                  padding: '10px 11px!important',
+                                }}
+                                className={classes.infoButton}
+                                onClick={() =>
+                                  handleDeleteSignalButtonClicked({
+                                    name: row.name,
+                                    accountId: row.accountId,
+                                    strategyId: row.strategyId,
+                                  })
+                                }
+                              >
+                                <Icon icon="ion:trash-sharp" color="white" />
+                              </IconButton>
+                            </div>
+                          </TableCell>
                         </TableRow>
                       );
                     })
@@ -328,7 +469,6 @@ export default function TradesTable() {
               </TableBody>
             </Table>
           </TableContainer>
-
           <div className="flex justify-between items-center">
             <Typography sx={{ color: '#ccc', fontSize: 13 }}>
               Showing {rowsPerPage * (page - 1) + 1} to{' '}

@@ -9,7 +9,6 @@ import InputBase from '@mui/material/InputBase';
 import SearchIcon from '@mui/icons-material/Search';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import Typography from '@mui/material/Typography';
-// import InputLabel from '@mui/material/InputLabel';
 import api from '../../utils/api';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
@@ -111,7 +110,6 @@ export default function TradesTable() {
       sessionStorage.setItem('dashboard', JSON.stringify(config));
 
       const { page, pagecount, sort, type } = config.trades;
-      // console.log(page, pagecount, sort, type);
       const res = await api.get(
         `/trade?page=${page}&pagecount=${pagecount}&sort=${sort}&type=${type}`
       );
@@ -157,10 +155,6 @@ export default function TradesTable() {
                   sx={{
                     width: '80px',
                     color: 'white',
-                    // borderColor: 'white!important',
-                    // '&: active': {
-                    //   border: '1px solid black',
-                    // },
                   }}
                 />
               }
@@ -186,7 +180,6 @@ export default function TradesTable() {
       <Paper
         sx={{
           width: '100%',
-          // marginBottom: 10,
           overflow: 'hidden',
           backgroundColor: '#2E353E',
           boxShadow: 'none',
@@ -199,7 +192,6 @@ export default function TradesTable() {
       >
         <TableContainer
           sx={{
-            // maxHeight: 440,
             '.MuiTable-root': {
               borderColor: '#282D36',
               borderWidth: '1px',
@@ -230,7 +222,6 @@ export default function TradesTable() {
                   <TableCell
                     key={id}
                     align="center"
-                    // style={{ minWidth: column.minWidth }}
                     sx={{
                       padding: '5px',
                     }}
@@ -273,16 +264,9 @@ export default function TradesTable() {
                         role="checkbox"
                         tabIndex={-1}
                         key={row.id}
-                        // sx={{
-                        //   '&:last-child td, &:last-child th': {
-                        //     border: 1,
-                        //     borderColor: '#282D36',
-                        //   },
-                        // }}
                       >
                         {headers.map(({ id }) => {
                           let value = row[id];
-                          console.log(value === []);
                           if (id === 'account') {
                             value = `${value[0].name}(${value[0].login})`;
                             // } else if (id === 'openTime') {
@@ -318,7 +302,6 @@ export default function TradesTable() {
             entries
           </Typography>
           <Pagination
-            // className="text-white"
             sx={{
               paddingY: 2,
             }}

@@ -93,7 +93,7 @@ function InfoModal({ setExclamationModalShow }) {
                 width="13"
                 height="13"
                 color="#d2322d"
-                style={{ display: 'inline-block' }}
+                className='inline-block'
               />
               <small className="text-[#ccc]">
                 {' '}

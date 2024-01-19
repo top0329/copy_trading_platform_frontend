@@ -10,7 +10,7 @@ import { styled, alpha } from '@mui/material/styles';
 import InputBase from '@mui/material/InputBase';
 import SearchIcon from '@mui/icons-material/Search';
 import AddIcon from '@mui/icons-material/Add';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import Typography from '@mui/material/Typography';
 // import InputLabel from '@mui/material/InputLabel';
@@ -28,6 +28,8 @@ import Stack from '@mui/material/Stack';
 import PriorityHighIcon from '@mui/icons-material/PriorityHigh';
 import IconButton from '@mui/material/IconButton';
 import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
+import DeleteAccountModal from '../../components/modals/DeleteAccountModal';
+import useToast from '../../hooks/useToast';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -104,17 +106,22 @@ const headers = [
 ];
 
 export default function TradesTable() {
+  const { showToast } = useToast();
+  const navigate = useNavigate();
+
   const [sort, setSort] = React.useState({
     id: '',
     type: '',
   });
-
-  const [count, setCount] = React.useState();
-
+  const [count, setCount] = React.useState(0);
   const [page, setPage] = React.useState(1);
-  const [exclamationModalShow, setExclamationModalShow] = React.useState(false);
+  // const [exclamationModalShow, setExclamationModalShow] = React.useState(false);
+  const [deleteAccountModalShow, setDeleteAccountModalShow] =
+    React.useState(false);
   const [data, setData] = React.useState([]);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [selectedAccountData, setSelectedAccountData] = React.useState({});
+  const [isLoading, setIsLoading] = React.useState(false);
 
   const handleChangeRowsPerPage = (e) => {
     let config = JSON.parse(sessionStorage.getItem('accounts'));
@@ -145,6 +152,30 @@ export default function TradesTable() {
       setCount(res.data.count);
     } catch (e) {
       console.log(e);
+    }
+  };
+
+  const handleConfigButtonClicked = (id) => {
+    navigate(`/accounts/edit/${id}`);
+  };
+
+  const handleDeleteAccountButtonClicked = (accountData) => {
+    setSelectedAccountData(accountData);
+    setDeleteAccountModalShow(true);
+  };
+
+  const handleDeleteAccountModalButtonClicked = async () => {
+    try {
+      setIsLoading(true);
+      await api.delete(`/account/delete/${selectedAccountData.accountId}`);
+      handlePageChange(null, page);
+      showToast('Account deleted successfully!', 'success');
+    } catch (err) {
+      showToast('Account deletion failed!', 'error');
+      console.log(err);
+    } finally {
+      setDeleteAccountModalShow(false);
+      setIsLoading(false);
     }
   };
 
@@ -184,8 +215,18 @@ export default function TradesTable() {
 
   return (
     <div>
-      {exclamationModalShow && (
+      {/* {exclamationModalShow && (
         <InfoModal setExclamationModalShow={setExclamationModalShow} />
+      )} */}
+      {deleteAccountModalShow && (
+        <DeleteAccountModal
+          deleteAccountModalShow={setDeleteAccountModalShow}
+          selectedAccountName={selectedAccountData.accountName}
+          handleDeleteAccountModalButtonClicked={
+            handleDeleteAccountModalButtonClicked
+          }
+          isLoading={isLoading}
+        />
       )}
       <Stack
         direction="row"
@@ -195,7 +236,7 @@ export default function TradesTable() {
         justifyContent={'space-between'}
       >
         <div className="flex gap-2">
-          <IconButton
+          {/* <IconButton
             size="small"
             color="inherit"
             sx={{ backgroundColor: '#2e7d32', borderRadius: '4px' }}
@@ -203,7 +244,7 @@ export default function TradesTable() {
             onClick={() => setExclamationModalShow(true)}
           >
             <PriorityHighIcon fontSize="small" sx={{ color: 'white' }} />
-          </IconButton>
+          </IconButton> */}
 
           <Link to="/accounts/add-account">
             <Button
@@ -361,6 +402,7 @@ export default function TradesTable() {
                   data &&
                     data.length > 0 &&
                     data.map((row) => {
+                      console.log(row)
                       return (
                         <TableRow
                           hover
@@ -377,7 +419,7 @@ export default function TradesTable() {
                           {headers.map(({ id }) => {
                             let value = row[id];
                             if (id === 'copyFactoryRoles') {
-                              console.log(row[id]);
+                              // console.log(row[id]);
                               value = '';
                               row[id].forEach((item) => {
                                 value += item + ', ';
@@ -408,12 +450,12 @@ export default function TradesTable() {
                             key={row.id + 'option'}
                             align="left"
                             sx={{
-                              width: 100,
+                              width: '0',
                               padding: '5px',
                             }}
                           >
                             <div className="flex gap-1">
-                              <IconButton
+                              {/* <IconButton
                                 size="small"
                                 color="inherit"
                                 sx={{
@@ -425,7 +467,7 @@ export default function TradesTable() {
                                 className={classes.infoButton}
                               >
                                 <Icon icon="fa:plug" color="white" />
-                              </IconButton>
+                              </IconButton> */}
                               <IconButton
                                 size="small"
                                 color="inherit"
@@ -436,10 +478,13 @@ export default function TradesTable() {
                                   paddingX: '11px',
                                 }}
                                 className={classes.infoButton}
+                                onClick={() =>
+                                  handleConfigButtonClicked(row.accountId)
+                                }
                               >
                                 <Icon icon="fa:cogs" color="white" />
                               </IconButton>
-                              <IconButton
+                              {/* <IconButton
                                 size="small"
                                 color="inherit"
                                 sx={{
@@ -452,7 +497,7 @@ export default function TradesTable() {
                                 className={classes.infoButton}
                               >
                                 <Icon icon="tabler:list" color="white" />
-                              </IconButton>
+                              </IconButton> */}
                               <IconButton
                                 size="small"
                                 color="inherit"
@@ -464,6 +509,12 @@ export default function TradesTable() {
                                   padding: '10px 11px!important',
                                 }}
                                 className={classes.infoButton}
+                                onClick={() =>
+                                  handleDeleteAccountButtonClicked({
+                                    accountName: `${row.name}(${row.login})`,
+                                    accountId: row.accountId,
+                                  })
+                                }
                               >
                                 <Icon icon="ion:trash-sharp" color="white" />
                               </IconButton>

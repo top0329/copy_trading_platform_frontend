@@ -6,60 +6,13 @@ import IconButton from '@mui/material/IconButton';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import { makeStyles } from '@material-ui/core/styles';
-import { styled, alpha } from '@mui/material/styles';
-import InputBase from '@mui/material/InputBase';
-import SearchIcon from '@mui/icons-material/Search';
+import { useDispatch, useSelector } from 'react-redux';
 
 import DashboardTable from '../components/Tables/DashboardTable';
 import TradesTable from '../components/Tables/TradesTable';
 import HistoryTable from '../components/Tables/HistoryTable';
 import InfoModal from '../components/modals/InfoModal';
 import api from '../utils/api';
-import { useNavigate, useLocation } from 'react-router-dom';
-
-import { useDispatch, useSelector } from 'react-redux';
-
-const Search = styled('div')(({ theme }) => ({
-  position: 'relative',
-  borderRadius: theme.shape.borderRadius,
-  backgroundColor: alpha(theme.palette.common.white, 0.15),
-  '&:hover': {
-    backgroundColor: alpha(theme.palette.common.white, 0.25),
-  },
-  marginLeft: 0,
-  width: '100%',
-  [theme.breakpoints.up('sm')]: {
-    marginLeft: theme.spacing(1),
-    width: 'auto',
-  },
-}));
-
-const SearchIconWrapper = styled('div')(({ theme }) => ({
-  padding: theme.spacing(0, 2),
-  height: '100%',
-  position: 'absolute',
-  pointerEvents: 'none',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-}));
-
-const StyledInputBase = styled(InputBase)(({ theme }) => ({
-  color: 'inherit',
-  '& .MuiInputBase-input': {
-    padding: theme.spacing(1, 1, 1, 0),
-    // vertical padding + font size from searchIcon
-    paddingLeft: `calc(1em + ${theme.spacing(4)})`,
-    transition: theme.transitions.create('width'),
-    width: '100%',
-    [theme.breakpoints.up('sm')]: {
-      width: '12ch',
-      '&:focus': {
-        width: '20ch',
-      },
-    },
-  },
-}));
 
 const useStyles = makeStyles((theme) => ({
   infoButton: {
@@ -81,23 +34,12 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function Dashboard() {
+  const classes = useStyles();
+  
   const [activeTab, setActiveTab] = React.useState(1);
-  const [exclamationModalShow, setExclamationModalShow] = React.useState(false);
-  const [accountData, setAccountData] = React.useState([]);
-  const [intervalId, setIntervalId] = React.useState();
+  // const [exclamationModalShow, setExclamationModalShow] = React.useState(false);
   const dispatch = useDispatch();
   const { ids } = useSelector((state) => state.utils);
-
-  React.useEffect(() => {
-    api
-      .get('/account/all-accounts')
-      .then((res) => {
-        setAccountData(res.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, []);
 
   React.useEffect(() => {
     const _id = setInterval(async () => {
@@ -136,7 +78,7 @@ function Dashboard() {
   }, [ids]);
 
   React.useEffect(() => {
-    let interval = setIntervalId(() => {
+    let interval = setInterval(() => {
       async function fetcher() {
         try {
           await api.put(`/account/update-all-accounts-information`);
@@ -146,24 +88,11 @@ function Dashboard() {
         }
       }
       fetcher();
-    }, 1000 * 60 * 30);
+    }, 1000 * 60 * 5);
 
     return () => {
       clearInterval(interval);
     };
-  }, []);
-
-  React.useEffect(() => {
-    async function test() {
-      try {
-        const res = await api.get('/account/info');
-        console.log(res.data);
-      } catch (err) {
-        console.log(err);
-      }
-    }
-
-    test();
   }, []);
 
   React.useEffect(() => {
@@ -204,8 +133,6 @@ function Dashboard() {
     sessionStorage.setItem('dashboard', JSON.stringify(config));
   };
 
-  const classes = useStyles();
-
   return (
     <div className="w-auto text-[#ccc] pb-[100px]">
       <Stack
@@ -216,7 +143,7 @@ function Dashboard() {
         justifyContent={'space-between'}
       >
         <div className="flex gap-2">
-          <IconButton
+          {/* <IconButton
             size="small"
             color="inherit"
             sx={{ backgroundColor: '#2e7d32', borderRadius: '4px' }}
@@ -227,7 +154,7 @@ function Dashboard() {
           </IconButton>
           {exclamationModalShow && (
             <InfoModal setExclamationModalShow={setExclamationModalShow} />
-          )}
+          )} */}
           <Button
             className={classes.button}
             variant="contained"

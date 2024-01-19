@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react';
 import api from '../utils/api';
 import { jwtDecode } from 'jwt-decode';
 import setAuthToken from '../utils/setAuthToken';
+import { useNavigate } from 'react-router-dom';
 
 export const AuthContext = createContext({
   isAuthenticated: false,
@@ -29,6 +30,7 @@ const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isInitialized, setIsInitialized] = useState(false);
   const [user, setUser] = useState({});
+  const navigate = useNavigate();
 
   useEffect(() => {
     const init = async () => {
@@ -44,9 +46,6 @@ const AuthProvider = ({ children }) => {
         } else {
           setIsAuthenticated(false);
           setUser({});
-          // dispatch({
-          //   type: LOGOUT,
-          // });
         }
       } catch (err) {
         console.log(err);
@@ -64,19 +63,21 @@ const AuthProvider = ({ children }) => {
     setAuthToken();
   };
 
-  const login = (data) =>
-    new Promise((resolve, reject) => {
-      api
-        .post('/users/login', data)
-        .then((res) => {
-          console.log(res.data);
+  const login = (data) => new Promise((resolve, reject) => {
+    api
+      .post('/users/login', data)
+      .then((res) => {
+        if(!res.data.token) {
+          navigate('/email-verification-page-for-login');
+        } else {
           setAuthToken(res.data.token);
           setUser(res.data.user);
           setIsAuthenticated(true);
           resolve();
-        })
-        .catch((err) => reject(err));
-    });
+        }
+      })
+      .catch((err) => reject(err));
+  });
 
   return (
     <AuthContext.Provider

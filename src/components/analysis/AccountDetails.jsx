@@ -1,13 +1,4 @@
 import * as React from 'react';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TablePagination from '@mui/material/TablePagination';
-import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
-import { Icon } from '@iconify/react';
 
 const AccountDetails = ({ data }) => {
   const _renderGrowth = (data) => {
@@ -42,8 +33,14 @@ const AccountDetails = ({ data }) => {
         </p>
         <p className="text-[12px] text-white">Growth</p>
         <p className="text-[#47A447] text-[18px] font-[700]">
-          {Object.keys(data).length > 0 && _renderGrowth(data.profit)}{' '}
-          <small>%</small>
+          {Object.keys(data).length > 0 &&
+            (isNaN(_renderGrowth(data.profit)) ? (
+              <p>No Data</p>
+            ) : (
+              <React.Fragment>
+                {_renderGrowth(data.profit)}<small>%</small>
+              </React.Fragment>
+            ))}{' '}
         </p>
         <p className="text-[12px] text-white mt-[5px]">Profit/Loss</p>
         <p className="text-white text-[18px] font-[700]">

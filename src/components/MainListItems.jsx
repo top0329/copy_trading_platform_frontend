@@ -48,7 +48,7 @@ function MainListItems({ open }) {
       <Link className="flex flex-row" to={'/dashboard'}>
         <ListItemButton>
           <ListItemIcon>
-            <SpeedIcon style={{ color: '#CCC' }} />
+            <SpeedIcon sx={{ color: '#CCC' }} />
           </ListItemIcon>
           <ListItemText primary="Dashboard" />
         </ListItemButton>
@@ -56,14 +56,14 @@ function MainListItems({ open }) {
       <Link className="flex flex-row" to={'/signals'}>
         <ListItemButton>
           <ListItemIcon>
-            <SignalCellularAltIcon style={{ color: '#CCC' }} />
+            <SignalCellularAltIcon sx={{ color: '#CCC' }} />
           </ListItemIcon>
           <ListItemText primary="Signals" />
         </ListItemButton>
       </Link>
       <ListItemButton onClick={handleConfiguratorClick}>
         <ListItemIcon>
-          <SettingsSuggestIcon style={{ color: '#CCC' }} />
+          <SettingsSuggestIcon sx={{ color: '#CCC' }} />
         </ListItemIcon>
         <ListItemText primary="Configurator" />
         {openConfigurator ? <ExpandLess /> : <ExpandMore />}
@@ -112,30 +112,30 @@ function MainListItems({ open }) {
       <Link className="flex flex-row" to={'/analysis'}>
         <ListItemButton>
           <ListItemIcon>
-            <SearchIcon style={{ color: '#CCC' }} />
+            <SearchIcon sx={{ color: '#CCC' }} />
           </ListItemIcon>
           <ListItemText primary="Analysis" />
         </ListItemButton>
       </Link>
-      {/* <Link className="flex flex-row" to={'/signal-followers'}>
+      <Link className="flex flex-row" to={'/signal-followers'}>
         <ListItemButton>
           <ListItemIcon>
-            <ForwardRoundedIcon style={{ color: '#CCC' }} />
+            <ForwardRoundedIcon sx={{ color: '#CCC' }} />
           </ListItemIcon>
           <ListItemText primary="Signal Followers" />
         </ListItemButton>
-      </Link> */}
+      </Link>
       <Link className="flex flex-row" to={'/signal-provider'}>
         <ListItemButton>
           <ListItemIcon>
-            <SwapHorizRoundedIcon style={{ color: '#CCC' }} />
+            <SwapHorizRoundedIcon sx={{ color: '#CCC' }} />
           </ListItemIcon>
           <ListItemText primary="Signal Provider" />
         </ListItemButton>
       </Link>
       <ListItemButton onClick={handleHelpCenterClick}>
         <ListItemIcon>
-          <LayersIcon style={{ color: '#CCC' }} />
+          <LayersIcon sx={{ color: '#CCC' }} />
         </ListItemIcon>
         <ListItemText primary="Help Center" />
         {openHelpCenter ? <ExpandLess /> : <ExpandMore />}

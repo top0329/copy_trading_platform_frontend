@@ -82,6 +82,7 @@ function AddAccount() {
         setIsLoading(true);
         const result = await api.post('/account/register-account', values);
         showToast('Account created successfully!', 'success');
+        console.log(result.data.AccountRegister);
 
         dispatch({
           type: 'ADD_ID',
@@ -100,7 +101,7 @@ function AddAccount() {
 
   return (
     <div>
-      <div style={{ padding: '0px 200px' }}>
+      <div className="py-0 px-[200px]">
         <div className="pb-3">
           <Link
             to={'/accounts'}
@@ -113,61 +114,21 @@ function AddAccount() {
             <h1 className="text-white text-lg pl-2"> Accounts</h1>
           </Link>
         </div>
-        <div
-          className="mb-[20px] rounded bg-[#282D36]"
-          style={{ color: 'white' }}
-        >
+        <div className="mb-[20px] rounded bg-[#282D36] text-white">
           <header className="p-[18px]">
             <h2 className="mt-[5px] text-[20px] font-normal">Add Account</h2>
           </header>
-          <div
-            className="p-[15px] bg-[#2E353E]"
-            style={{ boxSizing: 'border-box' }}
-          >
-            <div
-              style={{
-                borderBottom: '1px solid #242830',
-                paddingBottom: '15px',
-                marginBottom: '15px',
-                display: 'flex',
-                justifyContent: 'start',
-              }}
-            >
-              <label
-                className="text-[#ccc] text-[13px]"
-                style={{
-                  textAlign: 'right',
-                  width: '25%',
-                  paddingTop: '7px',
-                  paddingRight: '15px',
-                  paddingLeft: '15px',
-                  display: 'inline-block',
-                  position: 'relative',
-                  maxWidth: '100%',
-                }}
-              >
+          <div className="p-[15px] bg-[#2E353E] box-border">
+            <div className="border-b-[1px] border-[#242830] pb-[15px] mb-[15px] flex justify-start">
+              <label className="text-[#ccc] text-[13px] text-right w-1/4 pt-[7px] px-[15px] inline-block relative max-w-full">
                 Login
               </label>
-              <div
-                style={{
-                  width: '50%',
-                  paddingLeft: '15px',
-                  paddingRight: '15px',
-                }}
-              >
+              <div className="w-1/2 px-[15px]">
                 <input
                   name="login"
                   type="text"
                   required
-                  className="bg-[#282d36] text-[#fff] px-3 py-1.5 rounded"
-                  style={{
-                    display: 'block',
-                    width: '100%',
-                    height: '34px',
-                    padding: '6px 12px',
-                    fontSize: '14px',
-                    borderRadius: '4px',
-                  }}
+                  className="bg-[#282d36] text-[#fff] px-3 py-1.5 rounded block w-full h-[34px] text-sm"
                   onChange={handleInputChange}
                 />
                 {values.login == '' && createButtonClicked && (
@@ -177,50 +138,16 @@ function AddAccount() {
                 )}
               </div>
             </div>
-            <div
-              style={{
-                borderBottom: '1px solid #242830',
-                paddingBottom: '15px',
-                marginBottom: '15px',
-                display: 'flex',
-                justifyContent: 'start',
-              }}
-            >
-              <label
-                className="text-[#ccc] text-[13px]"
-                style={{
-                  textAlign: 'right',
-                  width: '25%',
-                  paddingTop: '7px',
-                  paddingRight: '15px',
-                  paddingLeft: '15px',
-                  display: 'inline-block',
-                  position: 'relative',
-                  maxWidth: '100%',
-                }}
-              >
+            <div className="flex justify-start mb-[15px] pb-[15px] border-b-[1px] border-[#242830]">
+              <label className="text-[#ccc] text-[13px] text-right w-1/4 pt-[7px] px-[15px] inline-block relative max-w-full">
                 Password
               </label>
-              <div
-                style={{
-                  width: '50%',
-                  paddingLeft: '15px',
-                  paddingRight: '15px',
-                }}
-              >
+              <div className="w-1/2 px-[15px]">
                 <input
                   name="password"
                   type="password"
                   required
-                  className="bg-[#282d36] text-[#fff] px-3 py-1.5 rounded"
-                  style={{
-                    display: 'block',
-                    width: '100%',
-                    height: '34px',
-                    padding: '6px 12px',
-                    fontSize: '14px',
-                    borderRadius: '4px',
-                  }}
+                  className="block bg-[#282d36] text-[#fff] px-3 py-1.5 rounded w-full h-[34px] text-sm"
                   onChange={handleInputChange}
                 />
                 {values.password == '' && createButtonClicked && (
@@ -230,51 +157,17 @@ function AddAccount() {
                 )}
               </div>
             </div>
-            <div
-              style={{
-                borderBottom: '1px solid #242830',
-                paddingBottom: '15px',
-                marginBottom: '15px',
-                display: 'flex',
-                justifyContent: 'start',
-              }}
-            >
-              <label
-                className="text-[#ccc] text-[13px]"
-                style={{
-                  textAlign: 'right',
-                  width: '25%',
-                  paddingTop: '7px',
-                  paddingRight: '15px',
-                  paddingLeft: '15px',
-                  display: 'inline-block',
-                  position: 'relative',
-                  maxWidth: '100%',
-                }}
-              >
+            <div className="flex justify-start pb-[15px] mb-[15px] border-b-[1px] border-[#242830]">
+              <label className="text-[#ccc] text-[13px] text-right w-1/4 pt-[7px] px-[15px] inline-block relative max-w-full">
                 Name
               </label>
-              <div
-                style={{
-                  width: '50%',
-                  paddingLeft: '15px',
-                  paddingRight: '15px',
-                }}
-              >
+              <div className="w-1/2 px-[15px]">
                 <input
                   name="name"
                   type="text"
                   required
                   minLength={2}
-                  className="bg-[#282d36] text-[#fff] px-3 py-1.5 rounded"
-                  style={{
-                    display: 'block',
-                    width: '100%',
-                    height: '34px',
-                    padding: '6px 12px',
-                    fontSize: '14px',
-                    borderRadius: '4px',
-                  }}
+                  className="block bg-[#282d36] text-[#fff] px-3 py-1.5 rounded w-full h-[34px] text-sm"
                   onChange={handleInputChange}
                 />
                 {values.name == '' && createButtonClicked && (
@@ -284,50 +177,16 @@ function AddAccount() {
                 )}
               </div>
             </div>
-            <div
-              style={{
-                borderBottom: '1px solid #242830',
-                paddingBottom: '15px',
-                marginBottom: '15px',
-                display: 'flex',
-                justifyContent: 'start',
-              }}
-            >
-              <label
-                className="text-[#ccc] text-[13px]"
-                style={{
-                  textAlign: 'right',
-                  width: '25%',
-                  paddingTop: '7px',
-                  paddingRight: '15px',
-                  paddingLeft: '15px',
-                  display: 'inline-block',
-                  position: 'relative',
-                  maxWidth: '100%',
-                }}
-              >
+            <div className="flex justify-start pb-[15px] mb-[15px] border-b-[1px] border-[#242830]">
+              <label className="text-[#ccc] text-[13px] text-right w-1/4 pt-[7px] px-[15px] inline-block relative max-w-full">
                 Server
               </label>
-              <div
-                style={{
-                  width: '50%',
-                  paddingLeft: '15px',
-                  paddingRight: '15px',
-                }}
-              >
+              <div className="w-1/2 px-[15px]">
                 <input
                   name="server"
                   type="text"
                   required
-                  className="bg-[#282d36] text-[#fff] px-3 py-1.5 rounded"
-                  style={{
-                    display: 'block',
-                    width: '100%',
-                    height: '34px',
-                    padding: '6px 12px',
-                    fontSize: '14px',
-                    borderRadius: '4px',
-                  }}
+                  className="block bg-[#282d36] text-[#fff] px-3 py-1.5 rounded w-full h-[34px] text-sm"
                   onChange={handleInputChange}
                 />
                 {values.server == '' && createButtonClicked && (
@@ -337,49 +196,15 @@ function AddAccount() {
                 )}
               </div>
             </div>
-            <div
-              style={{
-                borderBottom: '1px solid #242830',
-                paddingBottom: '15px',
-                marginBottom: '15px',
-                display: 'flex',
-                justifyContent: 'start',
-              }}
-            >
-              <label
-                className="text-[#ccc] text-[13px]"
-                style={{
-                  textAlign: 'right',
-                  width: '25%',
-                  paddingTop: '7px',
-                  paddingRight: '15px',
-                  paddingLeft: '15px',
-                  display: 'inline-block',
-                  position: 'relative',
-                  maxWidth: '100%',
-                }}
-              >
+            <div className="flex justify-start pb-[15px] mb-[15px] border-b-[1px] border-[#242830]">
+              <label className="text-[#ccc] text-[13px] text-right w-1/4 pt-[7px] px-[15px] inline-block relative max-w-full">
                 Platform
               </label>
-              <div
-                style={{
-                  width: '50%',
-                  paddingLeft: '15px',
-                  paddingRight: '15px',
-                }}
-              >
+              <div className="w-1/2 px-[15px]">
                 <select
                   name="platform"
                   required
-                  className="bg-[#282d36] text-[#fff] px-3 py-1.5 rounded"
-                  style={{
-                    display: 'block',
-                    width: '100%',
-                    height: '34px',
-                    padding: '6px 12px',
-                    fontSize: '14px',
-                    borderRadius: '4px',
-                  }}
+                  className="block bg-[#282d36] text-[#fff] px-3 py-1.5 rounded w-full h-[34px] text-sm"
                   onChange={handleInputChange}
                 >
                   <option value="" disabled selected className="hidden">
@@ -395,37 +220,11 @@ function AddAccount() {
                 )}
               </div>
             </div>
-            <div
-              style={{
-                borderBottom: '1px solid #242830',
-                paddingBottom: '15px',
-                marginBottom: '15px',
-                display: 'flex',
-                justifyContent: 'start',
-              }}
-            >
-              <label
-                className="text-[#ccc] text-[13px]"
-                style={{
-                  textAlign: 'right',
-                  width: '25%',
-                  paddingTop: '7px',
-                  paddingRight: '15px',
-                  paddingLeft: '15px',
-                  display: 'inline-block',
-                  position: 'relative',
-                  maxWidth: '100%',
-                }}
-              >
+            <div className="flex justify-start">
+              <label className="text-[#ccc] text-[13px] text-right w-1/4 pt-[7px] px-[15px] inline-block relative max-w-full">
                 CopyFactoryRoles
               </label>
-              <div
-                style={{
-                  width: '50%',
-                  paddingLeft: '15px',
-                  paddingRight: '15px',
-                }}
-              >
+              <div className="w-1/2 px-[15px]">
                 <div className="flex items-center gap-3 pt-[7px]">
                   <div className="flex items-center">
                     <input
@@ -437,18 +236,7 @@ function AddAccount() {
                         setIsSubscriberChecked(!isSubscriberChecked)
                       }
                     />
-                    <label
-                      className="text-[#ccc] text-[13px]"
-                      style={{
-                        textAlign: 'right',
-                        width: '25%',
-                        paddingRight: '15px',
-                        paddingLeft: '5px',
-                        display: 'inline-block',
-                        position: 'relative',
-                        maxWidth: '100%',
-                      }}
-                    >
+                    <label className="inline-block text-right w-1/4 pr-[15px] pl-[5px] relative max-w-full text-[#ccc] text-[13px]">
                       Subscriber
                     </label>
                   </div>
@@ -460,18 +248,7 @@ function AddAccount() {
                       className="bg-[#282d36] text-[#fff] px-3 py-1.5 rounded w-4"
                       onChange={() => setIsProviderChecked(!isProviderChecked)}
                     />
-                    <label
-                      className="text-[#ccc] text-[13px]"
-                      style={{
-                        textAlign: 'right',
-                        width: '25%',
-                        paddingRight: '15px',
-                        paddingLeft: '5px',
-                        display: 'inline-block',
-                        position: 'relative',
-                        maxWidth: '100%',
-                      }}
-                    >
+                    <label className="inline-block text-right w-1/4 pr-[15px] pl-[5px] relative max-w-full text-[#ccc] text-[13px]">
                       Provider
                     </label>
                   </div>

@@ -9,7 +9,6 @@ import InputBase from '@mui/material/InputBase';
 import SearchIcon from '@mui/icons-material/Search';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import Typography from '@mui/material/Typography';
-// import InputLabel from '@mui/material/InputLabel';
 import api from '../../utils/api';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
@@ -114,7 +113,6 @@ export default function HistoryTable() {
       sessionStorage.setItem('dashboard', JSON.stringify(config));
 
       const { page, pagecount, sort, type } = config.history;
-      // console.log(page, pagecount, sort, type);
       const res = await api.get(
         `/history?page=${page}&pagecount=${pagecount}&sort=${sort}&type=${type}`
       );
@@ -160,10 +158,6 @@ export default function HistoryTable() {
                   sx={{
                     width: '80px',
                     color: 'white',
-                    // borderColor: 'white!important',
-                    // '&: active': {
-                    //   border: '1px solid black',
-                    // },
                   }}
                 />
               }
@@ -189,7 +183,6 @@ export default function HistoryTable() {
       <Paper
         sx={{
           width: '100%',
-          // marginBottom: 10,
           overflow: 'hidden',
           backgroundColor: '#2E353E',
           boxShadow: 'none',
@@ -202,7 +195,6 @@ export default function HistoryTable() {
       >
         <TableContainer
           sx={{
-            // maxHeight: 440,
             '.MuiTable-root': {
               borderColor: '#282D36',
               borderWidth: '1px',
@@ -233,7 +225,6 @@ export default function HistoryTable() {
                   <TableCell
                     key={id}
                     align="center"
-                    // style={{ minWidth: column.minWidth }}
                     sx={{
                       padding: '5px',
                     }}
@@ -267,7 +258,6 @@ export default function HistoryTable() {
               }}
             >
               {
-                // .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 data &&
                   data.map((row) => {
                     return (
@@ -276,17 +266,9 @@ export default function HistoryTable() {
                         role="checkbox"
                         tabIndex={-1}
                         key={row.id}
-                        // sx={{
-                        //   '&:last-child td, &:last-child th': {
-                        //     border: 1,
-                        //     borderColor: '#282D36',
-                        //   },
-                        // }}
                       >
                         {headers.map(({ id }) => {
                           let value = row[id];
-                          // console.log(value)
-                          // console.log(row)
                           if (id === 'account') {
                             value = `${value[0].name}(${value[0].login})`;
                             // } else if (id === 'openTime') {
@@ -322,7 +304,6 @@ export default function HistoryTable() {
             entries
           </Typography>
           <Pagination
-            // className="text-white"
             sx={{
               paddingY: 2,
             }}

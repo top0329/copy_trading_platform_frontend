@@ -9,7 +9,6 @@ import InputBase from '@mui/material/InputBase';
 import SearchIcon from '@mui/icons-material/Search';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import Typography from '@mui/material/Typography';
-// import InputLabel from '@mui/material/InputLabel';
 import api from '../../utils/api';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
@@ -215,10 +214,6 @@ export default function TradesTable() {
                   sx={{
                     width: '80px',
                     color: 'white',
-                    // borderColor: 'white!important',
-                    // '&: active': {
-                    //   border: '1px solid black',
-                    // },
                   }}
                 />
               }
@@ -244,7 +239,6 @@ export default function TradesTable() {
       <Paper
         sx={{
           width: '100%',
-          // marginBottom: 10,
           overflow: 'hidden',
           backgroundColor: '#2E353E',
           boxShadow: 'none',
@@ -257,7 +251,6 @@ export default function TradesTable() {
       >
         <TableContainer
           sx={{
-            // maxHeight: 440,
             '.MuiTable-root': {
               borderColor: '#282D36',
               borderWidth: '1px',
@@ -288,14 +281,13 @@ export default function TradesTable() {
                   <TableCell
                     key={id}
                     align="center"
-                    // style={{ minWidth: column.minWidth }}
                     sx={{
                       padding: '5px',
                     }}
                   >
                     <div className="flex items-center justify-between p-[3px]">
                       {label}
-                      <div className="flex flex-col width={11} cursor-pointer">
+                      <div className="flex flex-col cursor-pointer">
                         <Icon
                           icon="teenyicons:up-solid"
                           color="#ccc"
@@ -314,7 +306,6 @@ export default function TradesTable() {
                 <TableCell
                   key={'ccc'}
                   align="center"
-                  // style={{ minWidth: column.minWidth }}
                   sx={{
                     padding: '5px',
                   }}
@@ -330,7 +321,6 @@ export default function TradesTable() {
               }}
             >
               {
-                // .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 data &&
                   data.map((row) => {
                     return (
@@ -339,12 +329,6 @@ export default function TradesTable() {
                         role="checkbox"
                         tabIndex={-1}
                         key={row.id}
-                        // sx={{
-                        //   '&:last-child td, &:last-child th': {
-                        //     border: 1,
-                        //     borderColor: '#282D36',
-                        //   },
-                        // }}
                       >
                         {headers.map(({ id }) => {
                           const { day, week, month } = _calcProfitByDate(
@@ -412,7 +396,6 @@ export default function TradesTable() {
             entries
           </Typography>
           <Pagination
-            // className="text-white"
             sx={{
               paddingY: 2,
             }}

@@ -17,6 +17,7 @@ import useAuth from '../hooks/useAuth';
 // import Orders from './Orders';
 import Header from '../components/Header';
 import { Outlet } from 'react-router-dom';
+import coreRoutes from '../routes/CoreRoutes';
 
 const drawerWidth = 240;
 
@@ -122,7 +123,7 @@ const DefaultLayout = () => {
                       noWrap
                       sx={{ flexGrow: 1 }}
                     >
-                      Dashboard
+                      {coreRoutes.children[0].title}
                     </Typography>
                     <Button
                       variant="contained"
@@ -183,7 +184,7 @@ const DefaultLayout = () => {
                         ? theme.palette.grey[100]
                         : theme.palette.grey[900],
                     flexGrow: 1,
-                    // overflowY: scroll,
+                    overflowY: 'scroll',
                     height: '100vh',
                     // maxWidth: '100%',
                     // overflow: 'unset',

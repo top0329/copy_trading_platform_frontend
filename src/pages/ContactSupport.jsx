@@ -6,7 +6,7 @@ import Button from '@mui/material/Button';
 function ContactSupport() {
   return (
     <div>
-      <div style={{ padding: '0px 200px' }}>
+      <div className="py-0 px-[200px]">
         <Paper
           elevation={0}
           sx={{
@@ -18,141 +18,58 @@ function ContactSupport() {
           }}
         >
           <HelpIcon fontSize="5px" />
-          <strong
-            style={{
-              paddingLeft: '2px',
-              fontWeight: 'bold',
-              boxSizing: 'border-box',
-              fontSize: '13px',
-            }}
-          >
+          <strong className="pl-[2px] font-bold box-border text-[13px]">
             {' '}
             Have you read our{' '}
-            <Link to={'/knowledgebase'} style={{ color: '#0088cc' }}>
+            <Link to={'/knowledge-base'} className="text-[#0088cc]">
               knowledge base?
             </Link>
           </strong>
-          <p
-            style={{ paddingLeft: '25px', fontSize: '13px', color: '#31708f' }}
-          >
+          <p className="pl-[25px] text-[13px] text-[#31708f]">
             With our{' '}
-            <Link to={'/knowledgebase'} style={{ color: '#0088cc' }}>
+            <Link to={'/knowledge-base'} className="text-[#0088cc]">
               knowledge base
             </Link>{' '}
             you can get an in-depth explanation on all the features and
             functionality of the platform including copier risk settings and
             more{' '}
-            <Link to={'/knowledgebase'} style={{ color: '#0088cc' }}>
+            <Link to={'/knowledge-base'} className="text-[#0088cc]">
               here
             </Link>
             .
           </p>
         </Paper>
         <div>
-          <section
-            className="mb-[20px] rounded bg-[#282D36]"
-            style={{ color: 'white' }}
-          >
+          <section className="mb-[20px] rounded bg-[#282D36] text-white">
             <header className="p-[18px]">
               <h2 className="mt-[5px] text-[20px] font-normal">
                 Contact Support
               </h2>
             </header>
-            <div
-              className="p-[15px] bg-[#2E353E]"
-              style={{ boxSizing: 'border-box' }}
-            >
-              <div
-                style={{
-                  borderBottom: '1px solid #242830',
-                  paddingBottom: '15px',
-                  marginBottom: '15px',
-                  display: 'flex',
-                  justifyContent: 'start',
-                }}
-              >
-                <label
-                  className="text-[#ccc] text-[13px]"
-                  style={{
-                    textAlign: 'right',
-                    width: '25%',
-                    paddingTop: '7px',
-                    paddingRight: '15px',
-                    paddingLeft: '15px',
-                    display: 'inline-block',
-                    position: 'relative',
-                    maxWidth: '100%',
-                  }}
-                >
+            <div className="box-border p-[15px] bg-[#2E353E]">
+              <div className="flex justify-start border-b-[1px] border-[#242830] pb-[15px] mb-[15px]">
+                <label className="inline-block relative max-w-full text-right w-1/4 pt-[7px] px-[15px] text-[#ccc] text-[13px]">
                   Subject
                 </label>
-                <div
-                  style={{
-                    width: '50%',
-                    paddingLeft: '15px',
-                    paddingRight: '15px',
-                  }}
-                >
+                <div className="w-1/2 px-[15px]">
                   <input
                     name="subject"
                     type="text"
                     required
                     minLength={6}
-                    className="bg-[#282d36] text-[#fff] px-3 py-1.5 rounded"
-                    style={{
-                      display: 'block',
-                      width: '100%',
-                      height: '34px',
-                      padding: '6px 12px',
-                      fontSize: '14px',
-                      borderRadius: '4px',
-                    }}
+                    className="block w-full h-[34px] text-sm bg-[#282d36] text-[#fff] px-3 py-1.5 rounded"
                   />
                 </div>
               </div>
-              <div
-                style={{
-                  borderBottom: '1px solid #242830',
-                  paddingBottom: '15px',
-                  marginBottom: '15px',
-                  display: 'flex',
-                  justifyContent: 'start',
-                }}
-              >
-                <label
-                  className="text-[#ccc] text-[13px]"
-                  style={{
-                    textAlign: 'right',
-                    width: '25%',
-                    paddingTop: '7px',
-                    paddingRight: '15px',
-                    paddingLeft: '15px',
-                    display: 'inline-block',
-                    position: 'relative',
-                    maxWidth: '100%',
-                  }}
-                >
+              <div className="flex justify-start border-b-[1px] border-[#242830] pb-[15px] mb-[15px]">
+                <label className="inline-block relative max-w-full text-right w-1/4 pt-[7px] px-[15px] text-[#ccc] text-[13px]">
                   Department
                 </label>
-                <div
-                  style={{
-                    width: '50%',
-                    paddingLeft: '15px',
-                    paddingRight: '15px',
-                  }}
-                >
+                <div className="w-1/2 px-[15px]">
                   <select
                     name="department"
                     required
-                    className="bg-[#282d36] text-[#fff] px-3 py-1.5 rounded"
-                    style={{
-                      display: 'block',
-                      width: '100%',
-                      height: '34px',
-                      padding: '6px 12px',
-                      fontSize: '14px',
-                      borderRadius: '4px',
-                    }}
+                    className="block w-full h-[34px] text-sm bg-[#282d36] text-[#fff] px-3 py-1.5 rounded"
                   >
                     <option value={'General'}>General</option>
                     <option value={'Technical'}>Technical</option>
@@ -160,48 +77,17 @@ function ContactSupport() {
                   </select>
                 </div>
               </div>
-              <div
-                style={{
-                  display: 'flex',
-                  justifyContent: 'start',
-                }}
-              >
-                <label
-                  className="text-[#ccc] text-[13px]"
-                  style={{
-                    textAlign: 'right',
-                    width: '25%',
-                    paddingTop: '7px',
-                    paddingRight: '15px',
-                    paddingLeft: '15px',
-                    display: 'inline-block',
-                    position: 'relative',
-                    maxWidth: '100%',
-                  }}
-                >
+              <div className="flex justify-start">
+                <label className="inline-block relative max-w-full text-right w-1/4 pt-[7px] px-[15px] text-[#ccc] text-[13px]">
                   Message
                 </label>
-                <div
-                  style={{
-                    width: '50%',
-                    paddingLeft: '15px',
-                    paddingRight: '15px',
-                  }}
-                >
+                <div className="w-1/2 px-[15px]">
                   <textarea
                     name="message"
                     rows={8}
                     required
                     minLength={6}
-                    className="bg-[#282d36] text-[#fff] px-3 py-1.5 rounded"
-                    style={{
-                      display: 'block',
-                      width: '100%',
-                      height: 'auto',
-                      padding: '6px 12px',
-                      fontSize: '14px',
-                      borderRadius: '4px',
-                    }}
+                    className="block w-full h-auto text-sm bg-[#282d36] text-[#fff] px-3 py-1.5 rounded"
                   />
                 </div>
               </div>

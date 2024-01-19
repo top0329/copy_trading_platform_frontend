@@ -1,10 +1,20 @@
 import Root from '../pages/root';
 import Login from '../pages/login';
 import SignUp from '../pages/SignUp';
+import EmailVerify from '../pages/EmailVerification/EmailVerify';
+import EmailVerificationPageForLogin from '../pages/EmailVerification/EmailVerificationPageForLogin';
+import EmailVerificationPageForSignUp from '../pages/EmailVerification/EmailVerificationPageForSignUp';
+import ForgotPassword from '../pages/EmailVerification/ForgotPassword';
+import ResetPassword from '../pages/EmailVerification/ResetPassword';
+import Error404 from '../pages/Maintenance/Error404';
 
 const CommonRoutes = {
   path: '/',
   children: [
+    {
+      path: '*',
+      element: <Error404 />,
+    },
     {
       path: '/auth/login',
       element: <Login />,
@@ -16,6 +26,26 @@ const CommonRoutes = {
     {
       path: '/',
       element: <Root />,
+    },
+    {
+      path: '/auth/verify-email/:token',
+      element: <EmailVerify />,
+    },
+    {
+      path: '/email-verification-page-for-login',
+      element: <EmailVerificationPageForLogin />,
+    },
+    {
+      path: '/email-verification-page-for-signup',
+      element: <EmailVerificationPageForSignUp />,
+    },
+    {
+      path: '/forgot-password',
+      element: <ForgotPassword />,
+    },
+    {
+      path: '/reset-password/:token',
+      element: <ResetPassword />,
     },
   ],
 };

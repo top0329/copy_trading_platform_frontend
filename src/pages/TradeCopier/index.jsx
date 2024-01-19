@@ -5,36 +5,31 @@ import TableCell from '@mui/material/TableCell';
 import Button from '@mui/material/Button';
 import TableContainer from '@mui/material/TableContainer';
 import AddIcon from '@mui/icons-material/Add';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
-
 import TableHead from '@mui/material/TableHead';
 import { styled, alpha } from '@mui/material/styles';
 import Stack from '@mui/material/Stack';
-
 import Accordion from '@mui/material/Accordion';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import Typography from '@mui/material/Typography';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-
 import InputBase from '@mui/material/InputBase';
 import SearchIcon from '@mui/icons-material/Search';
 import OutlinedInput from '@mui/material/OutlinedInput';
-// import InputLabel from '@mui/material/InputLabel';
 import api from '../../utils/api';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
-
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { Icon } from '@iconify/react';
 import Pagination from '@mui/material/Pagination';
-import CreditCardIcon from '@mui/icons-material/CreditCard';
-
 import IconButton from '@mui/material/IconButton';
+import DeleteTradeCopierModal from '../../components/modals/DeleteTradeCopierModal';
+import useToast from '../../hooks/useToast';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -110,14 +105,18 @@ const headers = [
 ];
 
 export default function TradesTable() {
+  const { showToast } = useToast();
+  const navigate = useNavigate();
+
+  const classes = useStyles();
+
   const [sort, setSort] = React.useState({
     id: '',
     type: '',
   });
 
-  const classes = useStyles();
 
-  const [count, setCount] = React.useState();
+  const [count, setCount] = React.useState(0);
   const [id, setId] = React.useState(null);
 
   const [page, setPage] = React.useState(1);
@@ -130,12 +129,20 @@ export default function TradesTable() {
    * define sub data
    */
   const [subPage, setSubPage] = React.useState(1);
-  const [subCount, setSubCount] = React.useState();
+  const [subCount, setSubCount] = React.useState(0);
   const [subData, setSubData] = React.useState([]);
+  const [deleteTradeCopierModalShow, setDeleteTradeCopierModalShow] = React.useState(false);
+  const [selectedTradeCopierData, setSelectedTradeCopierData] = React.useState({});
+  React.useState(false);
+  const [isLoading, setIsLoading] = React.useState(false);
 
   const handleChange = (panel, id) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
     setId(id);
+  };
+
+  const handleConfigButtonClicked = (subscriberId, strategyId) => {
+    navigate(`/trade-copier/edit/${subscriberId}/${strategyId}`);
   };
 
   const handleChangeRowsPerPage = (e) => {
@@ -157,7 +164,6 @@ export default function TradesTable() {
       sessionStorage.setItem('tradeCopier', JSON.stringify(config));
 
       const { page, pagecount, sort, type } = config;
-      console.log(page, pagecount, sort, type);
       const res = await api.get(
         `/strategy/strategies?page=${page}&pagecount=${pagecount}&sort=${sort}&type=${type}`
       );
@@ -180,6 +186,27 @@ export default function TradesTable() {
     } catch (e) {
       console.log(e);
     }
+  };
+
+  const handleDeleteAccountModalButtonClicked = async () => {
+    try {
+      setIsLoading(true);
+      await api.delete(`/subscriber/${selectedTradeCopierData.subscriberId}`);
+      handlePageChange(null, page);
+      handleSubPageChange(null, subPage);
+      showToast('Account deleted successfully!', 'success');
+    } catch (err) {
+      showToast('Account deletion failed!', 'error');
+      console.log(err);
+    } finally {
+      setDeleteTradeCopierModalShow(false);
+      setIsLoading(false);
+    }
+  };
+
+  const handleDeleteTradeCopierButtonClicked = (accountData) => {
+    setSelectedTradeCopierData(accountData);
+    setDeleteTradeCopierModalShow(true);
   };
 
   React.useEffect(() => {
@@ -219,14 +246,14 @@ export default function TradesTable() {
 
   React.useEffect(() => {
     // if (!id) return;
-    console.log(id);
+    // console.log(id);
 
     async function fetchData() {
       const res = await api.get(
         `/strategy/strategies-subscribers/${id}?page=${subPage}&pagecount=${10}&sort=${''}&type=${''}`
       );
 
-      console.log(res.data);
+      // console.log(res.data);
       setSubData(res.data.data);
       setSubCount(res.data.count);
     }
@@ -234,8 +261,18 @@ export default function TradesTable() {
     fetchData();
   }, [id]);
 
-  const _renderTable = () => (
+  const _renderTable = (strategyName, strategyId) => (
     <div>
+      {deleteTradeCopierModalShow && (
+        <DeleteTradeCopierModal
+          deleteTradeCopierModalShow={setDeleteTradeCopierModalShow}
+          selectedTradeCopierData={selectedTradeCopierData}
+          handleDeleteAccountModalButtonClicked={
+            handleDeleteAccountModalButtonClicked
+          }
+          isLoading={isLoading}
+        />
+      )}
       <TableContainer
         stickyHeader
         aria-label="sticky table"
@@ -287,7 +324,6 @@ export default function TradesTable() {
               <TableCell
                 key={'option'}
                 align="center"
-                // style={{ minWidth: column.minWidth }}
                 sx={{
                   padding: '5px',
                 }}
@@ -303,36 +339,16 @@ export default function TradesTable() {
             }}
           >
             {subData.map((row) => {
+              console.log(row.subscriber[0].name);
               return (
-                <TableRow
-                  hover
-                  role="checkbox"
-                  tabIndex={-1}
-                  key={row._id}
-                  // sx={{
-                  //   '&:last-child td, &:last-child th': {
-                  //     border: 1,
-                  //     borderColor: '#282D36',
-                  //   },
-                  // }}
-                >
+                <TableRow hover role="checkbox" tabIndex={-1} key={row._id}>
                   {headers.map(({ id }) => {
                     let value = row[id];
-                    // if (id === 'copyFactoryRoles') {
-                    //   console.log(row[id]);
-                    //   value = '';
-                    //   row[id].forEach((item) => {
-                    //     value += item + ', ';
-                    //   });
-                    //   value = value.substr(0, value.length - 2);
-                    // }
                     if (id === 'subscriber') {
-                      // console.log(value);
                       value = `${value[0].name} (${value[0].login})`;
                     } else if (id === 'createdAt' || id === 'updatedAt') {
                       value = value.substr(0, 10) + ' ' + value.substr(11, 8);
                     }
-
                     return (
                       <TableCell
                         key={id + row._id}
@@ -350,24 +366,24 @@ export default function TradesTable() {
                     key={row.id + 'option'}
                     align="left"
                     sx={{
-                      width: 100,
+                      width: '0',
                       padding: '5px',
                     }}
                   >
                     <div className="flex gap-1">
-                      <IconButton
+                      {/* <IconButton
                         size="small"
                         color="inherit"
                         sx={{
                           backgroundColor: '#2e7d32',
                           borderRadius: '4px',
-                          fontSize: 13,
-                          paddingX: '11px',
+                          fontSize: 24,
+                          paddingX: '6px',
                         }}
                         className={classes.infoButton}
                       >
-                        <Icon icon="fa:plug" color="white" />
-                      </IconButton>
+                        <Icon icon="mdi:play" color="white" />
+                      </IconButton> */}
                       <IconButton
                         size="small"
                         color="inherit"
@@ -377,11 +393,17 @@ export default function TradesTable() {
                           fontSize: 13,
                           paddingX: '11px',
                         }}
+                        onClick={() =>
+                          handleConfigButtonClicked(
+                            row.subscriberId,
+                            strategyId
+                          )
+                        }
                         className={classes.infoButton}
                       >
                         <Icon icon="fa:cogs" color="white" />
                       </IconButton>
-                      <IconButton
+                      {/* <IconButton
                         size="small"
                         color="inherit"
                         sx={{
@@ -394,7 +416,7 @@ export default function TradesTable() {
                         className={classes.infoButton}
                       >
                         <Icon icon="tabler:list" color="white" />
-                      </IconButton>
+                      </IconButton> */}
                       <IconButton
                         size="small"
                         color="inherit"
@@ -406,6 +428,13 @@ export default function TradesTable() {
                           padding: '10px 11px!important',
                         }}
                         className={classes.infoButton}
+                        onClick={() =>
+                          handleDeleteTradeCopierButtonClicked({
+                            strategyName: strategyName,
+                            subscriberId: row.subscriberId,
+                            subscriberAccountName: row.subscriber[0].name,
+                          })
+                        }
                       >
                         <Icon icon="ion:trash-sharp" color="white" />
                       </IconButton>
@@ -537,7 +566,9 @@ export default function TradesTable() {
                     {row.description}
                   </Typography>
                 </AccordionSummary>
-                <AccordionDetails>{_renderTable()}</AccordionDetails>
+                <AccordionDetails>
+                  {_renderTable(row.name, row.strategyId)}
+                </AccordionDetails>
               </Accordion>
             ))}
 
