@@ -18,7 +18,6 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import InputBase from '@mui/material/InputBase';
 import SearchIcon from '@mui/icons-material/Search';
 import OutlinedInput from '@mui/material/OutlinedInput';
-import api from '../../utils/api';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
@@ -28,8 +27,10 @@ import Paper from '@mui/material/Paper';
 import { Icon } from '@iconify/react';
 import Pagination from '@mui/material/Pagination';
 import IconButton from '@mui/material/IconButton';
-import DeleteTradeCopierModal from '../../components/modals/DeleteTradeCopierModal';
-import useToast from '../../hooks/useToast';
+
+import DeleteTradeCopierModal from '../../../components/modals/DeleteTradeCopierModal';
+import useToast from '../../../hooks/useToast';
+import api from '../../../utils/api';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',

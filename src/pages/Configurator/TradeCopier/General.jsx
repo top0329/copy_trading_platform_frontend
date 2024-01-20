@@ -3,10 +3,9 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import validator from 'validator';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import useAuth from '../../hooks/useAuth';
-import api from '../../utils/api';
-import useToast from '../../hooks/useToast';
-import { set } from '../../../../backend/routes/api/subscriber';
+import useAuth from '../../../hooks/useAuth';
+import api from '../../../utils/api';
+import useToast from '../../../hooks/useToast';
 
 function General() {
   const { user } = useAuth();

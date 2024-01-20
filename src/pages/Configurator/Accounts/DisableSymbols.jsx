@@ -1,8 +1,8 @@
 import * as React from 'react';
 import LoadingButton from '@mui/lab/LoadingButton';
 
-import api from '../../utils/api';
-import useToast from '../../hooks/useToast';
+import api from '../../../utils/api';
+import useToast from '../../../hooks/useToast';
 
 function DisableSymbols() {
   const { showToast } = useToast();

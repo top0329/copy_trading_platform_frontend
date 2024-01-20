@@ -2,9 +2,9 @@ import * as React from 'react';
 import LoadingButton from '@mui/lab/LoadingButton';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import useAuth from '../../hooks/useAuth';
-import api from '../../utils/api';
-import useToast from '../../hooks/useToast';
+import useAuth from '../../../hooks/useAuth';
+import api from '../../../utils/api';
+import useToast from '../../../hooks/useToast';
 
 function AccountProfile() {
   const { user } = useAuth();

@@ -1,10 +1,11 @@
 import * as React from 'react';
-import Logo from '../assets/img/logo.jpeg';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import validator from 'validator';
-import api from '../utils/api';
-import useToast from '../hooks/useToast';
-import { useNavigate } from 'react-router-dom';
+
+import api from '../../utils/api';
+import useToast from '../../hooks/useToast';
+
+import Logo from '../../assets/img/logo.jpeg';
 
 function SignUp() {
   const { showToast } = useToast();
@@ -48,7 +49,7 @@ function SignUp() {
       } else {
         // delete values.confirm;
         const result = await api.post('/users/register', values);
-        if(!localStorage.getItem('signupEmail')) {
+        if (!localStorage.getItem('signupEmail')) {
           localStorage.setItem('signupEmail', values.email);
         } else {
           localStorage.removeItem('signupEmail');
@@ -59,7 +60,7 @@ function SignUp() {
         navigate('/email-verification-page-for-signup');
       }
     } catch (err) {
-      let msg = "Registration failed";
+      let msg = 'Registration failed';
       if (err.response) {
         msg = err.response.data.errors[0].msg;
       }

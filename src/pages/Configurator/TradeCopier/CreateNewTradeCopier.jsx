@@ -3,8 +3,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import LoadingButton from '@mui/lab/LoadingButton';
 import ReplyRoundedIcon from '@mui/icons-material/ReplyRounded';
 
-import api from '../../utils/api';
-import useToast from '../../hooks/useToast';
+import api from '../../../utils/api';
+import useToast from '../../../hooks/useToast';
 
 function CreateNewTradeCopier() {
   const { showToast } = useToast();

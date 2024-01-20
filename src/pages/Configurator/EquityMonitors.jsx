@@ -7,7 +7,7 @@ import InputBase from '@mui/material/InputBase';
 import SearchIcon from '@mui/icons-material/Search';
 import AddIcon from '@mui/icons-material/Add';
 
-import EquityMonitorsTable from '../components/Tables/EquityMonitorsTable';
+import EquityMonitorsTable from '../../components/Tables/EquityMonitorsTable';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',

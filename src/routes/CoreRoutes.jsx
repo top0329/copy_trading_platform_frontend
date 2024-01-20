@@ -4,40 +4,66 @@ import Loadable from '../third-party/Loadable';
 
 const DefaultLayout = Loadable(lazy(() => import('../layouts/DefaultLayout')));
 const Dashboard = Loadable(lazy(() => import('../pages/Dashboard')));
-const Accounts = Loadable(lazy(() => import('../pages/Accounts')));
-const AddAccount = Loadable(lazy(() => import('../pages/Accounts/AddAccount')));
-const Analysis = Loadable(lazy(() => import('../pages/Analysis')));
-const ContactSupport = Loadable(lazy(() => import('../pages/ContactSupport')));
-const EmailAlerts = Loadable(lazy(() => import('../pages/EmailAlerts')));
-const EquityMonitors = Loadable(lazy(() => import('../pages/EquityMonitors')));
-const KnowledgeBase = Loadable(lazy(() => import('../pages/KnowledgeBase')));
 const Signals = Loadable(lazy(() => import('../pages/Signals')));
-const TradeCopier = Loadable(lazy(() => import('../pages/TradeCopier')));
+const Accounts = Loadable(lazy(() => import('../pages/Configurator/Accounts')));
+const AddAccount = Loadable(
+  lazy(() => import('../pages/Configurator/Accounts/AddAccount'))
+);
+const EditAccount = Loadable(
+  lazy(() => import('../pages/Configurator/Accounts/EditAccount'))
+);
+const TradeCopier = Loadable(
+  lazy(() => import('../pages/Configurator/TradeCopier'))
+);
 const CreateNewTradeCopier = Loadable(
-  lazy(() => import('../pages/TradeCopier/CreateNewTradeCopier'))
+  lazy(() => import('../pages/Configurator/TradeCopier/CreateNewTradeCopier'))
 );
 const EditTradeCopier = Loadable(
-  lazy(() => import('../pages/TradeCopier/EditTradeCopier'))
+  lazy(() => import('../pages/Configurator/TradeCopier/EditTradeCopier'))
+);
+const EquityMonitors = Loadable(
+  lazy(() => import('../pages/Configurator/EquityMonitors'))
+);
+const EmailAlerts = Loadable(
+  lazy(() => import('../pages/Configurator/EmailAlerts'))
+);
+const Analysis = Loadable(lazy(() => import('../pages/Analysis')));
+const AccountAnalysis = Loadable(
+  lazy(() => import('../pages/Analysis/AccountAnalysis'))
 );
 const SignalFollowers = Loadable(
   lazy(() => import('../pages/SignalFollowers'))
 );
 const SignalProvider = Loadable(lazy(() => import('../pages/SignalProvider')));
-const ConfigurePaymentProcessor = Loadable(lazy(() => import('../pages/SignalProvider/ConfigurePaymentProcessor')))
+const ConfigurePaymentProcessor = Loadable(
+  lazy(() => import('../pages/SignalProvider/ConfigurePaymentProcessor'))
+);
 const CreateSignalProvider = Loadable(
   lazy(() => import('../pages/SignalProvider/CreateSignalProvider'))
 );
 const FollowerTerms = Loadable(
   lazy(() => import('../pages/SignalProvider/FollowerTerms'))
 );
-const EditAccount = Loadable(
-  lazy(() => import('../pages/Accounts/EditAccount'))
-);
 const EditSignalProvider = Loadable(
   lazy(() => import('../pages/SignalProvider/EditSignalProvider'))
 );
-const AccountAnalysis = Loadable(
-  lazy(() => import('../pages/Analysis/AccountAnalysis'))
+const WhitelabelDashboard = Loadable(
+  lazy(() => import('../pages/Whitelabel/WhitelabelDashboard'))
+);
+const WhitelabelUsers = Loadable(
+  lazy(() => import('../pages/Whitelabel/WhitelabelUsers'))
+);
+const WhitelabelHomepage = Loadable(
+  lazy(() => import('../pages/Whitelabel/WhitelabelHomepage'))
+);
+const WhitelabelSettings = Loadable(
+  lazy(() => import('../pages/Whitelabel/WhitelabelSettings'))
+);
+const KnowledgeBase = Loadable(
+  lazy(() => import('../pages/HelpCenter/KnowledgeBase'))
+);
+const ContactSupport = Loadable(
+  lazy(() => import('../pages/HelpCenter/ContactSupport'))
 );
 const Profile = Loadable(lazy(() => import('../pages/Profile')));
 const EmailVerificationPageForUpdate = Loadable(
@@ -169,6 +195,22 @@ const coreRoutes = {
     {
       path: '/email-verify-update/:token',
       element: <EmailVerifyUpdate />,
+    },
+    {
+      path: '/whitelabel/dashboard',
+      element: <WhitelabelDashboard />,
+    },
+    {
+      path: '/whitelabel/users',
+      element: <WhitelabelUsers />,
+    },
+    {
+      path: '/whitelabel/homepage',
+      element: <WhitelabelHomepage />,
+    },
+    {
+      path: '/whitelabel/settings',
+      element: <WhitelabelSettings />,
     },
   ],
 };

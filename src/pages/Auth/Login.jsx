@@ -1,12 +1,12 @@
 import * as React from 'react';
-import Logo from '../assets/img/logo.jpeg';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import validator from 'validator';
-import api from '../utils/api';
-import useToast from '../hooks/useToast';
-import { useNavigate } from 'react-router-dom';
 
-import useAuth from '../hooks/useAuth';
+import useAuth from '../../hooks/useAuth';
+import useToast from '../../hooks/useToast';
+import api from '../../utils/api';
+
+import Logo from '../../assets/img/logo.jpeg';
 
 function Login() {
   const { login } = useAuth();
@@ -40,7 +40,7 @@ function Login() {
         showToast('Invalid email format!', 'error');
       } else {
         // delete values.confirm;
-        if(!localStorage.getItem('loginEmail')) {
+        if (!localStorage.getItem('loginEmail')) {
           localStorage.setItem('loginEmail', values.email);
         } else {
           localStorage.removeItem('loginEmail');

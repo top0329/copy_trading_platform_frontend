@@ -16,8 +16,7 @@ function FollowerTerms() {
     billingModel: 0,
   };
   const [values, setValues] = React.useState(initialValues);
-  const [createButtonClicked, setCreateButtonClicked] =
-    React.useState(false);
+  const [createButtonClicked, setCreateButtonClicked] = React.useState(false);
   const [isLoading, setIsLoading] = React.useState(false);
 
   const navigate = useNavigate();
