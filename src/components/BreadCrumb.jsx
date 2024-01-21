@@ -5,7 +5,7 @@ import Link from '@mui/material/Link';
 import Stack from '@mui/material/Stack';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { breadcrumbs } from '@material-tailwind/react';
 
 const breadcrumb = {
@@ -28,6 +28,12 @@ const breadcrumb = {
     { name: "Dashboard", url: "/dashboard" },
     { name: "Configurator", url: "" },
     { name: "Accounts", url: "/accounts" },
+  ],
+  "/accounts/edit/": [
+    { name: "Dashboard", url: "/dashboard" },
+    { name: "Configurator", url: "" },
+    { name: "Accounts", url: "/accounts" },
+    { name: "Edit", url: "/accounts/edit/" },
   ],
   "/trade-copier": [
     { name: "Dashboard", url: "/dashboard" },
@@ -67,6 +73,18 @@ const breadcrumb = {
     { name: "Whitelabel", url: "" },
     { name: "Homepage", url: "/whitelabel/homepage" },
   ],
+  "/whitelabel/users/edit": [
+    { name: "Dashboard", url: "/dashboard" },
+    { name: "Whitelabel", url: "" },
+    { name: "Users", url: "/whitelabel/users" },
+    { name: "Edit", url: "/whitelabel/users/edit" },
+  ],
+  "/whitelabel/users/add-user": [
+    { name: "Dashboard", url: "/dashboard" },
+    { name: "Whitelabel", url: "" },
+    { name: "Users", url: "/whitelabel/users" },
+    { name: "Add User", url: "/whitelabel/users/add-user" },
+  ],
   "/whitelabel/settings": [
     { name: "Dashboard", url: "/dashboard" },
     { name: "Whitelabel", url: "" },
@@ -82,27 +100,52 @@ const breadcrumb = {
     { name: "Help Center", url: "" },
     { name: "Contact Support", url: "/contact-support" },
   ],
+  "/accounts/add-account": [
+    { name: "Dashboard", url: "/dashboard" },
+    { name: "Configurator", url: "" },
+    { name: "Accounts", url: "/accounts" },
+    { name: "Add account", url: "/accounts/add-account" },
+  ],
 }
 
-function handleClick(event) {
-  event.preventDefault();
-  console.info('You clicked a breadcrumb.');
-}
 
 export default function CustomSeparator() {
 
   const { pathname } = useLocation();
+  const navigate = useNavigate();
 
-  const breadcrumbs = breadcrumb[pathname].map(item => 
-    <Link
-      underline="hover"
+  const _goto = (url) => {
+    if ( url !== "" ) {
+      navigate(url)
+    }
+  }
+
+  
+  const _path = (_url) => {
+    if ( _url.includes("/whitelabel/users/edit") ) {
+      return "/whitelabel/users/edit";
+    } else if ( _url.includes("/accounts/edit/") ) {
+      return "/accounts/edit/";
+    }
+
+    return _url;
+  }
+
+  const breadcrumbs = breadcrumb[_path(pathname)] ? breadcrumb[_path(pathname)].map(item => 
+    <Typography
       key="2"
       color="white"
-      href={item.url}
+      sx = {{ 
+        cursor:'pointer',
+        '&:hover': {
+          textDecoration: 'underline'
+        }
+      }}
+      onClick = { () => _goto(item.url) }
     >
       { item.name }
-    </Link>
-  );
+    </Typography>
+  ) : []
   
   
   return (
