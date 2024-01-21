@@ -20,7 +20,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import IconButton from '@mui/material/IconButton';
 import { makeStyles } from '@material-ui/core/styles';
 import ReplyRoundedIcon from '@mui/icons-material/ReplyRounded';
-
+import LoadingButton from '@mui/lab/LoadingButton';
 import api from '../../../utils/api';
 import DeleteSignalModal from '../../../components/modals/DeleteSignalModal';
 import useToast from '../../../hooks/useToast';
@@ -103,9 +103,13 @@ export default function EditUser() {
   const classes = useStyles();
   const { showToast } = useToast();
   const navigate = useNavigate();
-
+  const [ isLoading, setIsLoading ] = React.useState(false);
   const { id } = useParams();
   const [data, setData] = React.useState({});
+
+  const [ showMaxAccountModal, setShowMaxAccountModal ] = React.useState(false);
+
+  const [ maxAccount, setMaxAccount ] = React.useState(0);
 
   React.useEffect(() => {
     console.log(id)
@@ -114,11 +118,26 @@ export default function EditUser() {
       if (res.data.status === "OK") {
         console.log(res.data)
         setData(res.data.data);
+        setMaxAccount(res.data.data.maxAccount);
       }
     }
 
     fetchData();
   }, [id]);
+
+  const handleUpdateMaxAccount = async() => {
+    try {
+      await api.put(`/users/max-account/${id}`, { maxAccount: maxAccount });
+      setData({
+        ...data,
+        maxAccount: maxAccount
+      });
+      setShowMaxAccountModal(false);
+      showToast("Updated successfully", "success");
+    } catch (err) {
+      console.log(err);
+    }
+  }
 
   return (
     <div className='mb-28'>
@@ -160,7 +179,7 @@ export default function EditUser() {
                   paddingY: '11px',
                 }}
                 className={classes.infoButton}
-              // onClick={() => handleConfigButtonClicked(row._id)}
+                onClick={() => setShowMaxAccountModal(true)}
               >
                 <Icon icon="fa:cogs" color="white" />
               </IconButton>
@@ -620,6 +639,57 @@ export default function EditUser() {
             </div>
           </div>
         </div>
+      </div>
+
+      <div className={`fixed right-0 bottom-0 top-0 left-0 flex items-center justify-center z-[1201] ${!showMaxAccountModal && 'hidden'}`}>
+        <div
+          className="fixed right-0 bottom-0 top-0 left-0 flex items-center justify-center z-[1202] bg-opacity-80 bg-[#1D2127]"
+          onClick={() => setShowMaxAccountModal(false)}
+        ></div>
+        <section className="mb-[20px] bg-[#282D36] w-[500px] z-[100000]">
+          <header className="p-[18px] text-white flex justify-between items-center">
+            <h2 className="mt-[5px] text-[20px] font-normal">Adjust max account limit</h2>
+            <button
+              className="bg-[#0099e6] w-[33px] h-[33px] font-extrabold"
+              onClick={() => setShowMaxAccountModal(false)}
+            >
+              ✖
+            </button>
+          </header>
+          <div className="p-[15px] bg-[#2E353E] text-white text-center flex justify-center gap-2 items-center py-10">
+            <div className='text-sm'>Max account limt: </div>
+            <input
+              name="fullName"
+              type="number"
+              required
+              value={maxAccount}
+              className="bg-[#282d36] text-[#fff] px-3 py-1.5 rounded block w-[40%] h-[34px] text-sm"
+              onChange={e => setMaxAccount(e.target.value)}
+            />
+            
+          </div>
+          <footer className="px-4 py-3 text-white flex justify-end items-center">
+            <LoadingButton
+              variant="contained"
+              size="small"
+              sx={{
+                textTransform: 'none',
+                color: '#ffffff!important',
+                backgroundColor: '#0099e6!important',
+                borderRadius: '1px',
+                paddingX: '12px',
+                paddingY: '6px',
+                '&:disabled': { opacity: 0.5 },
+              }}
+              onClick={handleUpdateMaxAccount}
+              loading={isLoading}
+              // disabled={!checkboxSelected}
+            >
+              Update
+            </LoadingButton>
+            
+          </footer>
+        </section>
       </div>
     </div>
   );
