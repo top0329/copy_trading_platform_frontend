@@ -2,6 +2,9 @@ import * as React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import LoadingButton from '@mui/lab/LoadingButton';
 import ReplyRoundedIcon from '@mui/icons-material/ReplyRounded';
+import Grid from '@mui/material/Grid';
+
+import validator from 'validator';
 
 import { useReducer } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -16,12 +19,9 @@ function AddAccount() {
   const { showToast } = useToast();
 
   const initialValues = {
-    login: '',
+    fullName: '',
     password: '',
-    name: '',
-    server: '',
-    platform: '',
-    copyFactoryRoles: [],
+    email: ''
   };
   const [values, setValues] = React.useState(initialValues);
   const [isSubscriberChecked, setIsSubscriberChecked] = React.useState(false);
@@ -45,52 +45,25 @@ function AddAccount() {
     });
   };
 
-  React.useEffect(() => {
-    if (isSubscriberChecked) {
-      if (values.copyFactoryRoles.includes('SUBSCRIBER') == false) {
-        values.copyFactoryRoles.push('SUBSCRIBER');
-      }
-    } else {
-      values.copyFactoryRoles = values.copyFactoryRoles.filter(
-        (role) => role !== 'SUBSCRIBER'
-      );
-    }
-    if (isProviderChecked) {
-      if (values.copyFactoryRoles.includes('PROVIDER') == false) {
-        values.copyFactoryRoles.push('PROVIDER');
-      }
-    } else {
-      values.copyFactoryRoles = values.copyFactoryRoles.filter(
-        (role) => role !== 'PROVIDER'
-      );
-    }
-  }, [isSubscriberChecked, isProviderChecked]);
-
   const handleCreateAccount = async () => {
     try {
       setCreateButtonClicked(true);
       if (
-        values.login == '' ||
+        values.fullName == '' ||
         values.password == '' ||
-        values.name == '' ||
-        values.server == '' ||
-        values.platform == '' ||
-        values.copyFactoryRoles.length == 0
+        values.email == ''
       ) {
         showToast('Please fill in all the information!', 'error');
       } else {
         setIsLoading(true);
-        const result = await api.post('/account/register-account', values);
-        showToast('Account created successfully!', 'success');
-        console.log(result.data.AccountRegister);
-
-        dispatch({
-          type: 'ADD_ID',
-          payload: result.data.AccountRegister.id,
-        });
+        const result = await api.post('/users/register', values);
+        
+        if ( result.data.msg === "User created successfully" ) {
+          showToast('Account created successfully!', 'success');
+        }
 
         setIsLoading(false);
-        navigate('/accounts');
+        navigate('/whitelabel/users');
       }
     } catch (err) {
       showToast('Account creation failed!', 'error');
@@ -103,164 +76,85 @@ function AddAccount() {
     <div>
       <div className="py-0 px-[200px]">
         <div className="pb-3">
-          <Link
-            to={'/accounts'}
-            className="flex flex-row items-center font-extrabold"
-          >
+          <Grid container sx={{ cursor: 'pointer' }} onClick={() => navigate("/whitelabel/users")}>
             <ReplyRoundedIcon
               fontSize="medium"
               sx={{ color: 'white', fontWeight: 'bold' }}
             />
-            <h1 className="text-white text-lg pl-2"> Accounts</h1>
-          </Link>
+            <h1 className="text-white text-lg pl-2"> Whitelabel Users</h1>
+          </Grid>
         </div>
         <div className="mb-[20px] rounded bg-[#282D36] text-white">
           <header className="p-[18px]">
-            <h2 className="mt-[5px] text-[20px] font-normal">Add Account</h2>
+            <h2 className="mt-[5px] text-[20px] font-normal">Manually add user</h2>
           </header>
           <div className="p-[15px] bg-[#2E353E] box-border">
             <div className="border-b-[1px] border-[#242830] pb-[15px] mb-[15px] flex justify-start">
               <label className="text-[#ccc] text-[13px] text-right w-1/4 pt-[7px] px-[15px] inline-block relative max-w-full">
-                Login
+                User Name
               </label>
               <div className="w-1/2 px-[15px]">
                 <input
-                  name="login"
+                  name="fullName"
                   type="text"
                   required
                   className="bg-[#282d36] text-[#fff] px-3 py-1.5 rounded block w-full h-[34px] text-sm"
                   onChange={handleInputChange}
                 />
-                {values.login == '' && createButtonClicked && (
+                {values.fullName == '' && createButtonClicked && (
                   <p className="mt-2 text-xs text-red-600 dark:text-red-500">
-                    Login required!
+                    User Name required!
                   </p>
                 )}
               </div>
             </div>
             <div className="flex justify-start mb-[15px] pb-[15px] border-b-[1px] border-[#242830]">
               <label className="text-[#ccc] text-[13px] text-right w-1/4 pt-[7px] px-[15px] inline-block relative max-w-full">
-                Password
+                User Email
+              </label>
+              <div className="w-1/2 px-[15px]">
+                <input
+                  name="email"
+                  type="text"
+                  required
+                  className="block bg-[#282d36] text-[#fff] px-3 py-1.5 rounded w-full h-[34px] text-sm"
+                  onChange={handleInputChange}
+                />
+                {
+                  values.email == '' && createButtonClicked ?
+                    <p className="mt-2 text-xs text-red-600 dark:text-red-500">
+                      User Email required!
+                    </p> :
+                  !validator.isEmail( values.email ) && createButtonClicked && 
+                    <p className="mt-2 text-xs text-red-600 dark:text-red-500">
+                      Invalid Email Format!
+                    </p>
+                }
+              </div>
+            </div>
+            <div className="flex justify-start mb-[15px]">
+              <label className="text-[#ccc] text-[13px] text-right w-1/4 pt-[7px] px-[15px] inline-block relative max-w-full">
+                User Password (min 6 chars)
               </label>
               <div className="w-1/2 px-[15px]">
                 <input
                   name="password"
                   type="password"
                   required
-                  className="block bg-[#282d36] text-[#fff] px-3 py-1.5 rounded w-full h-[34px] text-sm"
-                  onChange={handleInputChange}
-                />
-                {values.password == '' && createButtonClicked && (
-                  <p className="mt-2 text-xs text-red-600 dark:text-red-500">
-                    Password required!
-                  </p>
-                )}
-              </div>
-            </div>
-            <div className="flex justify-start pb-[15px] mb-[15px] border-b-[1px] border-[#242830]">
-              <label className="text-[#ccc] text-[13px] text-right w-1/4 pt-[7px] px-[15px] inline-block relative max-w-full">
-                Name
-              </label>
-              <div className="w-1/2 px-[15px]">
-                <input
-                  name="name"
-                  type="text"
-                  required
                   minLength={2}
                   className="block bg-[#282d36] text-[#fff] px-3 py-1.5 rounded w-full h-[34px] text-sm"
                   onChange={handleInputChange}
                 />
-                {values.name == '' && createButtonClicked && (
-                  <p className="mt-2 text-xs text-red-600 dark:text-red-500">
-                    Name required!
-                  </p>
-                )}
-              </div>
-            </div>
-            <div className="flex justify-start pb-[15px] mb-[15px] border-b-[1px] border-[#242830]">
-              <label className="text-[#ccc] text-[13px] text-right w-1/4 pt-[7px] px-[15px] inline-block relative max-w-full">
-                Server
-              </label>
-              <div className="w-1/2 px-[15px]">
-                <input
-                  name="server"
-                  type="text"
-                  required
-                  className="block bg-[#282d36] text-[#fff] px-3 py-1.5 rounded w-full h-[34px] text-sm"
-                  onChange={handleInputChange}
-                />
-                {values.server == '' && createButtonClicked && (
-                  <p className="mt-2 text-xs text-red-600 dark:text-red-500">
-                    Server required!
-                  </p>
-                )}
-              </div>
-            </div>
-            <div className="flex justify-start pb-[15px] mb-[15px] border-b-[1px] border-[#242830]">
-              <label className="text-[#ccc] text-[13px] text-right w-1/4 pt-[7px] px-[15px] inline-block relative max-w-full">
-                Platform
-              </label>
-              <div className="w-1/2 px-[15px]">
-                <select
-                  name="platform"
-                  value={values.platform}
-                  required
-                  className="block bg-[#282d36] text-[#fff] px-3 py-1.5 rounded w-full h-[34px] text-sm"
-                  onChange={handleInputChange}
-                >
-                  <option value="" disabled className="hidden">
-                    Select Platform
-                  </option>
-                  <option value={'mt4'}>MT4</option>
-                  <option value={'mt5'}>MT5</option>
-                </select>
-                {values.platform == '' && createButtonClicked && (
-                  <p className="mt-2 text-xs text-red-600 dark:text-red-500">
-                    Platform required!
-                  </p>
-                )}
-              </div>
-            </div>
-            <div className="flex justify-start">
-              <label className="text-[#ccc] text-[13px] text-right w-1/4 pt-[7px] px-[15px] inline-block relative max-w-full">
-                CopyFactoryRoles
-              </label>
-              <div className="w-1/2 px-[15px]">
-                <div className="flex items-center gap-3 pt-[7px]">
-                  <div className="flex items-center">
-                    <input
-                      name="subscriber"
-                      type="checkbox"
-                      required
-                      className="bg-[#282d36] text-[#fff] px-3 py-1.5 rounded w-4"
-                      onChange={() =>
-                        setIsSubscriberChecked(!isSubscriberChecked)
-                      }
-                    />
-                    <label className="inline-block text-right w-1/4 pr-[15px] pl-[5px] relative max-w-full text-[#ccc] text-[13px]">
-                      Subscriber
-                    </label>
-                  </div>
-                  <div className="flex items-center">
-                    <input
-                      name="provider"
-                      type="checkbox"
-                      required
-                      className="bg-[#282d36] text-[#fff] px-3 py-1.5 rounded w-4"
-                      onChange={() => setIsProviderChecked(!isProviderChecked)}
-                    />
-                    <label className="inline-block text-right w-1/4 pr-[15px] pl-[5px] relative max-w-full text-[#ccc] text-[13px]">
-                      Provider
-                    </label>
-                  </div>
-                </div>
-                {!isProviderChecked &&
-                  !isSubscriberChecked &&
-                  createButtonClicked && (
+                {
+                  values.password == '' && createButtonClicked ?
                     <p className="mt-2 text-xs text-red-600 dark:text-red-500">
-                      CopyFactoryRoles required!
+                      User Password required!
+                    </p> :
+                  values.password.length < 6 && createButtonClicked &&  
+                    <p className="mt-2 text-xs text-red-600 dark:text-red-500">
+                      User Password at least 6 characters!
                     </p>
-                  )}
+                }
               </div>
             </div>
           </div>
