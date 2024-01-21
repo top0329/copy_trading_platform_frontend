@@ -26,7 +26,6 @@ import IconButton from '@mui/material/IconButton';
 import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
 
 import DeleteUserModal from '../../../components/modals/DeleteUserModal';
-import InfoModal from '../../../components/modals/InfoModal';
 
 import useToast from '../../../hooks/useToast';
 import api from '../../../utils/api';

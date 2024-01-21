@@ -217,7 +217,7 @@ const coreRoutes = {
       element: <WhitelabelUsers />,
     },
     {
-      path: '/whitelabel/users/edit/:userId',
+      path: '/whitelabel/users/edit/:id',
       title: 'Profile',
       element: <EditUser />,
     },

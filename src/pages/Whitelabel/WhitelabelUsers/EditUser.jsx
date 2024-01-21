@@ -16,11 +16,11 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { Icon } from '@iconify/react';
 import Pagination from '@mui/material/Pagination';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import IconButton from '@mui/material/IconButton';
 import { makeStyles } from '@material-ui/core/styles';
 import ReplyRoundedIcon from '@mui/icons-material/ReplyRounded';
-
+import LoadingButton from '@mui/lab/LoadingButton';
 import api from '../../../utils/api';
 import DeleteSignalModal from '../../../components/modals/DeleteSignalModal';
 import useToast from '../../../hooks/useToast';
@@ -103,111 +103,41 @@ export default function EditUser() {
   const classes = useStyles();
   const { showToast } = useToast();
   const navigate = useNavigate();
+  const [ isLoading, setIsLoading ] = React.useState(false);
+  const { id } = useParams();
+  const [data, setData] = React.useState({});
 
-  const [sort, setSort] = React.useState({
-    id: '',
-    type: '',
-  });
-  const [count, setCount] = React.useState(0);
-  const [page, setPage] = React.useState(1);
-  const [data, setData] = React.useState([]);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
-  const [selectedSignalData, setSelectedSignalData] = React.useState({});
-  const [deleteSignalModalShow, setDeleteSignalModalShow] =
-    React.useState(false);
-  const [isLoading, setIsLoading] = React.useState(false);
+  const [ showMaxAccountModal, setShowMaxAccountModal ] = React.useState(false);
 
-  const handleDeleteSignalButtonClicked = (accountData) => {
-    setSelectedSignalData(accountData);
-    setDeleteSignalModalShow(true);
-  };
-
-  const handleConfigButtonClicked = (id) => {
-    navigate(`/signal-provider/edit/${id}`);
-  };
-
-  const handleConfigureButtonClicked = () => {
-    navigate('/signal-provider/configure-payment-processor');
-  };
-
-  const handleDeleteSignalModalButtonClicked = async () => {
-    try {
-      setIsLoading(true);
-      await api.delete(`/strategy/${selectedSignalData.strategyId}`);
-      showToast('Signal deleted successfully!', 'success');
-      handlePageChange(null, page);
-    } catch (err) {
-      showToast('Signal deletion failed!', 'error');
-      console.log(err);
-    } finally {
-      setDeleteSignalModalShow(false);
-      setIsLoading(false);
-    }
-  };
-
-  const handleChangeRowsPerPage = (e) => {
-    let config = JSON.parse(sessionStorage.getItem('signals'));
-    config.pagecount = e.target.value;
-    config.page = 1;
-    sessionStorage.setItem('signals', JSON.stringify(config));
-
-    setRowsPerPage(e.target.value);
-    handlePageChange(null, 1);
-  };
-
-  const handlePageChange = async (e, value) => {
-    setPage(value);
-
-    try {
-      let config = JSON.parse(sessionStorage.getItem('signals'));
-      config.page = value;
-      sessionStorage.setItem('signals', JSON.stringify(config));
-
-      const { page, pagecount, sort, type } = config;
-      console.log(page, pagecount, sort, type);
-      const res = await api.get(
-        `/strategy/strategies?page=${page}&pagecount=${pagecount}&sort=${sort}&type=${type}`
-      );
-      setData(res.data.data);
-      setCount(res.data.count);
-    } catch (e) {
-      console.log(e);
-    }
-  };
+  const [ maxAccount, setMaxAccount ] = React.useState(0);
 
   React.useEffect(() => {
-    let config = JSON.parse(sessionStorage.getItem('signals'));
-
-    if (!config) {
-      config = {
-        page: 1,
-        pagecount: 10,
-        sort: '',
-        type: '',
-      };
-
-      sessionStorage.setItem('signals', JSON.stringify(config));
-    }
-
-    setPage(config.page);
-    setRowsPerPage(config.pagecount);
-    setSort({
-      id: config.sort,
-      type: config.type,
-    });
-
+    console.log(id)
     async function fetchData() {
-      const { page, pagecount, sort, type } = config;
-      const res = await api.get(
-        `/strategy/strategies?page=${page}&pagecount=${pagecount}&sort=${sort}&type=${type}`
-      );
-      console.log(res.data);
-      setData(res.data.data);
-      setCount(res.data.count);
+      const res = await api.get(`/users/detail/${id}`);
+      if (res.data.status === "OK") {
+        console.log(res.data)
+        setData(res.data.data);
+        setMaxAccount(res.data.data.maxAccount);
+      }
     }
 
     fetchData();
-  }, []);
+  }, [id]);
+
+  const handleUpdateMaxAccount = async() => {
+    try {
+      await api.put(`/users/max-account/${id}`, { maxAccount: maxAccount });
+      setData({
+        ...data,
+        maxAccount: maxAccount
+      });
+      setShowMaxAccountModal(false);
+      showToast("Updated successfully", "success");
+    } catch (err) {
+      console.log(err);
+    }
+  }
 
   return (
     <div className='mb-28'>
@@ -230,13 +160,13 @@ export default function EditUser() {
           </header>
           <div className="text-[#ccc] bg-[#2E353E] p-4 rounded-b">
             <p className="mb-2 text-sm">Profile Name</p>
-            <h1 className="text-xl">Profile fichardt</h1>
+            <h1 className="text-xl">{data.fullName}</h1>
             <p className="my-2 text-sm">Registered</p>
-            <h1 className="text-xl">2024-01-18</h1>
+            <h1 className="text-xl">{data.createdAt && data.createdAt.substring(0, 10)}</h1>
             <div className="flex justify-between items-center">
               <div>
                 <p className="my-2 text-sm">Max Accounts</p>
-                <h1 className="text-xl">1</h1>
+                <h1 className="text-xl">{data.maxAccount}</h1>
               </div>
               <IconButton
                 size="small"
@@ -249,7 +179,7 @@ export default function EditUser() {
                   paddingY: '11px',
                 }}
                 className={classes.infoButton}
-                // onClick={() => handleConfigButtonClicked(row._id)}
+                onClick={() => setShowMaxAccountModal(true)}
               >
                 <Icon icon="fa:cogs" color="white" />
               </IconButton>
@@ -276,7 +206,7 @@ export default function EditUser() {
                   },
                 }}
               >
-                <TableContainer
+                {/* <TableContainer
                   sx={{
                     // maxHeight: 440,
                     '.MuiTable-root': {
@@ -402,32 +332,9 @@ export default function EditUser() {
                       }
                     </TableBody>
                   </Table>
-                </TableContainer>
+                </TableContainer> */}
 
-                <div className="flex justify-between items-center">
-                  <Typography sx={{ color: '#ccc', fontSize: 13 }}>
-                    Showing {rowsPerPage * (page - 1) + 1} to{' '}
-                    {rowsPerPage * page > count ? count : rowsPerPage * page} of{' '}
-                    {count} entries
-                  </Typography>
-                  <Pagination
-                    // className="text-white"
-                    sx={{
-                      paddingY: 2,
-                    }}
-                    count={
-                      count % rowsPerPage === 0
-                        ? count / rowsPerPage
-                        : Math.floor(count / rowsPerPage) + 1
-                    }
-                    page={page}
-                    onChange={handlePageChange}
-                    variant="outlined"
-                    shape="rounded"
-                    showFirstButton
-                    showLastButton
-                  />
-                </div>
+                <Typography color='white' mb={1}>No signals have been added.</Typography>
               </Paper>
             </div>
           </div>
@@ -450,7 +357,7 @@ export default function EditUser() {
                   },
                 }}
               >
-                <TableContainer
+                {/* <TableContainer
                   sx={{
                     // maxHeight: 440,
                     '.MuiTable-root': {
@@ -575,31 +482,9 @@ export default function EditUser() {
                       }
                     </TableBody>
                   </Table>
-                </TableContainer>
+                </TableContainer> */}
 
-                <div className="flex justify-between items-center">
-                  <Typography sx={{ color: '#ccc', fontSize: 13 }}>
-                    Showing {rowsPerPage * (page - 1) + 1} to{' '}
-                    {rowsPerPage * page > count ? count : rowsPerPage * page} of{' '}
-                    {count} entries
-                  </Typography>
-                  <Pagination
-                    sx={{
-                      paddingY: 2,
-                    }}
-                    count={
-                      count % rowsPerPage === 0
-                        ? count / rowsPerPage
-                        : Math.floor(count / rowsPerPage) + 1
-                    }
-                    page={page}
-                    onChange={handlePageChange}
-                    variant="outlined"
-                    shape="rounded"
-                    showFirstButton
-                    showLastButton
-                  />
-                </div>
+                <Typography color='white' mb={1}>No accounts have been added.</Typography>
               </Paper>
             </div>
           </div>
@@ -622,7 +507,7 @@ export default function EditUser() {
                   },
                 }}
               >
-                <TableContainer
+                {/* <TableContainer
                   sx={{
                     // maxHeight: 440,
                     '.MuiTable-root': {
@@ -747,35 +632,64 @@ export default function EditUser() {
                       }
                     </TableBody>
                   </Table>
-                </TableContainer>
+                </TableContainer> */}
 
-                <div className="flex justify-between items-center">
-                  <Typography sx={{ color: '#ccc', fontSize: 13 }}>
-                    Showing {rowsPerPage * (page - 1) + 1} to{' '}
-                    {rowsPerPage * page > count ? count : rowsPerPage * page} of{' '}
-                    {count} entries
-                  </Typography>
-                  <Pagination
-                    sx={{
-                      paddingY: 2,
-                    }}
-                    count={
-                      count % rowsPerPage === 0
-                        ? count / rowsPerPage
-                        : Math.floor(count / rowsPerPage) + 1
-                    }
-                    page={page}
-                    onChange={handlePageChange}
-                    variant="outlined"
-                    shape="rounded"
-                    showFirstButton
-                    showLastButton
-                  />
-                </div>
+                <Typography color='white' mb={1}>No copiers have been added.</Typography>
               </Paper>
             </div>
           </div>
         </div>
+      </div>
+
+      <div className={`fixed right-0 bottom-0 top-0 left-0 flex items-center justify-center z-[1201] ${!showMaxAccountModal && 'hidden'}`}>
+        <div
+          className="fixed right-0 bottom-0 top-0 left-0 flex items-center justify-center z-[1202] bg-opacity-80 bg-[#1D2127]"
+          onClick={() => setShowMaxAccountModal(false)}
+        ></div>
+        <section className="mb-[20px] bg-[#282D36] w-[500px] z-[100000]">
+          <header className="p-[18px] text-white flex justify-between items-center">
+            <h2 className="mt-[5px] text-[20px] font-normal">Adjust max account limit</h2>
+            <button
+              className="bg-[#0099e6] w-[33px] h-[33px] font-extrabold"
+              onClick={() => setShowMaxAccountModal(false)}
+            >
+              ✖
+            </button>
+          </header>
+          <div className="p-[15px] bg-[#2E353E] text-white text-center flex justify-center gap-2 items-center py-10">
+            <div className='text-sm'>Max account limt: </div>
+            <input
+              name="fullName"
+              type="number"
+              required
+              value={maxAccount}
+              className="bg-[#282d36] text-[#fff] px-3 py-1.5 rounded block w-[40%] h-[34px] text-sm"
+              onChange={e => setMaxAccount(e.target.value)}
+            />
+            
+          </div>
+          <footer className="px-4 py-3 text-white flex justify-end items-center">
+            <LoadingButton
+              variant="contained"
+              size="small"
+              sx={{
+                textTransform: 'none',
+                color: '#ffffff!important',
+                backgroundColor: '#0099e6!important',
+                borderRadius: '1px',
+                paddingX: '12px',
+                paddingY: '6px',
+                '&:disabled': { opacity: 0.5 },
+              }}
+              onClick={handleUpdateMaxAccount}
+              loading={isLoading}
+              // disabled={!checkboxSelected}
+            >
+              Update
+            </LoadingButton>
+            
+          </footer>
+        </section>
       </div>
     </div>
   );
