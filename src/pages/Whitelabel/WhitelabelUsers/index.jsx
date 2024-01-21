@@ -187,7 +187,7 @@ export default function WhitelabelUsers() {
   };
 
   const handleConfigButtonClicked = (id) => {
-    navigate(`/accounts/edit/${id}`);
+    navigate(`/whitelabel/users/edit/${id}`);
   };
 
   const handleDeleteAccountButtonClicked = (accountData) => {
@@ -417,7 +417,7 @@ export default function WhitelabelUsers() {
                                 }}
                                 className={classes.infoButton}
                                 onClick={() =>
-                                  handleConfigButtonClicked(row.accountId)
+                                  handleConfigButtonClicked(row._id)
                                 }
                               >
                                 <Icon icon="fa:cogs" color="white" />

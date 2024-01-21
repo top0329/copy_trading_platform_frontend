@@ -1,6 +1,7 @@
 import { lazy } from 'react';
 import AuthGuard from '../utils/AuthGuard';
 import Loadable from '../third-party/Loadable';
+import EditUser from '../pages/Whitelabel/WhitelabelUsers/EditUser';
 
 const DefaultLayout = Loadable(lazy(() => import('../layouts/DefaultLayout')));
 const Dashboard = Loadable(lazy(() => import('../pages/Dashboard')));
@@ -74,8 +75,7 @@ const EmailVerificationPageForUpdate = Loadable(
 const EmailVerifyUpdate = Loadable(
   lazy(() => import('../pages/EmailVerification/EmailVerifyUpdate'))
 );
-
-import AuthView from '../pages/Maintenance/AuthView';
+const AuthView = Loadable(lazy(() => import('../pages/Maintenance/AuthView')));
 
 const coreRoutes = {
   path: '/',
@@ -204,11 +204,18 @@ const coreRoutes = {
     },
     {
       path: '/whitelabel/dashboard',
+      title: 'Whitelabel',
       element: <WhitelabelDashboard />,
     },
     {
       path: '/whitelabel/users',
+      title: 'Whitelabel Users',
       element: <WhitelabelUsers />,
+    },
+    {
+      path: '/whitelabel/users/edit/:userId',
+      title: 'Profile',
+      element: <EditUser />,
     },
     {
       path: '/whitelabel/homepage',
