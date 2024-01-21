@@ -230,7 +230,7 @@ export default function WhitelabelUsers() {
         justifyContent={'space-between'}
       >
         <div className="flex gap-2">
-          <Link to="/accounts/add-account">
+          <Link to="/whitelabel/users/add-user">
             <Button
               variant="contained"
               size="small"

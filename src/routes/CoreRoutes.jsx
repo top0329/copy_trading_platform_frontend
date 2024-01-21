@@ -77,6 +77,10 @@ const EmailVerifyUpdate = Loadable(
 );
 const AuthView = Loadable(lazy(() => import('../pages/Maintenance/AuthView')));
 
+const AddUser = Loadable(lazy(() => import('../pages/Whitelabel/WhitelabelUsers/AddUser')));
+
+
+
 const coreRoutes = {
   path: '/',
   element: (
@@ -224,6 +228,10 @@ const coreRoutes = {
     {
       path: '/whitelabel/settings',
       element: <WhitelabelSettings />,
+    },
+    {
+      path: '/whitelabel/users/add-user',
+      element: <AddUser />,
     },
   ],
 };
