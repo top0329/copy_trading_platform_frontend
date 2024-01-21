@@ -19,6 +19,8 @@ import Header from '../components/Header';
 import { Outlet } from 'react-router-dom';
 import coreRoutes from '../routes/CoreRoutes';
 
+import BreadCrumb from '../components/BreadCrumb';
+
 const drawerWidth = 240;
 
 const AppBar = styled(MuiAppBar, {
@@ -101,36 +103,33 @@ const DefaultLayout = () => {
                 <AppBar position="absolute" open={open}>
                   <Toolbar
                     sx={{
-                      pr: '24px', // keep right padding when drawer closed
+                      pr: '24px', // keep right padding when drawer closed, 
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'center'
                     }}
                   >
-                    <IconButton
-                      edge="start"
-                      color="inherit"
-                      aria-label="open drawer"
-                      onClick={toggleDrawer}
-                      sx={{
-                        marginRight: '36px',
-                        ...(open && { display: 'none' }),
-                      }}
-                    >
-                      <MenuIcon />
-                    </IconButton>
-                    <Typography
-                      component="h1"
-                      variant="h6"
-                      color="inherit"
-                      noWrap
-                      sx={{ flexGrow: 1 }}
-                    >
-                      {coreRoutes.children[0].title}
-                    </Typography>
+                    <Grid container alignItems='center'>
+                      <IconButton
+                        edge="start"
+                        color="inherit"
+                        aria-label="open drawer"
+                        onClick={toggleDrawer}
+                        sx={{
+                          marginRight: '36px',
+                          ...(open && { display: 'none' }),
+                        }}
+                      >
+                        <MenuIcon />
+                      </IconButton>
+                      <BreadCrumb/>
+                    </Grid>
                     <Button
                       variant="contained"
                       startIcon={<HelpIcon />}
                       color="success"
                       size="small"
-                      sx={{ textTransform: 'none' }}
+                      sx={{ textTransform: 'none', float: 'right!important' }}
                     >
                       Help
                     </Button>
