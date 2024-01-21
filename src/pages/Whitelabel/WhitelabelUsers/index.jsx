@@ -25,11 +25,11 @@ import PriorityHighIcon from '@mui/icons-material/PriorityHigh';
 import IconButton from '@mui/material/IconButton';
 import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
 
-import DeleteAccountModal from '../../components/modals/DeleteAccountModal';
-import InfoModal from '../../components/modals/InfoModal';
+import DeleteAccountModal from '../../../components/modals/DeleteAccountModal';
+import InfoModal from '../../../components/modals/InfoModal';
 
-import useToast from '../../hooks/useToast';
-import api from '../../utils/api';
+import useToast from '../../../hooks/useToast';
+import api from '../../../utils/api';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -95,11 +95,11 @@ const useStyles = makeStyles((theme) => ({
 const headers = [
   { id: 'email', label: 'Email' },
   { id: 'fullName', label: 'Full Name' },
-  { id: 'id', label: 'ID' },
-  { id: 'signals', label: 'Signals' },
-  { id: 'copiers', label: 'Copiers' },
+  { id: '_id', label: 'ID' },
+  { id: 'strategies', label: 'Signals' },
+  { id: 'subscribers', label: 'Copiers' },
   { id: 'accounts', label: 'Accounts' },
-  { id: 'maxAccounts', label: 'Max Accounts' },
+  { id: 'maxAccount', label: 'Max Accounts' },
 ];
 
 export default function WhitelabelUsers() {
@@ -120,11 +120,45 @@ export default function WhitelabelUsers() {
   const [selectedAccountData, setSelectedAccountData] = React.useState({});
   const [isLoading, setIsLoading] = React.useState(false);
 
+  React.useEffect(() => {
+    let config = JSON.parse(sessionStorage.getItem('users'));
+
+    if (!config) {
+      config = {
+        page: 1,
+        pagecount: 10,
+        sort: '',
+        type: '',
+      };
+
+      sessionStorage.setItem('users', JSON.stringify(config));
+    }
+
+    setPage(config.page);
+    setRowsPerPage(config.pagecount);
+    setSort({
+      id: config.sort,
+      type: config.type,
+    });
+
+    async function fetchData() {
+      const { page, pagecount, sort, type } = config;
+      const res = await api.get(
+        `/users/all?page=${page}&pagecount=${pagecount}&sort=${sort}&type=${type}`
+      );
+      console.log(res.data.data);
+      setData(res.data.data);
+      setCount(res.data.count);
+    }
+
+    fetchData();
+  }, []);
+
   const handleChangeRowsPerPage = (e) => {
-    let config = JSON.parse(sessionStorage.getItem('accounts'));
+    let config = JSON.parse(sessionStorage.getItem('users'));
     config.pagecount = e.target.value;
     config.page = 1;
-    sessionStorage.setItem('accounts', JSON.stringify(config));
+    sessionStorage.setItem('users', JSON.stringify(config));
 
     setRowsPerPage(e.target.value);
     handlePageChange(null, 1);
@@ -136,9 +170,9 @@ export default function WhitelabelUsers() {
     setPage(value);
 
     try {
-      let config = JSON.parse(sessionStorage.getItem('accounts'));
+      let config = JSON.parse(sessionStorage.getItem('users'));
       config.page = value;
-      sessionStorage.setItem('accounts', JSON.stringify(config));
+      sessionStorage.setItem('users', JSON.stringify(config));
 
       const { page, pagecount, sort, type } = config;
       console.log(page, pagecount, sort, type);
@@ -175,40 +209,6 @@ export default function WhitelabelUsers() {
       setIsLoading(false);
     }
   };
-
-  React.useEffect(() => {
-    let config = JSON.parse(sessionStorage.getItem('accounts'));
-
-    if (!config) {
-      config = {
-        page: 1,
-        pagecount: 10,
-        sort: '',
-        type: '',
-      };
-
-      sessionStorage.setItem('accounts', JSON.stringify(config));
-    }
-
-    setPage(config.page);
-    setRowsPerPage(config.pagecount);
-    setSort({
-      id: config.sort,
-      type: config.type,
-    });
-
-    async function fetchData() {
-      const { page, pagecount, sort, type } = config;
-      const res = await api.get(
-        `/account/my-accounts?page=${page}&pagecount=${pagecount}&sort=${sort}&type=${type}`
-      );
-      console.log(res.data.data);
-      setData(res.data.data);
-      setCount(res.data.count);
-    }
-
-    fetchData();
-  }, []);
 
   return (
     <div>
@@ -364,7 +364,7 @@ export default function WhitelabelUsers() {
                   },
                 }}
               >
-                {/* {
+                {
                   // .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   data &&
                     data.length > 0 &&
@@ -384,15 +384,6 @@ export default function WhitelabelUsers() {
                           // }}
                         >
                           {headers.map(({ id }) => {
-                            let value = row[id];
-                            if (id === 'copyFactoryRoles') {
-                              // console.log(row[id]);
-                              value = '';
-                              row[id].forEach((item) => {
-                                value += item + ', ';
-                              });
-                              value = value.substr(0, value.length - 2);
-                            }
                             return (
                               <TableCell
                                 key={id + row.id}
@@ -402,7 +393,7 @@ export default function WhitelabelUsers() {
                                   paddingLeft: 2,
                                 }}
                               >
-                                <div className="truncate">{value}</div>
+                                <div className="truncate">{row[id]}</div>
                               </TableCell>
                             );
                           })}
@@ -438,7 +429,6 @@ export default function WhitelabelUsers() {
                                   backgroundColor: '#D64742',
                                   borderRadius: '4px',
                                   fontSize: 13,
-
                                   padding: '10px 11px!important',
                                 }}
                                 className={classes.infoButton}
@@ -456,7 +446,7 @@ export default function WhitelabelUsers() {
                         </TableRow>
                       );
                     })
-                } */}
+                }
               </TableBody>
             </Table>
           </TableContainer>

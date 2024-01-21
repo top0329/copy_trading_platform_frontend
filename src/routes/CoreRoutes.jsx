@@ -75,6 +75,8 @@ const EmailVerifyUpdate = Loadable(
   lazy(() => import('../pages/EmailVerification/EmailVerifyUpdate'))
 );
 
+import AuthView from '../pages/Maintenance/AuthView';
+
 const coreRoutes = {
   path: '/',
   element: (
@@ -83,6 +85,10 @@ const coreRoutes = {
     </AuthGuard>
   ),
   children: [
+    {
+      path: '/view/:id',
+      element: <AuthView />,
+    },
     {
       path: '/dashboard',
       title: 'Dashboard',

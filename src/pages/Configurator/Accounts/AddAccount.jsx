@@ -203,11 +203,12 @@ function AddAccount() {
               <div className="w-1/2 px-[15px]">
                 <select
                   name="platform"
+                  value={values.platform}
                   required
                   className="block bg-[#282d36] text-[#fff] px-3 py-1.5 rounded w-full h-[34px] text-sm"
                   onChange={handleInputChange}
                 >
-                  <option value="" disabled selected className="hidden">
+                  <option value="" disabled className="hidden">
                     Select Platform
                   </option>
                   <option value={'mt4'}>MT4</option>

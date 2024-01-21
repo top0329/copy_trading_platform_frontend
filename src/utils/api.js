@@ -20,7 +20,12 @@ api.interceptors.response.use(
   (res) => res,
   (err) => {
     if (err.response.status === 401) {
-      window.localStorage.clear();
+      if (localStorage.getItem('token')) {
+        localStorage.setItem('expired', true);
+      }
+
+      window.localStorage.removeItem('token');
+
       window.location.href = '/auth/login';
     }
     return Promise.reject(err);

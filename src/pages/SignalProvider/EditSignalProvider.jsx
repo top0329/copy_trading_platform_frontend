@@ -7,23 +7,36 @@ import copy from 'copy-to-clipboard';
 
 import api from '../../utils/api';
 import useToast from '../../hooks/useToast';
+import { BASE_URL } from '../../config';
 
 function EditSignalProvider() {
   const { showToast } = useToast();
   const { strategyId } = useParams();
 
   const initialValues = {
-    openTrades: false,
-    tradeHistory: false,
-    balanceInformation: false,
-    broker: false,
-    accountDetails: false,
-    ticket: false,
-    isLive: false,
-    url: 'https://my.socialtradertools.com/view/818fja902i',
+    _id: '',
+    strategyId: '',
+    name: '',
+    description: '',
+    accountId: '',
+    live: false,
+    proposers: [],
+    terms: {
+      emailAlerts: false,
+      tradeCopy: false,
+    },
+    strategyLink: '',
+    setting: {
+      openTrades: true,
+      tradeHistory: true,
+      balanceInformation: true,
+      broker: true,
+      accountDetails: true,
+      ticket: true,
+    },
   };
+
   const [values, setValues] = React.useState(initialValues);
-  const [accountData, setAccountData] = React.useState([]);
   const [createSignalButtonClicked, setCreateSignalButtonClicked] =
     React.useState(false);
   const [isLoading, setIsLoading] = React.useState(false);
@@ -35,30 +48,46 @@ function EditSignalProvider() {
 
   const handleCheckboxChange = (e) => {
     const { name, checked } = e.target;
+    console.log(name, checked);
     setValues({
       ...values,
-      [name]: checked,
+      setting: {
+        ...values.setting,
+        [name]: checked,
+      },
     });
-    console.log(values);
   };
+
+  React.useEffect(() => {
+    async function init() {
+      const signalProviderData = await api.get(
+        `/strategy/strategies/${strategyId}`
+      );
+      setValues(signalProviderData.data);
+    }
+    init();
+  }, []);
 
   const handleCopyButtonClicked = () => {
     try {
       setIsCopied(true);
-      copy(values.url);
+      copy(`${BASE_URL}view/${values.strategyLink}`);
       setTimeout(() => {
         setIsCopied(false);
       }, 2000);
     } catch (err) {
-      console.log("failed to copy", err);
+      console.log('failed to copy', err);
     }
-  }
+  };
 
   const handleLiveButtonClicked = async () => {
     try {
       setIsLoading(true);
-      setValues({ isLive: !values.isLive });
-      showToast(`Successfully ${!values.isLive ? 'Lived' : 'Not Lived'}!`, 'success')
+      setValues({ ...values, live: !values.live });
+      // showToast(
+      //   `Successfully ${!values.live ? 'Lived' : 'Not Lived'}!`,
+      //   'success'
+      // );
     } catch (err) {
       console.log(err);
       showToast(`Failed to change Live state!`, 'error');
@@ -70,14 +99,16 @@ function EditSignalProvider() {
   const handleCreateSignalProviderButtonClicked = async () => {
     try {
       setIsLoading(true);
-      // const result = await api.post('/strategy/register-strategy', values);
-      showToast('Strategy registered successfully!', 'success');
+      const result = await api.put(`/strategy/${values._id}`, values);
+      showToast('Strategy updated successfully!', 'success');
       // console.log(result);
-      setIsLoading(false);
+
       navigate('/signal-provider');
     } catch (err) {
-      showToast('Strategy registration failed!', 'error');
+      showToast('Strategy updated failed!', 'error');
       console.log(err);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -104,7 +135,7 @@ function EditSignalProvider() {
             <div className="mb-3">
               <label className="font-bold">URL</label>
               <div className="flex gap-3">
-                <p>{values.url}</p>
+                <p>{`${BASE_URL}view/${values.strategyLink}`}</p>
                 <button
                   className={`${
                     isCopied ? 'bg-[#00cc2c] text-[#333]' : 'bg-[#0088cc]'
@@ -122,13 +153,13 @@ function EditSignalProvider() {
                 sx={{
                   textTransform: 'none',
                   backgroundColor: `${
-                    values.isLive ? '#0088cc!important' : '#d2322d!important'
+                    values.live ? '#0088cc!important' : '#d2322d!important'
                   }`,
                 }}
                 onClick={handleLiveButtonClicked}
                 loading={isLoading}
               >
-                {values.isLive ? 'Live' : 'Not Live'}
+                {values.live ? 'Live' : 'Not Live'}
               </LoadingButton>
             </div>
           </div>
@@ -190,18 +221,18 @@ function EditSignalProvider() {
                     <input
                       name="openTrades"
                       type="checkbox"
-                      checked={values.openTrades}
+                      checked={values.setting.openTrades}
                       onChange={handleCheckboxChange}
                       className="sr-only"
                     />
                     <div
                       className={`box block h-8 w-14 rounded-full ${
-                        values.openTrades ? 'bg-[#0088cc]' : 'bg-[#ccc]'
+                        values.setting.openTrades ? 'bg-[#0088cc]' : 'bg-[#ccc]'
                       }`}
                     ></div>
                     <div
                       className={`absolute left-1 top-1 flex h-6 w-6 items-center justify-center rounded-full bg-white transition ${
-                        values.openTrades ? 'translate-x-full' : ''
+                        values.setting.openTrades ? 'translate-x-full' : ''
                       }`}
                     ></div>
                   </div>
@@ -221,18 +252,20 @@ function EditSignalProvider() {
                     <input
                       name="tradeHistory"
                       type="checkbox"
-                      checked={values.tradeHistory}
+                      checked={values.setting.tradeHistory}
                       onChange={handleCheckboxChange}
                       className="sr-only"
                     />
                     <div
                       className={`box block h-8 w-14 rounded-full ${
-                        values.tradeHistory ? 'bg-[#0088cc]' : 'bg-[#ccc]'
+                        values.setting.tradeHistory
+                          ? 'bg-[#0088cc]'
+                          : 'bg-[#ccc]'
                       }`}
                     ></div>
                     <div
                       className={`absolute left-1 top-1 flex h-6 w-6 items-center justify-center rounded-full bg-white transition ${
-                        values.tradeHistory ? 'translate-x-full' : ''
+                        values.setting.tradeHistory ? 'translate-x-full' : ''
                       }`}
                     ></div>
                   </div>
@@ -252,18 +285,22 @@ function EditSignalProvider() {
                     <input
                       name="balanceInformation"
                       type="checkbox"
-                      checked={values.balanceInformation}
+                      checked={values.setting.balanceInformation}
                       onChange={handleCheckboxChange}
                       className="sr-only"
                     />
                     <div
                       className={`box block h-8 w-14 rounded-full ${
-                        values.balanceInformation ? 'bg-[#0088cc]' : 'bg-[#ccc]'
+                        values.setting.balanceInformation
+                          ? 'bg-[#0088cc]'
+                          : 'bg-[#ccc]'
                       }`}
                     ></div>
                     <div
                       className={`absolute left-1 top-1 flex h-6 w-6 items-center justify-center rounded-full bg-white transition ${
-                        values.balanceInformation ? 'translate-x-full' : ''
+                        values.setting.balanceInformation
+                          ? 'translate-x-full'
+                          : ''
                       }`}
                     ></div>
                   </div>
@@ -283,18 +320,18 @@ function EditSignalProvider() {
                     <input
                       name="broker"
                       type="checkbox"
-                      checked={values.broker}
+                      checked={values.setting.broker}
                       onChange={handleCheckboxChange}
                       className="sr-only"
                     />
                     <div
                       className={`box block h-8 w-14 rounded-full ${
-                        values.broker ? 'bg-[#0088cc]' : 'bg-[#ccc]'
+                        values.setting.broker ? 'bg-[#0088cc]' : 'bg-[#ccc]'
                       }`}
                     ></div>
                     <div
                       className={`absolute left-1 top-1 flex h-6 w-6 items-center justify-center rounded-full bg-white transition ${
-                        values.broker ? 'translate-x-full' : ''
+                        values.setting.broker ? 'translate-x-full' : ''
                       }`}
                     ></div>
                   </div>
@@ -314,18 +351,20 @@ function EditSignalProvider() {
                     <input
                       name="accountDetails"
                       type="checkbox"
-                      checked={values.accountDetails}
+                      checked={values.setting.accountDetails}
                       onChange={handleCheckboxChange}
                       className="sr-only"
                     />
                     <div
                       className={`box block h-8 w-14 rounded-full ${
-                        values.accountDetails ? 'bg-[#0088cc]' : 'bg-[#ccc]'
+                        values.setting.accountDetails
+                          ? 'bg-[#0088cc]'
+                          : 'bg-[#ccc]'
                       }`}
                     ></div>
                     <div
                       className={`absolute left-1 top-1 flex h-6 w-6 items-center justify-center rounded-full bg-white transition ${
-                        values.accountDetails ? 'translate-x-full' : ''
+                        values.setting.accountDetails ? 'translate-x-full' : ''
                       }`}
                     ></div>
                   </div>
@@ -345,18 +384,18 @@ function EditSignalProvider() {
                     <input
                       name="ticket"
                       type="checkbox"
-                      checked={values.ticket}
+                      checked={values.setting.ticket}
                       onChange={handleCheckboxChange}
                       className="sr-only"
                     />
                     <div
                       className={`box block h-8 w-14 rounded-full ${
-                        values.ticket ? 'bg-[#0088cc]' : 'bg-[#ccc]'
+                        values.setting.ticket ? 'bg-[#0088cc]' : 'bg-[#ccc]'
                       }`}
                     ></div>
                     <div
                       className={`absolute left-1 top-1 flex h-6 w-6 items-center justify-center rounded-full bg-white transition ${
-                        values.ticket ? 'translate-x-full' : ''
+                        values.setting.ticket ? 'translate-x-full' : ''
                       }`}
                     ></div>
                   </div>

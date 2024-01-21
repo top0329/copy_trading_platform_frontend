@@ -54,7 +54,7 @@ function WhitelabelHomepage() {
   };
 
   return (
-    <div className="grid grid-cols-12 gap-4 mb-24">
+    <div className="grid grid-cols-12 gap-6 mb-24">
       <div className="col-span-6">
         <div className="mb-[20px] rounded bg-[#282D36] text-white">
           <header className="p-4">

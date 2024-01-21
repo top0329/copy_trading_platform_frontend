@@ -90,10 +90,11 @@ const headers = [
   // { id: 'openTime', label: 'E' },
   // { id: 'symbol', label: 'Symbol' },
   // { id: 'type', label: 'Type' },
-  // { id: 'volume', label: 'Lots' },
   { id: 'description', label: 'Description' },
   { id: 'createdAt', label: 'CreatedAt' },
   { id: 'updatedAt', label: 'UpdatedAt' },
+  { id: 'live', label: 'Live' },
+  { id: 'terms', label: 'Terms' },
 ];
 
 export default function SignalProvider() {
@@ -125,7 +126,7 @@ export default function SignalProvider() {
 
   const handleConfigureButtonClicked = () => {
     navigate('/signal-provider/configure-payment-processor');
-  }
+  };
 
   const handleDeleteSignalModalButtonClicked = async () => {
     try {
@@ -226,7 +227,10 @@ export default function SignalProvider() {
         </header>
         <div className="text-[#ccc] bg-[#2E353E] p-4 rounded-b">
           <p className="mb-3">Processor configured</p>
-          <button className="w-auto rounded px-3 py-1.5 text-white text-sm bg-[#0099E6]" onClick={handleConfigureButtonClicked}>
+          <button
+            className="w-auto rounded px-3 py-1.5 text-white text-sm bg-[#0099E6]"
+            onClick={handleConfigureButtonClicked}
+          >
             Configure
           </button>
         </div>
@@ -416,7 +420,20 @@ export default function SignalProvider() {
                                     paddingLeft: 2,
                                   }}
                                 >
-                                  <div className="truncate">{value}</div>
+                                  {id === 'live' ? (
+                                    <Icon
+                                      icon={
+                                        row[id]
+                                          ? 'mdi:check-bold'
+                                          : 'mdi:close-bold'
+                                      }
+                                      width={22}
+                                      className="font-bold"
+                                      color={row[id] ? 'green' : '#D64742'}
+                                    />
+                                  ) : (
+                                    <div className="truncate">{value}</div>
+                                  )}
                                 </TableCell>
                               );
                             })}

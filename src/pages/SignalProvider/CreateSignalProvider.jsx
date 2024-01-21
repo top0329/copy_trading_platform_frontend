@@ -34,7 +34,7 @@ function CreateSignalProvider() {
     fetchData();
   }, []);
 
-  const handleDeleteAccountButtonClicked = () => {
+  const handleCreateSignalProviderButtonClicked = () => {
     try {
       setCreateSignalButtonClicked(true);
       if (
@@ -60,7 +60,7 @@ function CreateSignalProvider() {
     });
   };
 
-  const handleCreateSignalProviderButtonClicked = async () => {
+  const handleCreateSignalProviderModalButtonClicked = async () => {
     try {
       setIsLoading(true);
       const result = await api.post('/strategy/register-strategy', values);
@@ -71,6 +71,8 @@ function CreateSignalProvider() {
     } catch (err) {
       showToast('Strategy registration failed!', 'error');
       console.log(err);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -79,8 +81,8 @@ function CreateSignalProvider() {
       {signalProviderTermsModalShow && (
         <SignalProviderTermsModal
           signalProviderTermsModalShow={setSignalProviderTermsModalShow}
-          handleCreateSignalProviderButtonClicked={
-            handleCreateSignalProviderButtonClicked
+          handleCreateSignalProviderModalButtonClicked={
+            handleCreateSignalProviderModalButtonClicked
           }
           isLoading={isLoading}
         />
@@ -187,7 +189,7 @@ function CreateSignalProvider() {
                     textTransform: 'none',
                     backgroundColor: '#0088CC!important',
                   }}
-                  onClick={handleDeleteAccountButtonClicked}
+                  onClick={handleCreateSignalProviderButtonClicked}
                 >
                   Create signal page
                 </Button>

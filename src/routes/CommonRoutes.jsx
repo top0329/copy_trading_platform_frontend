@@ -7,12 +7,17 @@ import EmailVerificationPageForSignUp from '../pages/EmailVerification/EmailVeri
 import ForgotPassword from '../pages/EmailVerification/ForgotPassword';
 import ResetPassword from '../pages/EmailVerification/ResetPassword';
 import Error404 from '../pages/Maintenance/Error404';
+import View from '../pages/Maintenance/View';
 
 const CommonRoutes = {
   path: '/',
   children: [
     {
       path: '*',
+      element: <Error404 />,
+    },
+    {
+      path: '/404',
       element: <Error404 />,
     },
     {
@@ -46,6 +51,10 @@ const CommonRoutes = {
     {
       path: '/reset-password/:token',
       element: <ResetPassword />,
+    },
+    {
+      path: '/auth/view/:id',
+      element: <View />,
     },
   ],
 };

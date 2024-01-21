@@ -4,7 +4,7 @@ import LoadingButton from '@mui/lab/LoadingButton';
 
 function SignalProviderTermsModal({
   signalProviderTermsModalShow,
-  handleCreateSignalProviderButtonClicked,
+  handleCreateSignalProviderModalButtonClicked,
   isLoading,
 }) {
   const [checkboxSelected, setCheckboxSelected] = React.useState(false);
@@ -62,19 +62,12 @@ function SignalProviderTermsModal({
                 backgroundColor: '#0088cc!important',
               },
             }}
-            onClick={handleCreateSignalProviderButtonClicked}
+            onClick={handleCreateSignalProviderModalButtonClicked}
             loading={isLoading}
             disabled={!checkboxSelected}
           >
             Create signal page
           </LoadingButton>
-          {/* <button
-            className="bg-[#d2322d] rounded py-1.5 px-3 disabled:opacity-50"
-            onClick={handleCreateSignalProviderButtonClicked}
-            disabled={!checkboxSelected}
-          >
-            Delete
-          </button> */}
         </footer>
       </section>
     </div>

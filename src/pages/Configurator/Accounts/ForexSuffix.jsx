@@ -4,21 +4,22 @@ import { useParams } from 'react-router-dom';
 
 import api from '../../../utils/api';
 import useToast from '../../../hooks/useToast';
+import Symbols from '../../../constants/symbols.json'
 
 function ForexSuffix() {
   const { showToast } = useToast();
   const { id } = useParams();
 
-  const [symbols, setSymbols] = React.useState([]);
+  const [symbols, setSymbols] = React.useState(Symbols.symbols);
   const [isLoading, setIsLoading] = React.useState(false);
 
-  React.useEffect(() => {
-    async function init() {
-      const response = await api.get(`/account/${id}`);
-      setSymbols(response.data.symbols);
-    }
-    init();
-  }, []);
+  // React.useEffect(() => {
+  //   // async function init() {
+  //   //   const response = await api.get(`/account/${id}`);
+  //   //   setSymbols(response.data.symbols);
+  //   // }
+  //   // init();
+  // }, []);
 
   const handleUpdateClicked = async () => {
     try {

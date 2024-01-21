@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom';
 
 import api from '../../../utils/api';
 import useToast from '../../../hooks/useToast';
+import Symbols from '../../../constants/symbols.json'
 
 function DisableSymbols() {
   const { showToast } = useToast();
@@ -11,7 +12,7 @@ function DisableSymbols() {
 
   const [subscriberName, setSubscriberName] = React.useState('');
   const [isLoading, setIsLoading] = React.useState(false);
-  const [allSymbols, setAllSymbols] = React.useState([]);
+  const [allSymbols, setAllSymbols] = React.useState(Symbols.symbols);
   const [symbolsSelction, setSymbolsSelction] = React.useState(true);
 
   const handleCheckChange = (key, checked) => {
@@ -68,7 +69,7 @@ function DisableSymbols() {
 
       if (included.length > 0) {
         setAllSymbols(
-          accountData.data.symbols.map((item) =>
+          allSymbols.map((item) =>
             included.includes(item)
               ? { key: item, checked: true }
               : { key: item, checked: false }
@@ -76,16 +77,14 @@ function DisableSymbols() {
         );
       } else if (excluded.length > 0) {
         setAllSymbols(
-          accountData.data.symbols.map((item) =>
+          allSymbols.map((item) =>
             excluded.includes(item)
               ? { key: item, checked: false }
               : { key: item, checked: true }
           )
         );
       } else if (included.length === 0 && excluded.length === 0) {
-        setAllSymbols(
-          accountData.data.symbols.map((item) => ({ key: item, checked: true }))
-        );
+        setAllSymbols(allSymbols.map((item) => ({ key: item, checked: true })));
       }
     }
     init();

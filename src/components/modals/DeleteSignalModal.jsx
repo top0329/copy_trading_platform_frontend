@@ -64,13 +64,6 @@ function DeleteSignalModal({
           >
             Delete
           </LoadingButton>
-          {/* <button
-            className="bg-[#d2322d] rounded py-1.5 px-3 disabled:opacity-50"
-            onClick={handleDeleteSignalModalButtonClicked}
-            disabled={!checkboxSelected}
-          >
-            Delete
-          </button> */}
         </footer>
       </section>
     </div>

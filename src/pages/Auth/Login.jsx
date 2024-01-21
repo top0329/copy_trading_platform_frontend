@@ -4,7 +4,6 @@ import validator from 'validator';
 
 import useAuth from '../../hooks/useAuth';
 import useToast from '../../hooks/useToast';
-import api from '../../utils/api';
 
 import Logo from '../../assets/img/logo.jpeg';
 
@@ -48,7 +47,15 @@ function Login() {
         }
         await login(values);
         showToast('Login success!', 'success');
-        navigate('/dashboard');
+
+        const expired = localStorage.getItem('expired');
+        const prevPath = localStorage.getItem('prevPath');
+        if (expired && prevPath) {
+          localStorage.removeItem('expired');
+          navigate(prevPath);
+        } else {
+          navigate('/dashboard');
+        }
       }
     } catch (err) {
       let msg = 'Login failed';

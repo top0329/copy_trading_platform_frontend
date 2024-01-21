@@ -54,7 +54,7 @@ function ConfigurePaymentProcessor() {
       <div className="py-0 px-[200px]">
         <div className="pb-3">
           <Link
-            to={`/signal-provider/edit/${strategyId}`}
+            to='/signal-provider'
             className="flex flex-row items-center font-extrabold"
           >
             <ReplyRoundedIcon
