@@ -25,7 +25,7 @@ import PriorityHighIcon from '@mui/icons-material/PriorityHigh';
 import IconButton from '@mui/material/IconButton';
 import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
 
-import DeleteAccountModal from '../../../components/modals/DeleteAccountModal';
+import DeleteUserModal from '../../../components/modals/DeleteUserModal';
 import InfoModal from '../../../components/modals/InfoModal';
 
 import useToast from '../../../hooks/useToast';
@@ -113,8 +113,7 @@ export default function WhitelabelUsers() {
   const [count, setCount] = React.useState(0);
   const [page, setPage] = React.useState(1);
   // const [exclamationModalShow, setExclamationModalShow] = React.useState(false);
-  const [deleteAccountModalShow, setDeleteAccountModalShow] =
-    React.useState(false);
+  const [DeleteUserModalShow, setDeleteUserModalShow] = React.useState(false);
   const [data, setData] = React.useState([]);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [selectedAccountData, setSelectedAccountData] = React.useState({});
@@ -143,6 +142,7 @@ export default function WhitelabelUsers() {
 
     async function fetchData() {
       const { page, pagecount, sort, type } = config;
+      console.log(page, pagecount, sort, type)
       const res = await api.get(
         `/users/all?page=${page}&pagecount=${pagecount}&sort=${sort}&type=${type}`
       );
@@ -177,8 +177,9 @@ export default function WhitelabelUsers() {
       const { page, pagecount, sort, type } = config;
       console.log(page, pagecount, sort, type);
       const res = await api.get(
-        `/account/my-accounts?page=${page}&pagecount=${pagecount}&sort=${sort}&type=${type}`
+        `/users/all?page=${page}&pagecount=${pagecount}&sort=${sort}&type=${type}`
       );
+
       setData(res.data.data);
       setCount(res.data.count);
     } catch (e) {
@@ -192,32 +193,34 @@ export default function WhitelabelUsers() {
 
   const handleDeleteAccountButtonClicked = (accountData) => {
     setSelectedAccountData(accountData);
-    setDeleteAccountModalShow(true);
+    console.log(selectedAccountData)
+    setDeleteUserModalShow(true);
   };
 
-  const handleDeleteAccountModalButtonClicked = async () => {
+  const handleDeleteUserModalButtonClicked = async () => {
     try {
       setIsLoading(true);
-      await api.delete(`/account/delete/${selectedAccountData.accountId}`);
+
+      await api.delete(`users/${selectedAccountData._id}`);
       handlePageChange(null, page);
       showToast('Account deleted successfully!', 'success');
     } catch (err) {
       showToast('Account deletion failed!', 'error');
       console.log(err);
     } finally {
-      setDeleteAccountModalShow(false);
+      setDeleteUserModalShow(false);
       setIsLoading(false);
     }
   };
 
   return (
     <div>
-      {deleteAccountModalShow && (
-        <DeleteAccountModal
-          deleteAccountModalShow={setDeleteAccountModalShow}
-          selectedAccountName={selectedAccountData.accountName}
-          handleDeleteAccountModalButtonClicked={
-            handleDeleteAccountModalButtonClicked
+      {DeleteUserModalShow && (
+        <DeleteUserModal
+          DeleteUserModalShow={setDeleteUserModalShow}
+          selectedUserName={selectedAccountData.fullName}
+          handleDeleteUserModalButtonClicked={
+            handleDeleteUserModalButtonClicked
           }
           isLoading={isLoading}
         />
@@ -323,7 +326,7 @@ export default function WhitelabelUsers() {
                 >
                   {headers.map(({ label, id }) => (
                     <TableCell
-                      key={id}
+                      key={id + "rrr"}
                       align="center"
                       sx={{
                         padding: '5px',
@@ -369,19 +372,12 @@ export default function WhitelabelUsers() {
                   data &&
                     data.length > 0 &&
                     data.map((row) => {
-                      console.log(row);
                       return (
                         <TableRow
                           hover
                           role="checkbox"
                           tabIndex={-1}
                           key={row.id}
-                          // sx={{
-                          //   '&:last-child td, &:last-child th': {
-                          //     border: 1,
-                          //     borderColor: '#282D36',
-                          //   },
-                          // }}
                         >
                           {headers.map(({ id }) => {
                             return (
@@ -434,8 +430,8 @@ export default function WhitelabelUsers() {
                                 className={classes.infoButton}
                                 onClick={() =>
                                   handleDeleteAccountButtonClicked({
-                                    accountName: `${row.name}(${row.login})`,
-                                    accountId: row.accountId,
+                                    fullName: row.fullName,
+                                    _id: row._id,
                                   })
                                 }
                               >
