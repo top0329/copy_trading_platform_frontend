@@ -57,7 +57,7 @@ function ForexSuffix() {
             />
             <label
               htmlFor="inline-radio"
-              className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300 italic"
+              className="ms-2 text-sm font-medium text-[#ccc] dark:text-gray-300 italic"
             >
               No suffix
             </label>

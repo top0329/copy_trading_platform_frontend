@@ -85,7 +85,7 @@ function ConfigurePaymentProcessor() {
                   />
                   <label
                     htmlFor="inline-radio"
-                    className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                    className="ms-2 text-sm font-medium text-[#ccc] dark:text-gray-300"
                   >
                     Paypal
                   </label>
@@ -100,7 +100,7 @@ function ConfigurePaymentProcessor() {
                   />
                   <label
                     htmlFor="inline-radio"
-                    className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                    className="ms-2 text-sm font-medium text-[#ccc] dark:text-gray-300"
                   >
                     Stripe
                   </label>

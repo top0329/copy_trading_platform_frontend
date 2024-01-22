@@ -81,13 +81,17 @@ function AddAccount() {
       } else {
         setIsLoading(true);
         const result = await api.post('/account/register-account', values);
+        
+        if (result.data.AccountRegister) {
+          dispatch({
+            type: 'ADD_ID',
+            payload: result.data.AccountRegister.id,
+          });
+        } else {
+          throw new Error("null account Register");
+        }
+        
         showToast('Account created successfully!', 'success');
-        console.log(result.data.AccountRegister);
-
-        dispatch({
-          type: 'ADD_ID',
-          payload: result.data.AccountRegister.id,
-        });
 
         setIsLoading(false);
         navigate('/accounts');

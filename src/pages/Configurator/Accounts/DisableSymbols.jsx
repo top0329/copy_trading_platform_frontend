@@ -64,7 +64,7 @@ function DisableSymbols() {
           </div>
         </div>
         <strong className="text-[#ccc] text-[13px]">
-          <span className="text-[#47a447]"> 69 </span> Enabled symbols
+          <span className="text-[#47a447]">{  }</span> Enabled symbols
         </strong>{' '}
         |{' '}
         <strong className="text-[#ccc] text-[13px]">

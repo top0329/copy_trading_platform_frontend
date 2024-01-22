@@ -49,7 +49,7 @@ function Dashboard() {
       try {
         let temp = [...ids];
         if (temp.length === 0) {
-          clearInterval(_id);
+          clearInterval(_intervalRef3.current);
         }
         console.log('untils======>', temp);
         for (let i = 0; i < temp.length; i++) {
