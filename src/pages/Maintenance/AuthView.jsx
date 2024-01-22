@@ -19,7 +19,7 @@ function AuthView() {
   const [accountInfo, setAccountInfo] = React.useState({});
   const [history, setHistory] = React.useState([]);
 
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, user } = useAuth();
 
   const [showModal, setShowModal] = React.useState(false);
 
@@ -30,9 +30,15 @@ function AuthView() {
   React.useEffect(() => {
     async function func() {
       try {
-        const res = await api.get(`/strategy/${id}`);
+        const res = await api.get(`/strategy/link/${id}`);
         if (res.data.status === 'OK') {
-          setAccountId(res.data.data);
+          const _user = res.data.data.account.length > 0 ? res.data.data.account[0].user : "";
+          console.log(res.data.data)
+          if (res.data.data.live || (user && user._id === _user)) {
+            setAccountId(res.data.data.accountId);
+          } else {
+            navigate("/404");//go to 404 if signal is not live
+          }
         } else {
           navigate('/404');
         }
@@ -48,7 +54,6 @@ function AuthView() {
   React.useEffect(() => {
     async function fetcher() {
       try {
-        console.log(accountId);
         const res = await api.get(`/account/accounts/view/${accountId}`);
         console.log(Object.keys(res.data).length);
         setDetails(res.data);
@@ -134,9 +139,8 @@ function AuthView() {
         </div>
 
         <div
-          className={`fixed right-0 bottom-0 top-0 left-0 flex items-center justify-center z-[1201] ${
-            !showModal && 'hidden'
-          }`}
+          className={`fixed right-0 bottom-0 top-0 left-0 flex items-center justify-center z-[1201] ${!showModal && 'hidden'
+            }`}
         >
           <div
             className="fixed right-0 bottom-0 top-0 left-0 flex items-center justify-center z-[1202] bg-opacity-80 bg-[#1D2127]"
