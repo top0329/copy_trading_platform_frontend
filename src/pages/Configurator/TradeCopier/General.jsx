@@ -111,7 +111,7 @@ function General() {
               />
               <label
                 htmlFor="inline-radio"
-                className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                className="ms-2 text-sm font-medium text-[#ccc] dark:text-gray-300"
               >
                 ON
               </label>
@@ -122,11 +122,11 @@ function General() {
                 type="radio"
                 value="monitor"
                 name="inline-radio-group"
-                className="w-4 h-4 text-[#0088cc] bg-gray-800 border-gray-800 rounded-full"
+                className="w-4 h-4 text-[#ccc] bg-gray-800 border-gray-800 rounded-full"
               />
               <label
                 htmlFor="inline-radio"
-                className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                className="ms-2 text-sm font-medium text-[#ccc] dark:text-gray-300"
               >
                 Monitor existing trades only
               </label>
@@ -141,7 +141,7 @@ function General() {
               />
               <label
                 htmlFor="inline-radio"
-                className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                className="ms-2 text-sm font-medium text-[#ccc] dark:text-gray-300"
               >
                 OFF
               </label>
