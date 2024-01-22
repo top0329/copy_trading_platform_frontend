@@ -20,6 +20,11 @@ const breadcrumb = {
     { name: "Dashboard", url: "/dashboard" },
     { name: "Signals", url: "/signals" },
   ],
+  "/analysis/analysis-account": [
+    { name: "Dashboard", url: "/dashboard" },
+    { name: "Accounts", url: "" },
+    { name: "Analysis", url: "" },
+  ],
   "/analysis": [
     { name: "Dashboard", url: "/dashboard" },
     { name: "Analysis", url: "/analysis" },
@@ -162,9 +167,11 @@ export default function CustomSeparator() {
       return "/trade-copier/edit";
     } else if (_url.includes("/signal-provider/edit")) {
       return "/signal-provider/edit";
-    } else if(_url.includes("/signal-provider/follower-terms")) {
+    } else if (_url.includes("/signal-provider/follower-terms")) {
       return "/signal-provider/follower-terms";
-    }
+    } else if (_url.includes("/analysis/analysis-account")) {
+      return "/analysis/analysis-account";
+    } 
 
     return _url;
   }

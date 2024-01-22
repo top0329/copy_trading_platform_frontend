@@ -134,6 +134,8 @@ export default function TradesTable() {
       const res = await api.get(
         `/trade?page=${page}&pagecount=${pagecount}&sort=${sort}&type=${type}`
       );
+
+      console.log(data)
       setData(res.data.data);
       setCount(res.data.count);
     }

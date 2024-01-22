@@ -38,6 +38,7 @@ function AccountAnalysis() {
     async function fetcher() {
       try {
         const res = await api.get(`/account/accountInfo/${id}`);
+        console.log(res.data)
         if (Object.keys(res.data).length > 0) {
           setAccountInfo(res.data);
         }
@@ -53,6 +54,7 @@ function AccountAnalysis() {
     async function fetcher() {
       try {
         const res = await api.get(`/history/all/${id}`);
+        console.log(res.data)
         setHistory(res.data);
       } catch (err) {
         console.log(err);

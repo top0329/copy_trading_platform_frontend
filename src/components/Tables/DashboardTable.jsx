@@ -169,6 +169,7 @@ export default function TradesTable() {
       const res = await api.get(
         `/account/accounts?page=${page}&pagecount=${pagecount}&sort=${sort}&type=${type}`
       );
+      console.log(res.data)
       setData(res.data.data);
       setCount(res.data.count);
     }

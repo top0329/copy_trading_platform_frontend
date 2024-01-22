@@ -23,6 +23,15 @@ function AuthView() {
 
   const [showModal, setShowModal] = React.useState(false);
 
+  const [setting, setSetting] = React.useState({
+    openTrades: false,
+    tradeHistory: false,
+    balanceInformation: false,
+    broker: false,
+    accountDetails: false,
+    ticket: false
+  })
+
   const navigate = useNavigate();
 
   const [accountId, setAccountId] = React.useState();
@@ -36,6 +45,7 @@ function AuthView() {
           console.log(res.data.data)
           if (res.data.data.live || (user && user._id === _user)) {
             setAccountId(res.data.data.accountId);
+            setSetting(res.data.data.setting);
           } else {
             navigate("/404");//go to 404 if signal is not live
           }
@@ -118,25 +128,37 @@ function AuthView() {
           </button>
         </div>
         <div className="flex gap-[20px]">
-          <div className="w-1/4 pt-[10px]">
-            <AccountDetails data={details} />
+          {
+            setting.balanceInformation && 
+            <div className="w-1/4 pt-[10px]">
+              <AccountDetails data={details} />
+            </div>
+          }
+          {
+            setting.broker &&
+            <div className="w-3/4 pt-[10px]">
+              <PerformanceChart data={history} />
+            </div>
+          }
+        </div>
+        {
+          setting.accountDetails &&
+          <div className="mt-[40px]">
+            <TradingStats data={accountInfo} />
           </div>
-          <div className="w-3/4 pt-[10px]">
-            <PerformanceChart data={history} />
+        }
+        {
+          setting.tradeHistory &&
+          <div className="mt-[40px]">
+            <AnalysisByTime data={history} />
           </div>
-        </div>
-
-        <div className="mt-[40px]">
-          <TradingStats data={accountInfo} />
-        </div>
-
-        <div className="mt-[40px]">
-          <AnalysisByTime data={history} />
-        </div>
-
-        <div className="mt-[40px]">
-          <TradesAnalysis />
-        </div>
+        }
+        {
+          setting.openTrades &&
+          <div className="mt-[40px]">
+            <TradesAnalysis />
+          </div>
+        }
 
         <div
           className={`fixed right-0 bottom-0 top-0 left-0 flex items-center justify-center z-[1201] ${!showModal && 'hidden'

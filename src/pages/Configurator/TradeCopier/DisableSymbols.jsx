@@ -145,11 +145,11 @@ function DisableSymbols() {
           </div>
         </div>
         <strong className="text-[#ccc] text-[13px]">
-          <span className="text-[#47a447]"> 69 </span> Enabled symbols
+          <span className="text-[#47a447]">{ allSymbols.reduce((count, item) => count + ( item.checked ? 1 : 0 ), 0) }</span> Enabled symbols
         </strong>{' '}
         |{' '}
         <strong className="text-[#ccc] text-[13px]">
-          <span className="text-[#d2322d]"> 0 </span> Disabled symbols
+          <span className="text-[#d2322d]">{ allSymbols.reduce((count, item) => count + ( !item.checked ? 1 : 0 ), 0) }</span> Disabled symbols
         </strong>
       </header>
       <div className="p-[18px] bg-[#2E353E]">
