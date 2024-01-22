@@ -14,7 +14,7 @@ function WhitelabelDashboard() {
       const userData = await api.get('/users/all');
       const accountData = await api.get('/account/all-accounts');
       const copierData = await api.get('/subscriber/subscribers');
-      setUserCount(userData.data.length);
+      setUserCount(userData.data.count);
       setAccountCount(accountData.data.length);
       setCopierCount(copierData.data.length);
     }
