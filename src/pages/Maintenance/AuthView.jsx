@@ -129,32 +129,32 @@ function AuthView() {
         </div>
         <div className="flex gap-[20px]">
           {
-            setting.balanceInformation && 
+            !setting.accountDetails && 
             <div className="w-1/4 pt-[10px]">
               <AccountDetails data={details} />
             </div>
           }
           {
-            setting.broker &&
+            !setting.accountDetails && 
             <div className="w-3/4 pt-[10px]">
               <PerformanceChart data={history} />
             </div>
           }
         </div>
         {
-          setting.accountDetails &&
+          !setting.balanceInformation &&
           <div className="mt-[40px]">
             <TradingStats data={accountInfo} />
           </div>
         }
         {
-          setting.tradeHistory &&
+          !setting.tradeHistory &&
           <div className="mt-[40px]">
             <AnalysisByTime data={history} />
           </div>
         }
         {
-          setting.openTrades &&
+          !setting.openTrades &&
           <div className="mt-[40px]">
             <TradesAnalysis />
           </div>

@@ -63,48 +63,9 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-const headers = [
-  // { id: 'accountStatus', label: '', minWidth: 15, align: 'center' },
-  { id: 'account', label: 'Account', minWidth: 138 },
-  {
-    id: 'platform',
-    label: 'MT',
-  },
-  {
-    id: 'balance',
-    label: 'Balance',
-  },
-  {
-    id: 'equity',
-    label: 'Equity',
-  },
-  {
-    id: 'equityPercentage',
-    label: 'Equity %',
-  },
-  {
-    id: 'openTrades',
-    label: 'Open Trades (Lots)',
-  },
-  {
-    id: 'day',
-    label: 'Day',
-  },
-  {
-    id: 'week',
-    label: 'Week',
-  },
-  {
-    id: 'month',
-    label: 'Month',
-  },
-  {
-    id: 'total',
-    label: 'Total',
-  },
-];
 
-export default function TradesTable() {
+
+export default function TradesTable({ headers }) {
   const [sort, setSort] = React.useState({
     id: '',
     type: '',
@@ -278,7 +239,7 @@ export default function TradesTable() {
                   },
                 }}
               >
-                {headers.map(({ label, id }) => (
+                {headers.filter(item => item.checked && item.id !== "actions").map(({ label, id }) => (
                   <TableCell
                     key={id}
                     align="center"
@@ -304,13 +265,6 @@ export default function TradesTable() {
                     </div>
                   </TableCell>
                 ))}
-                <TableCell
-                  key={'ccc'}
-                  align="center"
-                  sx={{
-                    padding: '5px',
-                  }}
-                ></TableCell>
               </TableRow>
             </TableHead>
             <TableBody
@@ -331,7 +285,7 @@ export default function TradesTable() {
                         tabIndex={-1}
                         key={row.id}
                       >
-                        {headers.map(({ id }) => {
+                        {headers.filter(item => item.checked && item.id !== "actions").map(({ id }) => {
                           const { day, week, month } = _calcProfitByDate(
                             row.profit
                           );
@@ -357,31 +311,33 @@ export default function TradesTable() {
                             </TableCell>
                           );
                         })}
-                        <TableCell
-                          key={row._id + 'goto'}
-                          align="left"
-                          sx={{
-                            padding: '5px',
-                            paddingLeft: 2,
-                          }}
-                        >
-                          <Link
-                            to={`/analysis/analysis-account/${row.accountId}`}
+                        {
+                          headers.find(({id}) => id === "actions").checked &&
+                          <TableCell
+                            key={row._id + 'goto'}
+                            align="center"
+                            sx={{
+                              padding: '5px',
+                            }}
                           >
-                            <IconButton
-                              size="small"
-                              color="inherit"
-                              sx={{
-                                backgroundColor: '#0088CC',
-                                borderRadius: '4px',
-                                fontSize: 12,
-                                padding: '8px 6px',
-                              }}
+                            <Link
+                              to={`/analysis/analysis-account/${row.accountId}`}
                             >
-                              <Icon icon="fa:bar-chart" color="white" />
-                            </IconButton>
-                          </Link>
-                        </TableCell>
+                              <IconButton
+                                size="small"
+                                color="inherit"
+                                sx={{
+                                  backgroundColor: '#0088CC',
+                                  borderRadius: '4px',
+                                  fontSize: 12,
+                                  padding: '8px 6px',
+                                }}
+                              >
+                                <Icon icon="fa:bar-chart" color="white" />
+                              </IconButton>
+                            </Link>
+                          </TableCell>
+                        }
                       </TableRow>
                     );
                   })

@@ -61,28 +61,8 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-const headers = [
-  { id: 'positionId', label: 'ID' },
-  { id: 'account', label: 'Account' },
-  { id: 'openTime', label: 'Open Time' },
-  { id: 'symbol', label: 'Symbol' },
-  { id: 'type', label: 'Type' },
-  { id: 'volume', label: 'Lots' },
-  { id: 'openPrice', label: 'Open Price' },
-  { id: 'closeTime', label: 'Close Time' },
-  { id: 'closePrice', label: 'Close Price' },
-  { id: 'durationInMinutes', label: 'DurationInMinutes' },
-  { id: 'gain', label: 'Gain' },
-  { id: 'marketValue', label: 'MarketValue' },
-  { id: 'pips', label: 'Pips' },
-  { id: 'success', label: 'Success' },
-  { id: 'profit', label: 'Profit' },
-  // { id: 'riskInBalancePercent', label: 'RiskInBalancePercent' },
-  // { id: 'riskInPips', label: 'RiskInPips' },
-  // { id: 'type', label: '' },
-];
 
-export default function HistoryTable() {
+export default function HistoryTable({ headers }) {
   const [sort, setSort] = React.useState({
     id: '',
     type: '',
@@ -221,7 +201,7 @@ export default function HistoryTable() {
                   },
                 }}
               >
-                {headers.map(({ label, id }) => (
+                {headers.filter(item => item.checked).map(({ label, id }) => (
                   <TableCell
                     key={id}
                     align="center"
@@ -267,7 +247,7 @@ export default function HistoryTable() {
                         tabIndex={-1}
                         key={row.id}
                       >
-                        {headers.map(({ id }) => {
+                        {headers.filter(item => item.checked).map(({ id }) => {
                           let value = row[id];
                           if (id === 'account') {
                             value = `${value[0].name}(${value[0].login})`;

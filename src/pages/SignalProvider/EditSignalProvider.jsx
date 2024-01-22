@@ -310,7 +310,7 @@ function EditSignalProvider() {
                 </label>
               </div>
             </div>
-            <div className="flex justify-start border-b-[1px] border-[#242830] pb-[15px] mb-[15px]">
+            {/* <div className="flex justify-start border-b-[1px] border-[#242830] pb-[15px] mb-[15px]">
               <label className="inline-block relative text-right w-1/4 pt-[7px] px-[15px] max-w-full text-[#ccc] text-[13px]">
                 Broker
               </label>
@@ -340,7 +340,7 @@ function EditSignalProvider() {
                   </p>
                 </label>
               </div>
-            </div>
+            </div> */}
             <div className="flex justify-start border-b-[1px] border-[#242830] pb-[15px] mb-[15px]">
               <label className="inline-block relative text-right w-1/4 pt-[7px] px-[15px] max-w-full text-[#ccc] text-[13px]">
                 Account details
@@ -374,7 +374,7 @@ function EditSignalProvider() {
                 </label>
               </div>
             </div>
-            <div className="flex justify-start">
+            {/* <div className="flex justify-start">
               <label className="inline-block relative text-right w-1/4 pt-[7px] px-[15px] max-w-full text-[#ccc] text-[13px]">
                 Ticket
               </label>
@@ -404,7 +404,7 @@ function EditSignalProvider() {
                   </p>
                 </label>
               </div>
-            </div>
+            </div> */}
           </div>
           <div className="px-[15px] py-[15px]">
             <div className="grid grid-cols-12 gap-3">
