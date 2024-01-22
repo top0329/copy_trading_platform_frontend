@@ -41,8 +41,8 @@ function Dashboard() {
   const dispatch = useDispatch();
   const { ids } = useSelector((state) => state.utils);
 
-  const _intervalRef3 = useRef(null);
-  const _intervalRef300 = useRef(null);
+  const _intervalRef3 = React.useRef(null);
+  const _intervalRef300 = React.useRef(null);
 
   React.useEffect(() => {
     _intervalRef3.current = setInterval(async () => {
