@@ -8,6 +8,11 @@ import useAuth from '../hooks/useAuth';
 import useToast from '../hooks/useToast';
 
 // ==============================|| AUTH GUARD ||============================== //
+const admins = [
+  "/whitelabel",
+  "/signal-provider",
+  "/signal-followers"
+]
 
 const verifyToken = (token) => {
   try {
@@ -27,16 +32,24 @@ const verifyToken = (token) => {
 };
 
 const AuthGuard = ({ children }) => {
-  const { isAuthenticated, isInitialized } = useAuth();
+  const { isAuthenticated, isInitialized, user } = useAuth();
   const navigate = useNavigate();
   const { pathname } = useLocation();
 
   useEffect(() => {
     if (!isAuthenticated && isInitialized) {
-      console.log(isAuthenticated, isInitialized);
       navigate('/auth/login');
     }
-  }, [isAuthenticated, isInitialized]);
+
+    if (Object.keys(user).length > 0) {
+      console.log(user)
+      admins.forEach(url => {
+        if (pathname.includes(url) && user.role !== "Admin") {
+          navigate('/auth/login');
+        }
+      });
+    }
+  }, [isAuthenticated, isInitialized, user]);
 
   // token validation when routing
   useEffect(() => {
@@ -66,7 +79,8 @@ const AuthGuard = ({ children }) => {
       }
     } else if (inValid) {
       navigate('/auth/login');
-    }
+    } 
+
   }, [pathname]);
 
   return children;

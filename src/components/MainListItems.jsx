@@ -24,10 +24,14 @@ import LabelIcon from '@mui/icons-material/Label';
 import HouseIcon from '@mui/icons-material/House';
 import GroupsIcon from '@mui/icons-material/Groups';
 
+import useAuth from '../hooks/useAuth';
+
 function MainListItems({ open }) {
   const [openConfigurator, setOpenConfigurator] = React.useState(false);
   const [openHelpCenter, setOpenHelpCenter] = React.useState(false);
   const [whitelabel, setWhitelabel] = React.useState(false);
+
+  const { user } = useAuth();
 
   const handleConfiguratorClick = () => {
     setOpenConfigurator(!openConfigurator);
@@ -131,70 +135,75 @@ function MainListItems({ open }) {
           <ListItemText primary="Analysis" />
         </ListItemButton>
       </Link>
-      <Link className="flex flex-row" to={'/signal-followers'}>
-        <ListItemButton>
-          <ListItemIcon>
-            <ForwardRoundedIcon sx={{ color: '#CCC' }} />
-          </ListItemIcon>
-          <ListItemText primary="Signal Followers" />
-        </ListItemButton>
-      </Link>
-      <Link className="flex flex-row" to={'/signal-provider'}>
-        <ListItemButton>
-          <ListItemIcon>
-            <SwapHorizRoundedIcon sx={{ color: '#CCC' }} />
-          </ListItemIcon>
-          <ListItemText primary="Signal Provider" />
-        </ListItemButton>
-      </Link>
-      <ListItemButton onClick={handleWhitelabelClick}>
-        <ListItemIcon>
-          <LabelIcon sx={{ color: '#CCC' }} />
-        </ListItemIcon>
-        <ListItemText primary="Whitelabel" />
-        {whitelabel ? <ExpandLess /> : <ExpandMore />}
-      </ListItemButton>
-      <Collapse
-        in={whitelabel && open}
-        timeout="auto"
-        unmountOnExit
-        sx={{ backgroundColor: '#191C21' }}
-      >
-        <List component="div" disablePadding>
-          <Link className="flex flex-row" to={'/whitelabel/dashboard'}>
-            <ListItemButton sx={{ pl: 4 }}>
+      {
+        user.role === "Admin" &&
+        <>
+          <Link className="flex flex-row" to={'/signal-followers'}>
+            <ListItemButton>
               <ListItemIcon>
-                <SpeedIcon sx={{ color: '#ccc' }} />
+                <ForwardRoundedIcon sx={{ color: '#CCC' }} />
               </ListItemIcon>
-              <ListItemText primary="Dashboard" />
+              <ListItemText primary="Signal Followers" />
             </ListItemButton>
           </Link>
-          <Link className="flex flex-row" to={'/whitelabel/users'}>
-            <ListItemButton sx={{ pl: 4 }}>
+          <Link className="flex flex-row" to={'/signal-provider'}>
+            <ListItemButton>
               <ListItemIcon>
-                <GroupsIcon sx={{ color: '#ccc' }} />
+                <SwapHorizRoundedIcon sx={{ color: '#CCC' }} />
               </ListItemIcon>
-              <ListItemText primary="Users" />
+              <ListItemText primary="Signal Provider" />
             </ListItemButton>
           </Link>
-          <Link className="flex flex-row" to={'/whitelabel/homepage'}>
-            <ListItemButton sx={{ pl: 4 }}>
-              <ListItemIcon>
-                <HouseIcon sx={{ color: '#ccc' }} />
-              </ListItemIcon>
-              <ListItemText primary="Homepage" />
-            </ListItemButton>
-          </Link>
-          <Link className="flex flex-row" to={'/whitelabel/settings'}>
-            <ListItemButton sx={{ pl: 4 }}>
-              <ListItemIcon>
-                <SettingsSuggestIcon sx={{ color: '#ccc' }} />
-              </ListItemIcon>
-              <ListItemText primary="Settings" />
-            </ListItemButton>
-          </Link>
-        </List>
-      </Collapse>
+          <ListItemButton onClick={handleWhitelabelClick}>
+            <ListItemIcon>
+              <LabelIcon sx={{ color: '#CCC' }} />
+            </ListItemIcon>
+            <ListItemText primary="Whitelabel" />
+            {whitelabel ? <ExpandLess /> : <ExpandMore />}
+          </ListItemButton>
+          <Collapse
+            in={whitelabel && open}
+            timeout="auto"
+            unmountOnExit
+            sx={{ backgroundColor: '#191C21' }}
+          >
+            <List component="div" disablePadding>
+              <Link className="flex flex-row" to={'/whitelabel/dashboard'}>
+                <ListItemButton sx={{ pl: 4 }}>
+                  <ListItemIcon>
+                    <SpeedIcon sx={{ color: '#ccc' }} />
+                  </ListItemIcon>
+                  <ListItemText primary="Dashboard" />
+                </ListItemButton>
+              </Link>
+              <Link className="flex flex-row" to={'/whitelabel/users'}>
+                <ListItemButton sx={{ pl: 4 }}>
+                  <ListItemIcon>
+                    <GroupsIcon sx={{ color: '#ccc' }} />
+                  </ListItemIcon>
+                  <ListItemText primary="Users" />
+                </ListItemButton>
+              </Link>
+              <Link className="flex flex-row" to={'/whitelabel/homepage'}>
+                <ListItemButton sx={{ pl: 4 }}>
+                  <ListItemIcon>
+                    <HouseIcon sx={{ color: '#ccc' }} />
+                  </ListItemIcon>
+                  <ListItemText primary="Homepage" />
+                </ListItemButton>
+              </Link>
+              <Link className="flex flex-row" to={'/whitelabel/settings'}>
+                <ListItemButton sx={{ pl: 4 }}>
+                  <ListItemIcon>
+                    <SettingsSuggestIcon sx={{ color: '#ccc' }} />
+                  </ListItemIcon>
+                  <ListItemText primary="Settings" />
+                </ListItemButton>
+              </Link>
+            </List>
+          </Collapse>
+        </>
+      }
       <ListItemButton onClick={handleHelpCenterClick}>
         <ListItemIcon>
           <LayersIcon sx={{ color: '#CCC' }} />
