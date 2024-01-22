@@ -40,6 +40,18 @@ const breadcrumb = {
     { name: "Configurator", url: "" },
     { name: "Trade Copier", url: "/trade-copier" },
   ],
+  "/trade-copier/edit": [
+    { name: "Dashboard", url: "/dashboard" },
+    { name: "Configurator", url: "" },
+    { name: "Trade Copier", url: "/trade-copier" },
+    { name: "Edit", url: "" },
+  ],
+  "/trade-copier/create-new-trade-copier": [
+    { name: "Dashboard", url: "/dashboard" },
+    { name: "Configurator", url: "" },
+    { name: "Trade Copier", url: "/trade-copier" },
+    { name: "Create Trade Copier", url: "/trade-copier/create-new-trade-copier" },
+  ],
   "/email-alerts": [
     { name: "Dashboard", url: "/dashboard" },
     { name: "Configurator", url: "" },
@@ -57,6 +69,26 @@ const breadcrumb = {
   "/signal-provider": [
     { name: "Dashboard", url: "/dashboard" },
     { name: "Signal Provider", url: "/signal-provider" },
+  ],
+  "/signal-provider/create": [
+    { name: "Dashboard", url: "/dashboard" },
+    { name: "Signal Provider", url: "/signal-provider" },
+    { name: "Create Signal Provider", url: "/signal-provider/create" },
+  ],
+  "/signal-provider/configure-payment-processor": [
+    { name: "Dashboard", url: "/dashboard" },
+    { name: "Signal Provider", url: "/signal-provider" },
+    { name: "Configure Payment Processor", url: "" },
+  ],
+  "/signal-provider/edit": [
+    { name: "Dashboard", url: "/dashboard" },
+    { name: "Signal Provider", url: "/signal-provider" },
+    { name: "Edit", url: "" },
+  ],
+  "/signal-provider/follower-terms": [
+    { name: "Dashboard", url: "/dashboard" },
+    { name: "Signal Provider", url: "/signal-provider" },
+    { name: "Follower Terms", url: "" },
   ],
   "/whitelabel/dashboard": [
     { name: "Dashboard", url: "/dashboard" },
@@ -115,39 +147,45 @@ export default function CustomSeparator() {
   const navigate = useNavigate();
 
   const _goto = (url) => {
-    if ( url !== "" ) {
+    if (url !== "") {
       navigate(url)
     }
   }
 
-  
+
   const _path = (_url) => {
-    if ( _url.includes("/whitelabel/users/edit") ) {
+    if (_url.includes("/whitelabel/users/edit")) {
       return "/whitelabel/users/edit";
-    } else if ( _url.includes("/accounts/edit/") ) {
+    } else if (_url.includes("/accounts/edit/")) {
       return "/accounts/edit/";
+    } else if (_url.includes("/trade-copier/edit")) {
+      return "/trade-copier/edit";
+    } else if (_url.includes("/signal-provider/edit")) {
+      return "/signal-provider/edit";
+    } else if(_url.includes("/signal-provider/follower-terms")) {
+      return "/signal-provider/follower-terms";
     }
 
     return _url;
   }
 
-  const breadcrumbs = breadcrumb[_path(pathname)] ? breadcrumb[_path(pathname)].map(item => 
+  const breadcrumbs = breadcrumb[_path(pathname)] ? breadcrumb[_path(pathname)].map(item =>
     <Typography
       key="2"
       color="white"
-      sx = {{ 
-        cursor:'pointer',
+      sx={{
+        cursor: 'pointer',
         '&:hover': {
           textDecoration: 'underline'
         }
       }}
-      onClick = { () => _goto(item.url) }
+      onClick={() => _goto(item.url)}
     >
-      { item.name }
+      {item.name}
     </Typography>
   ) : []
-  
-  
+
+
   return (
     <Breadcrumbs
       separator={<NavigateNextIcon sx={{ color: 'white' }} fontSize="small" />}
