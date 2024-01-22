@@ -29,6 +29,8 @@ function AddAccount() {
   const [createButtonClicked, setCreateButtonClicked] = React.useState(false);
   const [isLoading, setIsLoading] = React.useState(false);
 
+  const [brokers, setBrokers] = React.useState([]);
+
   // const [utils, dispatch] = useReducer(utilsReducer);
 
   // const { ids, setIds } = useUtils();
@@ -102,6 +104,16 @@ function AddAccount() {
       setIsLoading(false);
     }
   };
+
+  React.useEffect(() => {
+    api.get("/settings/brokers").then(res => {
+      if (res.data.status === "OK") {
+        setBrokers(res.data.data);
+      }
+    }).catch(err => {
+      console.log(err)
+    })
+  }, [])
 
   return (
     <div>
@@ -186,13 +198,20 @@ function AddAccount() {
                 Server
               </label>
               <div className="w-1/2 px-[15px]">
-                <input
+                <select
                   name="server"
-                  type="text"
+                  value={values.server}
                   required
                   className="block bg-[#282d36] text-[#fff] px-3 py-1.5 rounded w-full h-[34px] text-sm"
                   onChange={handleInputChange}
-                />
+                >
+                  <option value="" disabled className="hidden">
+                    Select Platform
+                  </option>
+                  {
+                    brokers.map(item => <option value={item.broker}>{item.broker}</option>)
+                  }
+                </select>
                 {values.server == '' && createButtonClicked && (
                   <p className="mt-2 text-xs text-red-600 dark:text-red-500">
                     Server required!
