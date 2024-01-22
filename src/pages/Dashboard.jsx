@@ -41,8 +41,11 @@ function Dashboard() {
   const dispatch = useDispatch();
   const { ids } = useSelector((state) => state.utils);
 
+  const _intervalRef3 = useRef(null);
+  const _intervalRef300 = useRef(null);
+
   React.useEffect(() => {
-    const _id = setInterval(async () => {
+    _intervalRef3.current = setInterval(async () => {
       try {
         let temp = [...ids];
         if (temp.length === 0) {
@@ -72,13 +75,13 @@ function Dashboard() {
     // setIntervalId(_id);
 
     return () => {
-      clearInterval(_id);
+      clearInterval(_intervalRef3.current);
       // console.log('clear interval ' + intervalId);
     };
   }, [ids]);
 
   React.useEffect(() => {
-    let interval = setInterval(() => {
+    _intervalRef300.current = setInterval(() => {
       async function fetcher() {
         try {
           await api.put(`/account/update-all-accounts-information`);
@@ -91,7 +94,7 @@ function Dashboard() {
     }, 1000 * 60 * 5);
 
     return () => {
-      clearInterval(interval);
+      clearInterval(_intervalRef300);
     };
   }, []);
 
