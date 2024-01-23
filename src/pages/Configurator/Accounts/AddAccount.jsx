@@ -92,7 +92,7 @@ function AddAccount() {
     }).catch(err => {
       console.log(err)
     })
-  }, [])
+  }, []);
 
   return (
     <div>

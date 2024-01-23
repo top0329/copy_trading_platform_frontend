@@ -340,7 +340,6 @@ export default function TradesTable() {
             }}
           >
             {subData.map((row) => {
-              console.log(row.subscriber[0].name);
               return (
                 <TableRow hover role="checkbox" tabIndex={-1} key={row._id}>
                   {headers.map(({ id }) => {
