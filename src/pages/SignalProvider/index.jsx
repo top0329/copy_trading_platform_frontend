@@ -399,7 +399,7 @@ export default function SignalProvider() {
                             {headers.map(({ id }) => {
                               let value = row[id];
                               if (id === 'account') {
-                                value = `${value[0].name}(${value[0].login})`;
+                                value = value.length > 0 ? `${value[0].name}(${value[0].login})` : "none";
                                 // } else if (id === 'openTime') {
                                 //   value = value.substring(0, 19);
                               } else if (id === 'signal') {

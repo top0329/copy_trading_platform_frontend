@@ -345,7 +345,7 @@ export default function TradesTable() {
                   {headers.map(({ id }) => {
                     let value = row[id];
                     if (id === 'subscriber') {
-                      value = `${value[0].name} (${value[0].login})`;
+                      value = value.length > 0 ? `${value[0].name} (${value[0].login})` : 'none';
                     } else if (id === 'createdAt' || id === 'updatedAt') {
                       value = value.substr(0, 10) + ' ' + value.substr(11, 8);
                     }
