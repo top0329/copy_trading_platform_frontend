@@ -21,7 +21,7 @@ function AddAccount() {
     name: '',
     server: '',
     platform: '',
-    copyFactoryRoles: ["SUBSCRIBER"],
+    copyFactoryRoles: [],
   };
   const [values, setValues] = React.useState(initialValues);
   const [isSubscriberChecked, setIsSubscriberChecked] = React.useState(false);
@@ -47,6 +47,26 @@ function AddAccount() {
     });
   };
 
+  React.useEffect(() => {
+    if (isSubscriberChecked) {
+      if (values.copyFactoryRoles.includes('SUBSCRIBER') == false) {
+        values.copyFactoryRoles.push('SUBSCRIBER');
+      }
+    } else {
+      values.copyFactoryRoles = values.copyFactoryRoles.filter(
+        (role) => role !== 'SUBSCRIBER'
+      );
+    }
+    if (isProviderChecked) {
+      if (values.copyFactoryRoles.includes('PROVIDER') == false) {
+        values.copyFactoryRoles.push('PROVIDER');
+      }
+    } else {
+      values.copyFactoryRoles = values.copyFactoryRoles.filter(
+        (role) => role !== 'PROVIDER'
+      );
+    }
+  }, [isSubscriberChecked, isProviderChecked]);
 
   const handleCreateAccount = async () => {
     try {
@@ -56,7 +76,8 @@ function AddAccount() {
         values.password == '' ||
         values.name == '' ||
         values.server == '' ||
-        values.platform == ''
+        values.platform == '' ||
+        values.copyFactoryRoles.length == 0
       ) {
         showToast('Please fill in all the information!', 'error');
       } else {
@@ -187,9 +208,9 @@ function AddAccount() {
                   <option value="" disabled className="hidden">
                     Select Server
                   </option>
-                  {
-                    brokers.map(item => <option value={item.broker}>{item.broker}</option>)
-                  }
+                  {brokers.map((item) => (
+                    <option value={item.broker}>{item.broker}</option>
+                  ))}
                 </select>
                 {values.server == '' && createButtonClicked && (
                   <p className="mt-2 text-xs text-red-600 dark:text-red-500">
@@ -223,7 +244,48 @@ function AddAccount() {
                 )}
               </div>
             </div>
-    
+            <div className="flex justify-start">
+              <label className="text-[#ccc] text-[13px] text-right w-1/4 pt-[7px] px-[15px] inline-block relative max-w-full">
+                CopyFactoryRoles
+              </label>
+              <div className="w-1/2 px-[15px]">
+                <div className="flex items-center gap-3 pt-[7px]">
+                  <div className="flex items-center">
+                    <input
+                      name="subscriber"
+                      type="checkbox"
+                      required
+                      className="bg-[#282d36] text-[#fff] px-3 py-1.5 rounded w-4"
+                      onChange={() =>
+                        setIsSubscriberChecked(!isSubscriberChecked)
+                      }
+                    />
+                    <label className="inline-block text-right w-1/4 pr-[15px] pl-[5px] relative max-w-full text-[#ccc] text-[13px]">
+                      Subscriber
+                    </label>
+                  </div>
+                  <div className="flex items-center">
+                    <input
+                      name="provider"
+                      type="checkbox"
+                      required
+                      className="bg-[#282d36] text-[#fff] px-3 py-1.5 rounded w-4"
+                      onChange={() => setIsProviderChecked(!isProviderChecked)}
+                    />
+                    <label className="inline-block text-right w-1/4 pr-[15px] pl-[5px] relative max-w-full text-[#ccc] text-[13px]">
+                      Provider
+                    </label>
+                  </div>
+                </div>
+                {!isProviderChecked &&
+                  !isSubscriberChecked &&
+                  createButtonClicked && (
+                    <p className="mt-2 text-xs text-red-600 dark:text-red-500">
+                      CopyFactoryRoles required!
+                    </p>
+                  )}
+              </div>
+            </div>
           </div>
           <footer className="px-[15px] py-[10px]">
             <div className="grid grid-cols-12 gap-3">

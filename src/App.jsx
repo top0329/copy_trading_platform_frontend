@@ -4,7 +4,7 @@ import Loader from './common/Loader';
 import './App.css';
 import CoreRoutes from './routes';
 import ToastProvider from './contexts/toastContext';
-import AuthProvider from './contexts/AuthContext';
+import AuthProvider from './contexts/authContext';
 import UtilsProvider from './contexts/utilsContext';
 
 function App() {
