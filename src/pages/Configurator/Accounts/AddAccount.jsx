@@ -83,7 +83,7 @@ function AddAccount() {
       } else {
         setIsLoading(true);
         const result = await api.post('/account/register-account', values);
-        
+
         if (result.data.AccountRegister) {
           dispatch({
             type: 'ADD_ID',
@@ -92,7 +92,7 @@ function AddAccount() {
         } else {
           throw new Error("null account Register");
         }
-        
+
         showToast('Account created successfully!', 'success');
 
         setIsLoading(false);
@@ -206,7 +206,7 @@ function AddAccount() {
                   onChange={handleInputChange}
                 >
                   <option value="" disabled className="hidden">
-                    Select Broker
+                    Select Server
                   </option>
                   {
                     brokers.map(item => <option value={item.broker}>{item.broker}</option>)
