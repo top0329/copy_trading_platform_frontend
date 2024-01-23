@@ -341,7 +341,6 @@ export default function TradesTable() {
                 }}
               >
                 {
-                  // .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   data &&
                     data.length > 0 &&
                     data.map((row) => {
@@ -352,19 +351,13 @@ export default function TradesTable() {
                           role="checkbox"
                           tabIndex={-1}
                           key={row.id}
-                          // sx={{
-                          //   '&:last-child td, &:last-child th': {
-                          //     border: 1,
-                          //     borderColor: '#282D36',
-                          //   },
-                          // }}
+                          
                         >
                           {headers.map(({ id }) => {
                             let value = row[id];
+                            console.log(value, id, row)
                             if (id === 'account') {
-                              value = `${value[0].name}(${value[0].login})`;
-                              // } else if (id === 'openTime') {
-                              //   value = value.substring(0, 19);
+                              value = value.length > 0 ? `${value[0].name}(${value[0].login})` : 'none';
                             } else if (id === 'signal') {
                               value = `${row.name}(${row.strategyId})`;
                             } else if (
@@ -396,49 +389,6 @@ export default function TradesTable() {
                             }}
                           >
                             <div className="flex gap-1">
-                              {/* <IconButton
-                        size="small"
-                        color="inherit"
-                        sx={{
-                          backgroundColor: '#2e7d32',
-                          borderRadius: '4px',
-                          fontSize: 24,
-                          paddingX: '6px',
-                        }}
-                        className={classes.infoButton}
-                      >
-                        <Icon icon="mdi:play" color="white" />
-                      </IconButton> */}
-                              {/* <IconButton
-                                size="small"
-                                color="inherit"
-                                sx={{
-                                  backgroundColor: '#0099E6',
-                                  borderRadius: '4px',
-                                  fontSize: 13,
-                                  paddingX: '11px',
-                                }}
-                                className={classes.infoButton}
-                                onClick={() =>
-                                  handleConfigButtonClicked(row.accountId)
-                                }
-                              >
-                                <Icon icon="fa:cogs" color="white" />
-                              </IconButton> */}
-                              {/* <IconButton
-                        size="small"
-                        color="inherit"
-                        sx={{
-                          backgroundColor: '#0099E6',
-                          borderRadius: '4px',
-                          fontSize: 17,
-                          fontWeight: 800,
-                          paddingX: '9px',
-                        }}
-                        className={classes.infoButton}
-                      >
-                        <Icon icon="tabler:list" color="white" />
-                      </IconButton> */}
                               <IconButton
                                 size="small"
                                 color="inherit"
