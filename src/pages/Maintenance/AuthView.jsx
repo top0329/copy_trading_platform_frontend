@@ -12,13 +12,14 @@ import AnalysisByTime from '../../components/analysis/AnalysisByTime';
 import TradesAnalysis from '../../components/analysis/TradesAnalysis';
 import { useParams } from 'react-router-dom';
 import useAuth from '../../hooks/useAuth';
+import useToast from '../../hooks/useToast';
 
 function AuthView() {
   const { id } = useParams();
   const [details, setDetails] = React.useState({});
   const [accountInfo, setAccountInfo] = React.useState({});
   const [history, setHistory] = React.useState([]);
-
+  const { showToast } = useToast();
   const { isAuthenticated, user } = useAuth();
 
   const [showModal, setShowModal] = React.useState(false);
@@ -29,8 +30,8 @@ function AuthView() {
     balanceInformation: false,
     broker: false,
     accountDetails: false,
-    ticket: false
-  })
+    ticket: false,
+  });
 
   const navigate = useNavigate();
 
@@ -41,13 +42,16 @@ function AuthView() {
       try {
         const res = await api.get(`/strategy/link/${id}`);
         if (res.data.status === 'OK') {
-          const _user = res.data.data.account.length > 0 ? res.data.data.account[0].user : "";
-          console.log(res.data.data)
+          const _user =
+            res.data.data.account.length > 0
+              ? res.data.data.account[0].user
+              : '';
+          console.log(res.data.data);
           if (res.data.data.live || (user && user._id === _user)) {
             setAccountId(res.data.data.accountId);
             setSetting(res.data.data.setting);
           } else {
-            navigate("/404");//go to 404 if signal is not live
+            navigate('/404'); //go to 404 if signal is not live
           }
         } else {
           navigate('/404');
@@ -101,9 +105,20 @@ function AuthView() {
     if (accountId) fetcher();
   }, [accountId]);
 
-  const handleFollowClick = () => {
+  const handleFollowClick = async () => {
     if (isAuthenticated) {
-      //follow
+      try {
+        const res = await api.post('/strategy/follow', { id: accountId });
+        if (res.data.status === 'OK') {
+          showToast(res.data.msg, 'success');
+          navigate('/signals');
+        } else {
+          showToast('Follow failed', 'error');
+        }
+      } catch (err) {
+        console.log(err);
+        showToast('Follow failed', 'error');
+      }
     } else {
       setShowModal(true);
     }
@@ -128,41 +143,37 @@ function AuthView() {
           </button>
         </div>
         <div className="flex gap-[20px]">
-          {
-            !setting.accountDetails && 
+          {!setting.accountDetails && (
             <div className="w-1/4 pt-[10px]">
               <AccountDetails data={details} />
             </div>
-          }
-          {
-            !setting.accountDetails && 
+          )}
+          {!setting.accountDetails && (
             <div className="w-3/4 pt-[10px]">
               <PerformanceChart data={history} />
             </div>
-          }
+          )}
         </div>
-        {
-          !setting.balanceInformation &&
+        {!setting.balanceInformation && (
           <div className="mt-[40px]">
             <TradingStats data={accountInfo} />
           </div>
-        }
-        {
-          !setting.tradeHistory &&
+        )}
+        {!setting.tradeHistory && (
           <div className="mt-[40px]">
             <AnalysisByTime data={history} />
           </div>
-        }
-        {
-          !setting.openTrades &&
+        )}
+        {!setting.openTrades && (
           <div className="mt-[40px]">
             <TradesAnalysis />
           </div>
-        }
+        )}
 
         <div
-          className={`fixed right-0 bottom-0 top-0 left-0 flex items-center justify-center z-[1201] ${!showModal && 'hidden'
-            }`}
+          className={`fixed right-0 bottom-0 top-0 left-0 flex items-center justify-center z-[1201] ${
+            !showModal && 'hidden'
+          }`}
         >
           <div
             className="fixed right-0 bottom-0 top-0 left-0 flex items-center justify-center z-[1202] bg-opacity-80 bg-[#1D2127]"
