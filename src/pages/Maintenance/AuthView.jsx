@@ -12,13 +12,14 @@ import AnalysisByTime from '../../components/analysis/AnalysisByTime';
 import TradesAnalysis from '../../components/analysis/TradesAnalysis';
 import { useParams } from 'react-router-dom';
 import useAuth from '../../hooks/useAuth';
+import useToast from '../../hooks/useToast';
 
 function AuthView() {
   const { id } = useParams();
   const [details, setDetails] = React.useState({});
   const [accountInfo, setAccountInfo] = React.useState({});
   const [history, setHistory] = React.useState([]);
-
+  const { showToast } = useToast();
   const { isAuthenticated, user } = useAuth();
 
   const [showModal, setShowModal] = React.useState(false);
@@ -101,9 +102,20 @@ function AuthView() {
     if (accountId) fetcher();
   }, [accountId]);
 
-  const handleFollowClick = () => {
+  const handleFollowClick = async () => {
     if (isAuthenticated) {
-      //follow
+      try {
+        const res = await api.post("/strategy/follow", { id: accountId });
+        if ( res.data.status === 'OK' ) {
+          showToast("Successfully followed", "success");
+          navigate("/signals");
+        } else {
+          showToast("Follow failed", "error");
+        }
+      } catch (err) {
+        console.log(err);
+        showToast("Follow failed", "error");
+      }
     } else {
       setShowModal(true);
     }

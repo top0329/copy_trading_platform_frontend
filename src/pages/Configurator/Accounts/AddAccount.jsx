@@ -206,7 +206,7 @@ function AddAccount() {
                   onChange={handleInputChange}
                 >
                   <option value="" disabled className="hidden">
-                    Select Platform
+                    Select Broker
                   </option>
                   {
                     brokers.map(item => <option value={item.broker}>{item.broker}</option>)
