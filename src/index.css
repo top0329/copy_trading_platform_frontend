@@ -41,3 +41,38 @@ th {
 .MuiAccordionDetails-root {
   padding: 0px !important;
 }
+
+.editor .ql-container {
+    background: transparent;
+    border: none;
+}
+
+.editor .ql-toolbar {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    padding-bottom: 20px;
+}
+
+.editor .ql-snow.ql-toolbar {
+    display: block;
+    background: transparent;
+    border: none;
+}
+
+.editor .ql-container.ql-snow {
+    border: none;
+}
+
+.editor .ql-bubble .ql-editor {
+    border: none;
+}
+
+.editor .ql-editor {
+    min-height: 18em;
+    border: none;
+}
+
+.editor .toolbar-container {
+    position: relative;
+}
