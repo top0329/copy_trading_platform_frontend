@@ -248,7 +248,7 @@ export default function TradesTable({ headers }) {
                     }}
                   >
                     <div className="flex items-center justify-between p-[3px]">
-                      {label}
+                      {label === '' ? (<p></p>) : (<p>{label}</p>)}
                       <div className="flex flex-col cursor-pointer">
                         <Icon
                           icon="teenyicons:up-solid"
@@ -307,7 +307,24 @@ export default function TradesTable({ headers }) {
                                 paddingLeft: 2,
                               }}
                             >
-                              <div className="truncate">{value}</div>
+                              {id === 'connectionStatus' ? (
+                                <Icon
+                                  icon={
+                                    row[id] === 'CONNECTED'
+                                      ? 'mdi:check-bold'
+                                      : 'mdi:close-bold'
+                                  }
+                                  width={22}
+                                  className="font-bold"
+                                  color={
+                                    row[id] === 'CONNECTED'
+                                      ? 'green'
+                                      : '#D64742'
+                                  }
+                                />
+                              ) : (
+                                <div className="truncate">{value}</div>
+                              )}
                             </TableCell>
                           );
                         })}

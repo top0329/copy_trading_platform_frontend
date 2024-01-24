@@ -4,7 +4,6 @@ import axios from 'axios';
 const api = axios.create({
   // baseURL: 'http://localhost:5000/api',
   baseURL: 'https://tradecopiersignalsbackend.onrender.com/api',
-  // baseURL: 'http://45.8.22.219:5000/api',
   headers: {
     'Content-Type': 'application/json',
   },
