@@ -1,18 +1,18 @@
 import * as React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
+import LoadingButton from '@mui/lab/LoadingButton';
 
 //import componenets
 import AccountDetails from '../../components/analysis/AccountDetails';
 import PerformanceChart from '../../components/analysis/PerformanceCharts';
 import TradingStats from '../../components/analysis/TradingStats';
-
-import api from '../../utils/api';
-import LoadingButton from '@mui/lab/LoadingButton';
 import AnalysisByTime from '../../components/analysis/AnalysisByTime';
 import TradesAnalysis from '../../components/analysis/TradesAnalysis';
-import { useParams } from 'react-router-dom';
+
+import api from '../../utils/api';
 import useAuth from '../../hooks/useAuth';
 import useToast from '../../hooks/useToast';
+import Logo from '../../assets/img/logo.jpeg'
 
 function AuthView() {
   const { id } = useParams();
@@ -130,11 +130,7 @@ function AuthView() {
     return (
       <div className="pb-[100px]">
         <div className="flex justify-between">
-          <img
-            className="h-10 w-10"
-            src="/src/assets/img/logo.jpeg"
-            alt=""
-          ></img>
+          <img className="h-10 w-10" src={Logo} alt="" />
           <button
             className="bg-[#51B451] text-white hover:bg-gray-200 hover:text-slate-500 px-3 rounded"
             onClick={handleFollowClick}
