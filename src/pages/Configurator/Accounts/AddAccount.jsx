@@ -142,7 +142,7 @@ function AddAccount() {
               <div className="w-1/2 px-[15px]">
                 <input
                   name="login"
-                  type="text"
+                  type="number"
                   required
                   className="bg-[#282d36] text-[#fff] px-3 py-1.5 rounded block w-full h-[34px] text-sm"
                   onChange={handleInputChange}
