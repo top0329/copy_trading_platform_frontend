@@ -95,7 +95,7 @@ function General() {
             </label>
           </div>
         </div>
-        <div className="flex justify-start">
+        <div className="flex justify-start border-b-[1px] border-[#242830] pb-[15px] mb-[15px]">
           <label className="inline-block relative max-w-full w-1/4 text-right pt-[7px] px-[15px] text-[#ccc] text-[13px]">
             Copier Mode
           </label>
@@ -146,6 +146,17 @@ function General() {
                 OFF
               </label>
             </div>
+          </div>
+        </div>
+        <div className="flex justify-start">
+          <label className="inline-block relative max-w-full w-1/4 text-right pt-[7px] px-[15px] text-[#ccc] text-[13px]">
+            Trade Comment (16 chars max)
+          </label>
+          <div className="w-1/2 px-[15px]">
+            <input
+              className="block w-full h-[34px] text-sm bg-[#282d36] text-[#fff] px-3 py-1.5 rounded"
+              type="text"
+            />
           </div>
         </div>
       </div>

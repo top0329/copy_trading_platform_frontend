@@ -136,6 +136,7 @@ export default function TradesTable() {
   const [selectedTradeCopierData, setSelectedTradeCopierData] = React.useState({});
   React.useState(false);
   const [isLoading, setIsLoading] = React.useState(false);
+  const [copierMode, setCopierMode] = React.useState(false);
 
   const handleChange = (panel, id) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
@@ -371,7 +372,7 @@ export default function TradesTable() {
                     }}
                   >
                     <div className="flex gap-1">
-                      {/* <IconButton
+                      <IconButton
                         size="small"
                         color="inherit"
                         sx={{
@@ -381,9 +382,10 @@ export default function TradesTable() {
                           paddingX: '6px',
                         }}
                         className={classes.infoButton}
+                        // onClick={}
                       >
                         <Icon icon="mdi:play" color="white" />
-                      </IconButton> */}
+                      </IconButton>
                       <IconButton
                         size="small"
                         color="inherit"

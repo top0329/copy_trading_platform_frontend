@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -9,7 +10,6 @@ import InputBase from '@mui/material/InputBase';
 import SearchIcon from '@mui/icons-material/Search';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import Typography from '@mui/material/Typography';
-import api from '../../utils/api';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
@@ -17,11 +17,12 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { Icon } from '@iconify/react';
 import Pagination from '@mui/material/Pagination';
-import { Link, useNavigate } from 'react-router-dom';
 import IconButton from '@mui/material/IconButton';
 import { makeStyles } from '@material-ui/core/styles';
+
 import DeleteSignalModal from '../../components/modals/DeleteSignalModal';
 import useToast from '../../hooks/useToast';
+import api from '../../utils/api';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',

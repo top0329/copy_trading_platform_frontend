@@ -29,9 +29,9 @@ function EditAccount() {
 
   return (
     <div className="grid grid-cols-12 gap-8">
-      <div className="col-span-3 flex flex-col gap-2">
+      <div className="col-span-3 flex flex-col gap-1.5">
         <button
-          className={`w-full rounded px-3 py-1.5 text-white text-sm ${
+          className={`w-full rounded px-3 py-1.5 text-[#eee] text-sm ${
             activeTab === 1 ? 'bg-[#0099E6]' : 'bg-[#282D36]'
           }`}
           onClick={() => handleTabClick(1)}
@@ -39,7 +39,7 @@ function EditAccount() {
           Account Profile
         </button>
         <button
-          className={`w-full rounded px-3 py-1.5 text-white text-sm ${
+          className={`w-full rounded px-3 py-1.5 text-[#eee] text-sm ${
             activeTab === 2 ? 'bg-[#0099E6]' : 'bg-[#282D36]'
           }`}
           onClick={() => handleTabClick(2)}
@@ -47,7 +47,7 @@ function EditAccount() {
           Forex Suffix
         </button>
         {/* <button
-          className={`w-full rounded px-3 py-1.5 text-white text-sm ${
+          className={`w-full rounded px-3 py-1.5 text-[#eee] text-sm ${
             activeTab === 3 ? 'bg-[#0099E6]' : 'bg-[#282D36]'
           }`}
           onClick={() => handleTabClick(3)}
