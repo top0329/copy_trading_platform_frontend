@@ -58,7 +58,6 @@ function DisableSymbols() {
 
   React.useEffect(() => {
     async function init() {
-      const accountData = await api.get(`/account/${subscriberId}`);
       const subscriberData = await api.get(`/subscriber/${subscriberId}`);
 
       setSubscriberName(subscriberData.data.name);
