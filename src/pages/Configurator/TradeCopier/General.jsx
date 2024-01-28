@@ -102,15 +102,15 @@ function General() {
           <div className="flex flex-col w-1/2 px-[15px] gap-2">
             <div className="flex items-center">
               <input
-                id="inline-radio"
+                id="on"
                 type="radio"
                 value="on"
-                name="inline-radio-group"
+                name="copierMode"
                 className="w-4 h-4 text-[#0088cc] bg-gray-800 border-gray-800 rounded-full"
                 checked
               />
               <label
-                htmlFor="inline-radio"
+                htmlFor="on"
                 className="ms-2 text-sm font-medium text-[#ccc] dark:text-gray-300"
               >
                 ON
@@ -118,14 +118,14 @@ function General() {
             </div>
             <div className="flex items-center">
               <input
-                id="inline-radio"
+                id="monitor"
                 type="radio"
                 value="monitor"
-                name="inline-radio-group"
+                name="copierMode"
                 className="w-4 h-4 text-[#ccc] bg-gray-800 border-gray-800 rounded-full"
               />
               <label
-                htmlFor="inline-radio"
+                htmlFor="monitor"
                 className="ms-2 text-sm font-medium text-[#ccc] dark:text-gray-300"
               >
                 Monitor existing trades only
@@ -133,14 +133,14 @@ function General() {
             </div>
             <div className="flex items-center">
               <input
-                id="inline-radio"
+                id="off"
                 type="radio"
                 value="off"
-                name="inline-radio-group"
+                name="copierMode"
                 className="w-4 h-4 text-[#0088cc] bg-gray-800 border-gray-800 rounded-full"
               />
               <label
-                htmlFor="inline-radio"
+                htmlFor="off"
                 className="ms-2 text-sm font-medium text-[#ccc] dark:text-gray-300"
               >
                 OFF
