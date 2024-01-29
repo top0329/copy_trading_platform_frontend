@@ -295,9 +295,9 @@ export default function TradesTable({ headers }) {
                           if (id === 'account') {
                             value = `${row.name}(${row.login})`;
                           } else if (id === 'equityPercentage') {
-                            if (isNaN((row.equity / row.balance) * 100)) value = ''; else value = (row.equity / row.balance) * 100;
+                            if (isNaN((row.equity / row.balance) * 100)) value = ''; else value = ((row.equity / row.balance) * 100).toFixed(2);
                           } else if (id === 'openTrades') {
-                            value = `${row.count} (${row.volume})`;
+                            value = `${row.count} (${(row.volume).toFixed(2)})`;
                           }
                           return (
                             <TableCell
