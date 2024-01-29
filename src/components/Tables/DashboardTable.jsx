@@ -124,6 +124,11 @@ export default function TradesTable({ headers }) {
     return { day, week, month };
   };
 
+
+  const _equityPercentageValue = (value) => {
+    if (value > 100) return <div className='text-[#58c04f]'>{value}</div>; else if(value <= 100 && value > 80) return <div className="text-[#5bc0de]">{value}</div>; else return <div className="text-[#fa5252]">{value}</div>;
+  };
+
   React.useEffect(() => {
     let session = sessionStorage.getItem('dashboard');
     async function fetchData(config) {
@@ -323,6 +328,8 @@ export default function TradesTable({ headers }) {
                                       : '#D64742'
                                   }
                                 />
+                              ) : id === 'equityPercentage' ? (
+                                _equityPercentageValue(value)
                               ) : (
                                 <div className="truncate">{value}</div>
                               )}
