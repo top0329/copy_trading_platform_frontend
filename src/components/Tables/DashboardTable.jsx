@@ -63,8 +63,6 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-
-
 export default function TradesTable({ headers }) {
   const [sort, setSort] = React.useState({
     id: '',
@@ -124,9 +122,11 @@ export default function TradesTable({ headers }) {
     return { day, week, month };
   };
 
-
   const _equityPercentageValue = (value) => {
-    if (value > 100) return <div className='text-[#58c04f]'>{value}</div>; else if(value <= 100 && value > 80) return <div className="text-[#5bc0de]">{value}</div>; else return <div className="text-[#fa5252]">{value}</div>;
+    if (value >= 100) return <div className="text-[#58c04f]">{value}</div>;
+    else if (value < 100 && value >= 95)
+      return <div className="text-[#5bc0de]">{value}</div>;
+    else if (value < 95 && value >= 85) return <div className='text-[#f1804c]'>{value}</div>; else return <div className="text-[#fa5252]">{value}</div>;
   };
 
   React.useEffect(() => {
@@ -136,7 +136,7 @@ export default function TradesTable({ headers }) {
       const res = await api.get(
         `/account/accounts?page=${page}&pagecount=${pagecount}&sort=${sort}&type=${type}`
       );
-      console.log(res.data)
+      console.log(res.data);
       setData(res.data.data);
       setCount(res.data.count);
     }
@@ -245,32 +245,34 @@ export default function TradesTable({ headers }) {
                   },
                 }}
               >
-                {headers.filter(item => item.checked && item.id !== "actions").map(({ label, id }) => (
-                  <TableCell
-                    key={id}
-                    align="center"
-                    sx={{
-                      padding: '5px',
-                    }}
-                  >
-                    <div className="flex items-center justify-between p-[3px]">
-                      {label === '' ? (<p></p>) : (<p>{label}</p>)}
-                      <div className="flex flex-col cursor-pointer">
-                        <Icon
-                          icon="teenyicons:up-solid"
-                          color="#ccc"
-                          className="mb-[-4px]"
-                          width={11}
-                        />
-                        <Icon
-                          icon="teenyicons:down-solid"
-                          width={11}
-                          color="#ccc"
-                        />
+                {headers
+                  .filter((item) => item.checked && item.id !== 'actions')
+                  .map(({ label, id }) => (
+                    <TableCell
+                      key={id}
+                      align="center"
+                      sx={{
+                        padding: '5px',
+                      }}
+                    >
+                      <div className="flex items-center justify-between p-[3px]">
+                        {label === '' ? <p></p> : <p>{label}</p>}
+                        <div className="flex flex-col cursor-pointer">
+                          <Icon
+                            icon="teenyicons:up-solid"
+                            color="#ccc"
+                            className="mb-[-4px]"
+                            width={11}
+                          />
+                          <Icon
+                            icon="teenyicons:down-solid"
+                            width={11}
+                            color="#ccc"
+                          />
+                        </div>
                       </div>
-                    </div>
-                  </TableCell>
-                ))}
+                    </TableCell>
+                  ))}
               </TableRow>
             </TableHead>
             <TableBody
@@ -281,17 +283,13 @@ export default function TradesTable({ headers }) {
                 },
               }}
             >
-              {
-                data &&
-                  data.map((row) => {
-                    return (
-                      <TableRow
-                        hover
-                        role="checkbox"
-                        tabIndex={-1}
-                        key={row.id}
-                      >
-                        {headers.filter(item => item.checked && item.id !== "actions").map(({ id }) => {
+              {data &&
+                data.map((row) => {
+                  return (
+                    <TableRow hover role="checkbox" tabIndex={-1} key={row.id}>
+                      {headers
+                        .filter((item) => item.checked && item.id !== 'actions')
+                        .map(({ id }) => {
                           const { day, week, month } = _calcProfitByDate(
                             row.profit
                           );
@@ -300,9 +298,15 @@ export default function TradesTable({ headers }) {
                           if (id === 'account') {
                             value = `${row.name}(${row.login})`;
                           } else if (id === 'equityPercentage') {
-                            if (isNaN((row.equity / row.balance) * 100)) value = ''; else value = ((row.equity / row.balance) * 100).toFixed(2);
+                            if (isNaN((row.equity / row.balance) * 100))
+                              value = '';
+                            else
+                              value = (
+                                (row.equity / row.balance) *
+                                100
+                              ).toFixed(2);
                           } else if (id === 'openTrades') {
-                            value = `${row.count} (${(row.volume).toFixed(2)})`;
+                            value = `${row.count} (${row.volume.toFixed(2)})`;
                           }
                           return (
                             <TableCell
@@ -336,37 +340,35 @@ export default function TradesTable({ headers }) {
                             </TableCell>
                           );
                         })}
-                        {
-                          headers.find(({id}) => id === "actions").checked &&
-                          <TableCell
-                            key={row._id + 'goto'}
-                            align="center"
-                            sx={{
-                              padding: '5px',
-                            }}
+                      {headers.find(({ id }) => id === 'actions').checked && (
+                        <TableCell
+                          key={row._id + 'goto'}
+                          align="center"
+                          sx={{
+                            padding: '5px',
+                          }}
+                        >
+                          <Link
+                            to={`/analysis/analysis-account/${row.accountId}`}
                           >
-                            <Link
-                              to={`/analysis/analysis-account/${row.accountId}`}
+                            <IconButton
+                              size="small"
+                              color="inherit"
+                              sx={{
+                                backgroundColor: '#0088CC',
+                                borderRadius: '4px',
+                                fontSize: 12,
+                                padding: '8px 6px',
+                              }}
                             >
-                              <IconButton
-                                size="small"
-                                color="inherit"
-                                sx={{
-                                  backgroundColor: '#0088CC',
-                                  borderRadius: '4px',
-                                  fontSize: 12,
-                                  padding: '8px 6px',
-                                }}
-                              >
-                                <Icon icon="fa:bar-chart" color="white" />
-                              </IconButton>
-                            </Link>
-                          </TableCell>
-                        }
-                      </TableRow>
-                    );
-                  })
-              }
+                              <Icon icon="fa:bar-chart" color="white" />
+                            </IconButton>
+                          </Link>
+                        </TableCell>
+                      )}
+                    </TableRow>
+                  );
+                })}
             </TableBody>
           </Table>
         </TableContainer>
