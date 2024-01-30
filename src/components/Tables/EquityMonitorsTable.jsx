@@ -160,9 +160,9 @@ export default function EquityMonitorsTable() {
                 },
               }}
             >
-              {columns.map((column) => (
+              {columns.map((column, index) => (
                 <TableCell
-                  key={column.id}
+                  key={`enquity_monitors_table_header_${index}`}
                   align={column.align}
                   style={{ minWidth: column.minWidth }}
                   sx={{ padding: '5px' }}
@@ -182,13 +182,13 @@ export default function EquityMonitorsTable() {
           >
             {rows
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((row) => {
+              .map((row, index) => {
                 return (
                   <TableRow
                     hover
                     role="checkbox"
                     tabIndex={-1}
-                    key={row.code}
+                    key={`enquity_monitors_table_row_${index}`}
                     // sx={{
                     //   '&:last-child td, &:last-child th': {
                     //     border: 1,

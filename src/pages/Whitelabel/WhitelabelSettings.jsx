@@ -154,9 +154,6 @@ function WhitelabelHomepage() {
                   className="block w-full h-[34px] text-sm bg-[#282d36] text-[#ccc] px-3 py-1.5 rounded"
                   onChange={handleUserRegistrationChange}
                 >
-                  <option value="" disabled selected className="hidden">
-                    Select the Permission
-                  </option>
                   <option value={false}>No</option>
                   <option value={true}>Yes</option>
                 </select>
@@ -292,8 +289,8 @@ function WhitelabelHomepage() {
           </header>
           <div className="box-border py-3 px-4 bg-[#2E353E] max-h-[500px] overflow-y-scroll">
             {
-              brokers.length > 0 ? brokers.map(item => 
-                <div className='flex py-1 align-middle border-b-[1px] border-[#242830]'>
+              brokers.length > 0 ? brokers.map((item, index) => 
+                <div key={`brodker_${index}`} className='flex py-1 align-middle border-b-[1px] border-[#242830]'>
                   <div className='w-3/4 text-center'>{item.broker}</div>
                   <div className='w-1/4'><Icon onClick={() => handleDelete(item._id)} className='hover:opacity-65 cursor-pointer' icon="ic:baseline-delete" /></div>
                 </div>
@@ -326,48 +323,7 @@ function WhitelabelHomepage() {
             </LoadingButton>
           </div>
         </div>
-        {/* <div className="mb-[20px] rounded bg-[#282D36] text-white">
-          <header className="p-4">
-            <h2 className="mt-1 text-[20px] font-normal">
-              Restrict Broker Selection
-            </h2>
-          </header>
-          <div className="box-border py-3 px-4 bg-[#2E353E]">
-            <div className="flex justify-start">
-              <label className="inline-block relative text-right w-1/4 pt-[7px] px-[15px] max-w-full text-[#ccc] text-[13px]">
-                Restrict Broker choice?
-              </label>
-              <div className="w-1/2 px-[15px]">
-                <input
-                  name="paypalEmail"
-                  type="number"
-                  required
-                  className="block w-full h-[34px] text-sm bg-[#282d36] text-[#fff] px-3 py-1.5 rounded"
-                  // onChange={handleInputChange}
-                />
-                {values.billingModel == '' && createButtonClicked && (
-                  <p className="mt-2 text-xs text-red-600 dark:text-red-500">
-                    Signal Account required!
-                  </p>
-                )}
-              </div>
-            </div>
-          </div>
-          <div className="px-4 py-2">
-            <LoadingButton
-              variant="contained"
-              size="small"
-              sx={{
-                textTransform: 'none',
-                backgroundColor: '#0088CC!important',
-              }}
-              onClick={handleCreateButtonClicked}
-              loading={isLoading}
-            >
-              Update
-            </LoadingButton>
-          </div>
-        </div> */}
+  
       </div>
     </div>
   );

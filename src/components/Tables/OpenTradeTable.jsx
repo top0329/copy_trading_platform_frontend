@@ -89,7 +89,7 @@ export default function OpenTradeTable() {
 
   const { id } = useParams();
 
-  const [count, setCount] = React.useState();
+  const [count, setCount] = React.useState(0);
 
   const [page, setPage] = React.useState(1);
   const [data, setData] = React.useState([]);
@@ -210,9 +210,9 @@ export default function OpenTradeTable() {
                   },
                 }}
               >
-                {headers.map(({ label, id }) => (
+                {headers.map(({ label, id }, index) => (
                   <TableCell
-                    key={id}
+                    key={`header_${index}`}
                     align="center"
                     // style={{ minWidth: column.minWidth }}
                     sx={{

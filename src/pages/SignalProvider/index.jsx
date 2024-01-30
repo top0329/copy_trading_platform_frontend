@@ -334,11 +334,10 @@ export default function SignalProvider() {
                       },
                     }}
                   >
-                    {headers.map(({ label, id }) => (
+                    {headers.map(({ label, id }, index) => (
                       <TableCell
-                        key={id}
+                        key={`signal_provider_header_${index}`}
                         align="center"
-                        // style={{ minWidth: column.minWidth }}
                         sx={{
                           padding: '5px',
                         }}
@@ -383,19 +382,13 @@ export default function SignalProvider() {
                     // .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     data &&
                       data.length > 0 &&
-                      data.map((row) => {
+                      data.map((row, index) => {
                         return (
                           <TableRow
                             hover
                             role="checkbox"
                             tabIndex={-1}
-                            key={row.id}
-                            // sx={{
-                            //   '&:last-child td, &:last-child th': {
-                            //     border: 1,
-                            //     borderColor: '#282D36',
-                            //   },
-                            // }}
+                            key={`signal_provider_data_${index}`}
                           >
                             {headers.map(({ id }) => {
                               let value = row[id];

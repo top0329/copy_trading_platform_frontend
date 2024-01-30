@@ -67,7 +67,7 @@ export default function TradesTable({ headers }) {
     type: '',
   });
 
-  const [count, setCount] = React.useState();
+  const [count, setCount] = React.useState(0);
 
   const [page, setPage] = React.useState(1);
   const [data, setData] = React.useState([]);
@@ -202,9 +202,9 @@ export default function TradesTable({ headers }) {
                   },
                 }}
               >
-                {headers.filter(item => item.checked).map(({ label, id }) => (
+                {headers.filter(item => item.checked).map(({ label, id }, index) => (
                   <TableCell
-                    key={id}
+                    key={`trade_table_header_${index}`}
                     align="center"
                     sx={{
                       padding: '5px',
@@ -241,13 +241,13 @@ export default function TradesTable({ headers }) {
               {
                 // .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 data &&
-                  data.map((row) => {
+                  data.map((row, index) => {
                     return (
                       <TableRow
                         hover
                         role="checkbox"
                         tabIndex={-1}
-                        key={row.id}
+                        key={`trade_table_row_${index}`}
                       >
                         {headers.filter(item => item.checked).map(({ id }) => {
                           let value = row[id];
