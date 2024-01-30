@@ -323,9 +323,9 @@ export default function WhitelabelUsers() {
                     },
                   }}
                 >
-                  {headers.map(({ label, id }) => (
+                  {headers.map(({ label, id }, index) => (
                     <TableCell
-                      key={id + "rrr"}
+                      key={`users_header_${index}`}
                       align="center"
                       sx={{
                         padding: '5px',
@@ -370,13 +370,13 @@ export default function WhitelabelUsers() {
                   // .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   data &&
                     data.length > 0 &&
-                    data.map((row) => {
+                    data.map((row, index) => {
                       return (
                         <TableRow
                           hover
                           role="checkbox"
                           tabIndex={-1}
-                          key={row.id}
+                          key={`users_table_data_${index}`}
                         >
                           {headers.map(({ id }) => {
                             return (

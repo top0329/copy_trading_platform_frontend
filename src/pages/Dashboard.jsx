@@ -18,7 +18,7 @@ const initialHeaders = {
   1: [
     {
       id: 'connectionStatus',
-      label: '',
+      label: 'Connection',
       minWidth: 15,
       checked: true,
     },
@@ -247,7 +247,7 @@ function Dashboard() {
     }));
   };
   /**
-   * when click viewl all button
+   * when click view all button
    */
   const handleViewAll = (e) => {
     const index = activeTab;
@@ -383,14 +383,16 @@ function Dashboard() {
                           0
                         ) === headers[activeTab].length
                       }
-                      onClick={handleViewAll}
+                      // onClick={handleViewAll}
+                      onChange={handleViewAll}
                     />
                     <div className="text-[0.9rem] p-1 cursor-pointer font-bold">
                       View all
                     </div>
                   </div>
-                  {headers[activeTab].map((item) => (
+                  {headers[activeTab].map((item,i ) => (
                     <div
+                      key={`input_${i}`}
                       className={`flex pl-6  hover:bg-[#232830] gap-1 cursor-pointer ${
                         item.checked && 'bg-[#0099E6]'
                       }`}

@@ -352,9 +352,9 @@ export default function TradesTable() {
                     },
                   }}
                 >
-                  {headers.map(({ label, id }) => (
+                  {headers.map(({ label, id }, index) => (
                     <TableCell
-                      key={id}
+                      key={`accounts_table_header_${index}`}
                       align="center"
                       // style={{ minWidth: column.minWidth }}
                       sx={{
@@ -398,23 +398,16 @@ export default function TradesTable() {
                 }}
               >
                 {
-                  // .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   data &&
                     data.length > 0 &&
-                    data.map((row) => {
+                    data.map((row, index) => {
                       console.log(row)
                       return (
                         <TableRow
                           hover
                           role="checkbox"
                           tabIndex={-1}
-                          key={row.id}
-                          // sx={{
-                          //   '&:last-child td, &:last-child th': {
-                          //     border: 1,
-                          //     borderColor: '#282D36',
-                          //   },
-                          // }}
+                          key={`accounts_table_row_${index}`}
                         >
                           {headers.map(({ id }) => {
                             let value = row[id];
@@ -426,13 +419,6 @@ export default function TradesTable() {
                               });
                               value = value.substr(0, value.length - 2);
                             }
-                            // if (id === 'account') {
-                            //   value = `${value[0].name}(${value[0].login})`;
-                            //   // } else if (id === 'openTime') {
-                            //   //   value = value.substring(0, 19);
-                            // } else if (id === 'signal') {
-                            //   value = `${row.name}(${row.strategyId})`;
-                            // }
                             return (
                               <TableCell
                                 key={id + row.id}
@@ -455,19 +441,7 @@ export default function TradesTable() {
                             }}
                           >
                             <div className="flex gap-1">
-                              {/* <IconButton
-                                size="small"
-                                color="inherit"
-                                sx={{
-                                  backgroundColor: '#2e7d32',
-                                  borderRadius: '4px',
-                                  fontSize: 13,
-                                  paddingX: '11px',
-                                }}
-                                className={classes.infoButton}
-                              >
-                                <Icon icon="fa:plug" color="white" />
-                              </IconButton> */}
+     
                               <IconButton
                                 size="small"
                                 color="inherit"
@@ -484,20 +458,6 @@ export default function TradesTable() {
                               >
                                 <Icon icon="fa:cogs" color="white" />
                               </IconButton>
-                              {/* <IconButton
-                                size="small"
-                                color="inherit"
-                                sx={{
-                                  backgroundColor: '#0099E6',
-                                  borderRadius: '4px',
-                                  fontSize: 17,
-                                  fontWeight: 800,
-                                  paddingX: '9px',
-                                }}
-                                className={classes.infoButton}
-                              >
-                                <Icon icon="tabler:list" color="white" />
-                              </IconButton> */}
                               <IconButton
                                 size="small"
                                 color="inherit"
@@ -535,7 +495,6 @@ export default function TradesTable() {
               {count} entries
             </Typography>
             <Pagination
-              // className="text-white"
               sx={{
                 paddingY: 2,
               }}

@@ -142,9 +142,9 @@ export default function EmailAlertsTable() {
                 },
               }}
             >
-              {columns.map((column) => (
+              {columns.map((column, index) => (
                 <TableCell
-                  key={column.id}
+                  key={`eamil_alert_table_header_${index}`}
                   align={column.align}
                   style={{ minWidth: column.minWidth }}
                   sx={{ padding: '5px' }}
@@ -164,13 +164,13 @@ export default function EmailAlertsTable() {
           >
             {rows
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((row) => {
+              .map((row, index) => {
                 return (
                   <TableRow
                     hover
                     role="checkbox"
                     tabIndex={-1}
-                    key={row.code}
+                    key={`eamil_alert_table_row_${index}`}
                     // sx={{
                     //   '&:last-child td, &:last-child th': {
                     //     border: 1,
