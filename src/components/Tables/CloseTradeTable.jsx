@@ -91,7 +91,7 @@ export default function CloseTradeTable() {
     type: '',
   });
 
-  const [count, setCount] = React.useState();
+  const [count, setCount] = React.useState(0);
 
   const [page, setPage] = React.useState(1);
   const [data, setData] = React.useState([]);
@@ -213,9 +213,9 @@ export default function CloseTradeTable() {
                   },
                 }}
               >
-                {headers.map(({ label, id }) => (
+                {headers.map(({ label, id }, index) => (
                   <TableCell
-                    key={id}
+                    key={`header_${index}`}
                     align="center"
                     // style={{ minWidth: column.minWidth }}
                     sx={{
@@ -253,13 +253,13 @@ export default function CloseTradeTable() {
               {
                 // .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 data &&
-                  data.map((row) => {
+                  data.map((row, index) => {
                     return (
                       <TableRow
                         hover
                         role="checkbox"
                         tabIndex={-1}
-                        key={row.id}
+                        key={`close_trade_table_header_${index}`}
                         // sx={{
                         //   '&:last-child td, &:last-child th': {
                         //     border: 1,

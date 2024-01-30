@@ -276,7 +276,7 @@ export default function TradesTable() {
         />
       )}
       <TableContainer
-        stickyHeader
+        // stickyHeader
         aria-label="sticky table"
         sx={{
           '& .MuiTableCell-root': {
@@ -296,9 +296,9 @@ export default function TradesTable() {
                 },
               }}
             >
-              {headers.map(({ label, id }) => (
+              {headers.map(({ label, id }, index) => (
                 <TableCell
-                  key={id}
+                  key={`header_${index}`}
                   align="center"
                   // style={{ minWidth: column.minWidth }}
                   sx={{
@@ -340,9 +340,9 @@ export default function TradesTable() {
               },
             }}
           >
-            {subData.map((row) => {
+            {subData.map((row, index) => {
               return (
-                <TableRow hover role="checkbox" tabIndex={-1} key={row._id}>
+                <TableRow hover role="checkbox" tabIndex={-1} key={`trade_copier_data_${index}`}>
                   {headers.map(({ id }) => {
                     let value = row[id];
                     if (id === 'subscriber') {

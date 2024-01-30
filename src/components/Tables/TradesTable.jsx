@@ -67,7 +67,7 @@ export default function TradesTable({ headers }) {
     type: '',
   });
 
-  const [count, setCount] = React.useState();
+  const [count, setCount] = React.useState(0);
 
   const [page, setPage] = React.useState(1);
   const [data, setData] = React.useState([]);
@@ -117,7 +117,7 @@ export default function TradesTable({ headers }) {
         `/trade?page=${page}&pagecount=${pagecount}&sort=${sort}&type=${type}`
       );
 
-      console.log(data)
+      console.log(res.data)
       setData(res.data.data);
       setCount(res.data.count);
     }
@@ -202,9 +202,9 @@ export default function TradesTable({ headers }) {
                   },
                 }}
               >
-                {headers.filter(item => item.checked).map(({ label, id }) => (
+                {headers.filter(item => item.checked).map(({ label, id }, index) => (
                   <TableCell
-                    key={id}
+                    key={`trade_table_header_${index}`}
                     align="center"
                     sx={{
                       padding: '5px',
@@ -241,18 +241,18 @@ export default function TradesTable({ headers }) {
               {
                 // .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 data &&
-                  data.map((row) => {
+                  data.map((row, index) => {
                     return (
                       <TableRow
                         hover
                         role="checkbox"
                         tabIndex={-1}
-                        key={row.id}
+                        key={`trade_table_row_${index}`}
                       >
                         {headers.filter(item => item.checked).map(({ id }) => {
                           let value = row[id];
                           if (id === 'account') {
-                            value = `${value[0].name}(${value[0].login})`;
+                            value = value.length > 0 ? `${value[0].name}(${value[0].login})` : 'none';
                             // } else if (id === 'openTime') {
                             //   value = value.substring(0, 19);
                           } else if (id === 'type') {

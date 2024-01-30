@@ -343,14 +343,14 @@ export default function TradesTable() {
                 {
                   data &&
                     data.length > 0 &&
-                    data.map((row) => {
+                    data.map((row, index) => {
                       console.log(row);
                       return (
                         <TableRow
                           hover
                           role="checkbox"
                           tabIndex={-1}
-                          key={row.id}
+                          key={`singals_row_${index}`}
                           
                         >
                           {headers.map(({ id }) => {
