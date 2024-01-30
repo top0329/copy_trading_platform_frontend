@@ -117,7 +117,7 @@ export default function TradesTable({ headers }) {
         `/trade?page=${page}&pagecount=${pagecount}&sort=${sort}&type=${type}`
       );
 
-      console.log(data)
+      console.log(res.data)
       setData(res.data.data);
       setCount(res.data.count);
     }
@@ -252,7 +252,7 @@ export default function TradesTable({ headers }) {
                         {headers.filter(item => item.checked).map(({ id }) => {
                           let value = row[id];
                           if (id === 'account') {
-                            value = `${value[0].name}(${value[0].login})`;
+                            value = value.length > 0 ? `${value[0].name}(${value[0].login})` : 'none';
                             // } else if (id === 'openTime') {
                             //   value = value.substring(0, 19);
                           } else if (id === 'type') {
