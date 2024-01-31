@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom';
 
 import api from '../../../utils/api';
 import useToast from '../../../hooks/useToast';
-import Symbols from '../../../constants/symbols.json'
+import Symbols from '../../../constants/symbols.json';
 
 function DisableSymbols() {
   const { showToast } = useToast();
@@ -13,7 +13,7 @@ function DisableSymbols() {
   const [subscriberName, setSubscriberName] = React.useState('');
   const [isLoading, setIsLoading] = React.useState(false);
   const [allSymbols, setAllSymbols] = React.useState(Symbols.symbols);
-  const [symbolsSelction, setSymbolsSelction] = React.useState(true);
+  const [symbols, setSymbols] = React.useState([]);
 
   const handleCheckChange = (key, checked) => {
     setAllSymbols(
@@ -24,7 +24,6 @@ function DisableSymbols() {
   };
 
   const enableAll = () => {
-    setSymbolsSelction(true);
     setAllSymbols(
       allSymbols.map((item) => ({
         key: item.key,
@@ -33,7 +32,6 @@ function DisableSymbols() {
     );
   };
   const disableAll = () => {
-    setSymbolsSelction(false);
     setAllSymbols(
       allSymbols.map((item) => ({
         key: item.key,
@@ -58,15 +56,21 @@ function DisableSymbols() {
 
   React.useEffect(() => {
     async function init() {
-      const subscriberData = await api.get(`/subscriber/${subscriberId}`);
+      const accountData = await api.get(`/account/${subscriberId}`);
+      const subscriberDatas = await api.get(`/subscriber/${subscriberId}`);
+      const subscriberData = subscriberDatas.data.subscriptions.find(
+        (data) => data.strategyId === strategyId
+      );
+      setSubscriberName(subscriberDatas.data.name);
+      setSymbols(accountData.data.symbols);
+      const included = subscriberData.symbolFilter.included;
+      const excluded = subscriberData.symbolFilter.excluded;
 
-      setSubscriberName(subscriberData.data.name);
-      const included =
-        subscriberData.data.subscriptions[0].symbolFilter.included;
-      const excluded =
-        subscriberData.data.subscriptions[0].symbolFilter.excluded;
-
-      if (included.length > 0) {
+      if (included.length === 0) {
+        setAllSymbols(
+          allSymbols.map((item) => ({ key: item, checked: false }))
+        );
+      } else if (included.length > 0) {
         setAllSymbols(
           allSymbols.map((item) =>
             included.includes(item)
@@ -74,16 +78,6 @@ function DisableSymbols() {
               : { key: item, checked: false }
           )
         );
-      } else if (excluded.length > 0) {
-        setAllSymbols(
-          allSymbols.map((item) =>
-            excluded.includes(item)
-              ? { key: item, checked: false }
-              : { key: item, checked: true }
-          )
-        );
-      } else if (included.length === 0 && excluded.length === 0) {
-        setAllSymbols(allSymbols.map((item) => ({ key: item, checked: true })));
       }
     }
     init();
@@ -95,21 +89,34 @@ function DisableSymbols() {
       let excluded = [],
         included = [];
       allSymbols.forEach(({ key, checked }) => {
-        if (symbolsSelction && !checked) {
+        if (!checked) {
           excluded = [...excluded, key];
-        } else if (!symbolsSelction && checked) {
+        } else if (checked) {
           included = [...included, key];
         }
       });
-      const data = {
-        name: subscriberName,
-        subscriptions: [
-          {
-            strategyId: strategyId,
-            symbolFilter: { included: included, excluded: excluded },
-          },
-        ],
-      };
+      let data;
+      if (included.length === 0) {
+        data = {
+          name: subscriberName,
+          subscriptions: [
+            {
+              strategyId: strategyId,
+              symbolFilter: { included: [], excluded: symbols },
+            },
+          ],
+        };
+      } else {
+        data = {
+          name: subscriberName,
+          subscriptions: [
+            {
+              strategyId: strategyId,
+              symbolFilter: { included: included, excluded: [] },
+            },
+          ],
+        };
+      }
       const res = await api.put(
         `/subscriber/update-symbol-filter/${subscriberId}`,
         data
@@ -144,11 +151,23 @@ function DisableSymbols() {
           </div>
         </div>
         <strong className="text-[#ccc] text-[13px]">
-          <span className="text-[#47a447]">{ allSymbols.reduce((count, item) => count + ( item.checked ? 1 : 0 ), 0) }</span> Enabled symbols
+          <span className="text-[#47a447]">
+            {allSymbols.reduce(
+              (count, item) => count + (item.checked ? 1 : 0),
+              0
+            )}
+          </span>{' '}
+          Enabled symbols
         </strong>{' '}
         |{' '}
         <strong className="text-[#ccc] text-[13px]">
-          <span className="text-[#d2322d]">{ allSymbols.reduce((count, item) => count + ( !item.checked ? 1 : 0 ), 0) }</span> Disabled symbols
+          <span className="text-[#d2322d]">
+            {allSymbols.reduce(
+              (count, item) => count + (!item.checked ? 1 : 0),
+              0
+            )}
+          </span>{' '}
+          Disabled symbols
         </strong>
       </header>
       <div className="p-[18px] bg-[#2E353E]">

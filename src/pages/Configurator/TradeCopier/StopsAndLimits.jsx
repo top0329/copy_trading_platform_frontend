@@ -16,6 +16,7 @@ function StopsAndLimits() {
     name: '',
     copyStopLoss: false,
     copyTakeProfit: false,
+    skipPendingOrders: false,
   };
   const [values, setValues] = React.useState(initialValues);
   const [createButtonClicked, setCreateButtonClicked] = React.useState(false);
@@ -24,11 +25,16 @@ function StopsAndLimits() {
   React.useEffect(() => {
     async function init() {
       try {
-        const subscriberData = await api.get(`/subscriber/${subscriberId}`);
+        const subscriberDatas = await api.get(`/subscriber/${subscriberId}`);
+        const subscriberData = subscriberDatas.data.subscriptions.find(
+          (data) => data.strategyId === strategyId
+        );
         setValues({
-          name: subscriberData.data.name,
-          copyStopLoss: subscriberData.data.copyStopLoss,
-          copyTakeProfit: subscriberData.data.copyTakeProfit,
+          name: subscriberDatas.data.name,
+          copyStopLoss: subscriberData.copyStopLoss,
+          copyTakeProfit: subscriberData.copyTakeProfit,
+          skipPendingOrders:
+            subscriberData.skipPendingOrders,
         });
       } catch (err) {
         console.log(err);
@@ -54,10 +60,14 @@ function StopsAndLimits() {
     try {
       setIsLoading(true);
       const data = {
-        ...values,
+        name: values.name,
         subscriptions: [
           {
             strategyId: strategyId,
+            copyStopLoss: values.copyStopLoss,
+            copyTakeProfit: values.copyTakeProfit,
+            skipPendingOrders:
+              values.skipPendingOrders,
           },
         ],
       };
@@ -82,14 +92,14 @@ function StopsAndLimits() {
           <h2 className="mt-[5px] text-[20px] font-normal">Stops & Limits</h2>
         </header>
         <div className="p-[15px] bg-[#2E353E] box-border">
-          {/* <div className="border-b-[1px] border-[#242830] pb-[15px] mb-[15px] flex justify-start">
+          <div className="border-b-[1px] border-[#242830] pb-[15px] mb-[15px] flex justify-start">
             <label className="text-[#ccc] text-[13px] text-right w-1/4 pt-[7px] px-[15px] inline-block relative max-w-full">
               Copy Pending Orders
             </label>
             <div className="w-1/2 px-[15px]">
               <select
-                name="server"
-                value={values.server}
+                name="skipPendingOrders"
+                value={values.skipPendingOrders}
                 required
                 className="block bg-[#282d36] text-[#fff] px-3 py-1.5 rounded w-full h-[34px] text-sm"
                 onChange={handleInputChange}
@@ -98,7 +108,7 @@ function StopsAndLimits() {
                 <option value={true}>Yes</option>
               </select>
             </div>
-          </div> */}
+          </div>
           <div className="flex justify-start mb-[15px] pb-[15px] border-b-[1px] border-[#242830]">
             <label className="text-[#ccc] text-[13px] text-right w-1/4 pt-[7px] px-[15px] inline-block relative max-w-full">
               Copy Stop Loss
