@@ -81,7 +81,7 @@ const initialHeaders = {
     { id: 'symbol', label: 'Symbol', checked: true },
     { id: 'type', label: 'Type', checked: true },
     { id: 'volume', label: 'Lots', checked: true },
-    { id: 'openPrice', label: 'OpenPrice', checked: true },
+    { id: 'openPrice', label: 'Open Price', checked: true },
     { id: 'profit', label: 'Profit', checked: true },
     { id: 'durationInMinutes', label: 'DurationInMinutes', checked: true },
     { id: 'gain', label: 'Gain', checked: true },

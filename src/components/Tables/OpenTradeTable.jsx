@@ -268,10 +268,12 @@ export default function OpenTradeTable() {
                           let value = row[id];
                           if (id === 'account') {
                             value = `${value[0].name}(${value[0].login})`;
-                            // } else if (id === 'openTime') {
-                            //   value = value.substring(0, 19);
+                          } else if (id === 'openTime') {
+                            value = value.substring(0, 19);
                           } else if (id === 'type') {
                             value = value.split('_')[2];
+                          } else if (id === 'marketValue') {
+                            value = Number(value).toFixed(2);
                           }
                           return (
                             <TableCell

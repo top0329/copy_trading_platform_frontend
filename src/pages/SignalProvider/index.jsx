@@ -394,8 +394,6 @@ export default function SignalProvider() {
                               let value = row[id];
                               if (id === 'account') {
                                 value = value.length > 0 ? `${value[0].name}(${value[0].login})` : "none";
-                                // } else if (id === 'openTime') {
-                                //   value = value.substring(0, 19);
                               } else if (id === 'signal') {
                                 value = `${row.name}(${row.strategyId})`;
                               }

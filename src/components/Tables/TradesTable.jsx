@@ -117,7 +117,7 @@ export default function TradesTable({ headers }) {
         `/trade?page=${page}&pagecount=${pagecount}&sort=${sort}&type=${type}`
       );
 
-      console.log(res.data)
+      console.log(res.data);
       setData(res.data.data);
       setCount(res.data.count);
     }
@@ -202,32 +202,34 @@ export default function TradesTable({ headers }) {
                   },
                 }}
               >
-                {headers.filter(item => item.checked).map(({ label, id }, index) => (
-                  <TableCell
-                    key={`trade_table_header_${index}`}
-                    align="center"
-                    sx={{
-                      padding: '5px',
-                    }}
-                  >
-                    <div className="flex items-center justify-between p-[3px]">
-                      {label}
-                      <div className="flex flex-col width={11} cursor-pointer">
-                        <Icon
-                          icon="teenyicons:up-solid"
-                          color="#ccc"
-                          className="mb-[-4px]"
-                          width={11}
-                        />
-                        <Icon
-                          icon="teenyicons:down-solid"
-                          width={11}
-                          color="#ccc"
-                        />
+                {headers
+                  .filter((item) => item.checked)
+                  .map(({ label, id }, index) => (
+                    <TableCell
+                      key={`trade_table_header_${index}`}
+                      align="center"
+                      sx={{
+                        padding: '5px',
+                      }}
+                    >
+                      <div className="flex items-center justify-between p-[3px]">
+                        {label}
+                        <div className="flex flex-col width={11} cursor-pointer">
+                          <Icon
+                            icon="teenyicons:up-solid"
+                            color="#ccc"
+                            className="mb-[-4px]"
+                            width={11}
+                          />
+                          <Icon
+                            icon="teenyicons:down-solid"
+                            width={11}
+                            color="#ccc"
+                          />
+                        </div>
                       </div>
-                    </div>
-                  </TableCell>
-                ))}
+                    </TableCell>
+                  ))}
               </TableRow>
             </TableHead>
             <TableBody
@@ -249,28 +251,35 @@ export default function TradesTable({ headers }) {
                         tabIndex={-1}
                         key={`trade_table_row_${index}`}
                       >
-                        {headers.filter(item => item.checked).map(({ id }) => {
-                          let value = row[id];
-                          if (id === 'account') {
-                            value = value.length > 0 ? `${value[0].name}(${value[0].login})` : 'none';
-                            // } else if (id === 'openTime') {
-                            //   value = value.substring(0, 19);
-                          } else if (id === 'type') {
-                            value = value.split('_')[2];
-                          }
-                          return (
-                            <TableCell
-                              key={id}
-                              align="left"
-                              sx={{
-                                padding: '5px',
-                                paddingLeft: 2,
-                              }}
-                            >
-                              <div className="truncate">{value}</div>
-                            </TableCell>
-                          );
-                        })}
+                        {headers
+                          .filter((item) => item.checked)
+                          .map(({ id }) => {
+                            let value = row[id];
+                            if (id === 'account') {
+                              value =
+                                value.length > 0
+                                  ? `${value[0].name}(${value[0].login})`
+                                  : 'none';
+                            } else if (id === 'openTime') {
+                              value = value.substring(0, 19);
+                            } else if (id === 'type') {
+                              value = value.split('_')[2];
+                            } else if (id === 'marketValue') {
+                              value = Number(value).toFixed(2);
+                            }
+                            return (
+                              <TableCell
+                                key={id}
+                                align="left"
+                                sx={{
+                                  padding: '5px',
+                                  paddingLeft: 2,
+                                }}
+                              >
+                                <div className="truncate">{value}</div>
+                              </TableCell>
+                            );
+                          })}
                       </TableRow>
                     );
                   })

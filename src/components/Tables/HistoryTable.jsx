@@ -61,15 +61,12 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-
 export default function HistoryTable({ headers }) {
   const [sort, setSort] = React.useState({
     id: '',
     type: '',
   });
-
   const [count, setCount] = React.useState(0);
-
   const [page, setPage] = React.useState(1);
   const [data, setData] = React.useState([]);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
@@ -201,32 +198,34 @@ export default function HistoryTable({ headers }) {
                   },
                 }}
               >
-                {headers.filter(item => item.checked).map(({ label, id }, index) => (
-                  <TableCell
-                    key={`history_table_header_${index}`}
-                    align="center"
-                    sx={{
-                      padding: '5px',
-                    }}
-                  >
-                    <div className="flex items-center justify-between p-[3px]">
-                      {label}
-                      <div className="flex flex-col width={11} cursor-pointer">
-                        <Icon
-                          icon="teenyicons:up-solid"
-                          color="#ccc"
-                          className="mb-[-4px]"
-                          width={11}
-                        />
-                        <Icon
-                          icon="teenyicons:down-solid"
-                          width={11}
-                          color="#ccc"
-                        />
+                {headers
+                  .filter((item) => item.checked)
+                  .map(({ label, id }, index) => (
+                    <TableCell
+                      key={`history_table_header_${index}`}
+                      align="center"
+                      sx={{
+                        padding: '5px',
+                      }}
+                    >
+                      <div className="flex items-center justify-between p-[3px]">
+                        {label}
+                        <div className="flex flex-col width={11} cursor-pointer">
+                          <Icon
+                            icon="teenyicons:up-solid"
+                            color="#ccc"
+                            className="mb-[-4px]"
+                            width={11}
+                          />
+                          <Icon
+                            icon="teenyicons:down-solid"
+                            width={11}
+                            color="#ccc"
+                          />
+                        </div>
                       </div>
-                    </div>
-                  </TableCell>
-                ))}
+                    </TableCell>
+                  ))}
               </TableRow>
             </TableHead>
             <TableBody
@@ -237,24 +236,33 @@ export default function HistoryTable({ headers }) {
                 },
               }}
             >
-              {
-                data &&
-                  data.map((row, index) => {
-                    return (
-                      <TableRow
-                        hover
-                        role="checkbox"
-                        tabIndex={-1}
-                        key={`history_table_row_${index}`}
-                      >
-                        {headers.filter(item => item.checked).map(({ id }) => {
+              {data &&
+                data.map((row, index) => {
+                  return (
+                    <TableRow
+                      hover
+                      role="checkbox"
+                      tabIndex={-1}
+                      key={`history_table_row_${index}`}
+                    >
+                      {headers
+                        .filter((item) => item.checked)
+                        .map(({ id }) => {
                           let value = row[id];
                           if (id === 'account') {
                             value = `${value[0].name}(${value[0].login})`;
-                            // } else if (id === 'openTime') {
-                            //   value = value.substring(0, 19);
+                          } else if (id === 'marketValue') {
+                            if (isNaN(value)) {
+                              value = '';
+                            } else {
+                              value = Number(value).toFixed(2);
+                            }
                           } else if (id === 'type') {
                             value = value.split('_')[2];
+                          } else if (id === 'openTime') {
+                            value = value.substring(0, 19);
+                          } else if (id === 'closeTime') {
+                            value = value.substring(0, 19);
                           }
                           return (
                             <TableCell
@@ -269,10 +277,9 @@ export default function HistoryTable({ headers }) {
                             </TableCell>
                           );
                         })}
-                      </TableRow>
-                    );
-                  })
-              }
+                    </TableRow>
+                  );
+                })}
             </TableBody>
           </Table>
         </TableContainer>

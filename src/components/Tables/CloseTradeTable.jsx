@@ -67,7 +67,7 @@ const headers = [
   { id: 'positionId', label: 'ID' },
   { id: 'account', label: 'Account' },
   { id: 'openTime', label: 'Open Time' },
-  { id: 'closeTime', label: 'Open Time' },
+  { id: 'closeTime', label: 'Close Time' },
   { id: 'symbol', label: 'Symbol' },
   { id: 'type', label: 'Type' },
   { id: 'closePrice', label: 'ClosePrice' },
@@ -271,10 +271,14 @@ export default function CloseTradeTable() {
                           let value = row[id];
                           if (id === 'account') {
                             value = `${value[0].name}(${value[0].login})`;
-                            // } else if (id === 'openTime') {
-                            //   value = value.substring(0, 19);
+                          } else if (id === 'openTime') {
+                            value = value.substring(0, 19);
+                          } else if (id === 'closeTime') {
+                            value = value.substring(0, 19);
                           } else if (id === 'type') {
                             value = value.split('_')[2];
+                          } else if (id === 'marketValue') {
+                            value = Number(value).toFixed(2);
                           }
                           return (
                             <TableCell
