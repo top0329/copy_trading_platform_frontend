@@ -64,7 +64,6 @@ function DisableSymbols() {
       setSubscriberName(subscriberDatas.data.name);
       setSymbols(accountData.data.symbols);
       const included = subscriberData.symbolFilter.included;
-      const excluded = subscriberData.symbolFilter.excluded;
 
       if (included.length === 0) {
         setAllSymbols(
