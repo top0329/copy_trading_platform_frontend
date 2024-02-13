@@ -98,22 +98,17 @@ function DisableSymbols() {
       if (included.length === 0) {
         data = {
           name: subscriberName,
-          subscriptions: [
-            {
-              strategyId: strategyId,
-              symbolFilter: { included: [], excluded: symbols },
-            },
-          ],
+          strategyId: strategyId,
+          symbolFilter: {
+            included: [],
+            excluded: allSymbols.map((symbol) => symbol.key),
+          },
         };
       } else {
         data = {
           name: subscriberName,
-          subscriptions: [
-            {
-              strategyId: strategyId,
-              symbolFilter: { included: included, excluded: [] },
-            },
-          ],
+          strategyId: strategyId,
+          symbolFilter: { included: included, excluded: [] },
         };
       }
       const res = await api.put(

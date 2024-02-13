@@ -117,7 +117,7 @@ const TradingStats = ({ data }) => {
             </td>
             <td className="w-[30%] text-[13px] p-[8px] text-[#ccc] font-[600] border border-[#1D2127]">
               {Object.keys(data).length > 0 && (
-                <React.Fragment>{data.averageWin} USD</React.Fragment>
+                <React.Fragment>{data.averageWin.toFixed(3)} USD</React.Fragment>
               )}
             </td>
           </tr>

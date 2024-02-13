@@ -33,8 +33,7 @@ function StopsAndLimits() {
           name: subscriberDatas.data.name,
           copyStopLoss: subscriberData.copyStopLoss,
           copyTakeProfit: subscriberData.copyTakeProfit,
-          skipPendingOrders:
-            subscriberData.skipPendingOrders,
+          skipPendingOrders: subscriberData.skipPendingOrders,
         });
       } catch (err) {
         console.log(err);
@@ -61,15 +60,10 @@ function StopsAndLimits() {
       setIsLoading(true);
       const data = {
         name: values.name,
-        subscriptions: [
-          {
-            strategyId: strategyId,
-            copyStopLoss: values.copyStopLoss,
-            copyTakeProfit: values.copyTakeProfit,
-            skipPendingOrders:
-              values.skipPendingOrders,
-          },
-        ],
+        strategyId: strategyId,
+        copyStopLoss: values.copyStopLoss,
+        copyTakeProfit: values.copyTakeProfit,
+        skipPendingOrders: values.skipPendingOrders,
       };
       console.log(data);
       const response = await api.put(
@@ -94,7 +88,7 @@ function StopsAndLimits() {
         <div className="p-[15px] bg-[#2E353E] box-border">
           <div className="border-b-[1px] border-[#242830] pb-[15px] mb-[15px] flex justify-start">
             <label className="text-[#ccc] text-[13px] text-right w-1/4 pt-[7px] px-[15px] inline-block relative max-w-full">
-              Copy Pending Orders
+              Skip Pending Orders
             </label>
             <div className="w-1/2 px-[15px]">
               <select

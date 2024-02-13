@@ -1,22 +1,20 @@
 import * as React from 'react';
 import LoadingButton from '@mui/lab/LoadingButton';
-import validator from 'validator';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
-import useAuth from '../../../hooks/useAuth';
 import api from '../../../utils/api';
 import useToast from '../../../hooks/useToast';
 
 function General() {
-  const { user } = useAuth();
   const { showToast } = useToast();
   const { subscriberId, strategyId } = useParams();
-
-  const navigate = useNavigate();
 
   const initialValues = {
     copyFrom: '',
     sendTo: '',
+    closeOnly: '',
+    comment: '', // TODO: implement trade comment
+    subscriberName: '',
   };
   const [values, setValues] = React.useState(initialValues);
   const [isLoading, setIsLoading] = React.useState(false);
@@ -24,13 +22,18 @@ function General() {
   React.useEffect(() => {
     async function init() {
       const accountData = await api.get(`/account/${subscriberId}`);
+      const subscriberData = await api.get(`/subscriber/${subscriberId}`);
       const strategyData = await api.get(`/strategy/${strategyId}`);
       setValues({
         copyFrom: `${accountData.data.name}(${accountData.data.login})`,
         sendTo: `${strategyData.data.name}(${strategyData.data.strategyId})`,
+        subscriberName: subscriberData.data.name,
+        closeOnly: subscriberData.data.subscriptions.map((data) => {
+          data.strategyId === strategyId;
+        }).closeOnly,
+        comment: accountData.data.comment,
       });
     }
-
     init();
   }, []);
 
@@ -44,23 +47,15 @@ function General() {
 
   const handleUpdateButtonClick = async () => {
     try {
-      if (values.email == '' || values.fullName == '') {
-        showToast('Please fill in all the information!', 'error');
-      } else {
-        if (!localStorage.getItem('updateEmail')) {
-          localStorage.setItem('updateEmail', values.email);
-        } else {
-          localStorage.removeItem('updateEmail');
-          localStorage.setItem('updateEmail', values.email);
-        }
-        setIsLoading(true);
-        // const result = await api.put('/users/me', values);
-        // setValues({ email: result.data.email, fullName: result.data.fullName });
-        showToast('User profile updated successfully!', 'success');
-        if (user.email !== values.email) {
-          navigate('/email-verification-page-for-update');
-        }
-      }
+      setIsLoading(true);
+      const result = await api.put(`/subscriber/update-general-setting/${subscriberId}`, {
+        name: values.subscriberName,
+        subscriptions: [
+          { strategyId: strategyId, closeOnly: values.closeOnly },
+        ],
+        commentData: values.comment,
+      });
+      showToast('User profile updated successfully!', 'success');
     } catch (err) {
       console.log(err);
       showToast(err.response.data.msg, 'error');
@@ -104,14 +99,14 @@ function General() {
               <input
                 id="on"
                 type="radio"
-                value="on"
-                name="copierMode"
-                className="w-4 h-4 text-[#0088cc] bg-gray-800 border-gray-800 rounded-full"
-                checked
+                value=""
+                name="closeOnly"
+                className="w-4 h-4 text-[#0088cc] bg-gray-800 border-gray-800 rounded-full cursor-pointer"
+                onChange={handleInputChange}
               />
               <label
                 htmlFor="on"
-                className="ms-2 text-sm font-medium text-[#ccc] dark:text-gray-300"
+                className="ms-2 text-sm font-medium text-[#ccc] dark:text-gray-300 cursor-pointer"
               >
                 ON
               </label>
@@ -120,13 +115,14 @@ function General() {
               <input
                 id="monitor"
                 type="radio"
-                value="monitor"
-                name="copierMode"
-                className="w-4 h-4 text-[#ccc] bg-gray-800 border-gray-800 rounded-full"
+                value="by-position"
+                name="closeOnly"
+                className="w-4 h-4 text-[#ccc] bg-gray-800 border-gray-800 rounded-full cursor-pointer"
+                onChange={handleInputChange}
               />
               <label
                 htmlFor="monitor"
-                className="ms-2 text-sm font-medium text-[#ccc] dark:text-gray-300"
+                className="ms-2 text-sm font-medium text-[#ccc] dark:text-gray-300 cursor-pointer"
               >
                 Monitor existing trades only
               </label>
@@ -135,13 +131,14 @@ function General() {
               <input
                 id="off"
                 type="radio"
-                value="off"
-                name="copierMode"
-                className="w-4 h-4 text-[#0088cc] bg-gray-800 border-gray-800 rounded-full"
+                value="immediately"
+                name="closeOnly"
+                className="w-4 h-4 text-[#0088cc] bg-gray-800 border-gray-800 rounded-full cursor-pointer"
+                onChange={handleInputChange}
               />
               <label
                 htmlFor="off"
-                className="ms-2 text-sm font-medium text-[#ccc] dark:text-gray-300"
+                className="ms-2 text-sm font-medium text-[#ccc] dark:text-gray-300 cursor-pointer"
               >
                 OFF
               </label>
@@ -154,8 +151,13 @@ function General() {
           </label>
           <div className="w-1/2 px-[15px]">
             <input
+              id="comment"
               className="block w-full h-[34px] text-sm bg-[#282d36] text-[#fff] px-3 py-1.5 rounded"
               type="text"
+              name="comment"
+              // value={values.comment}
+              maxLength={16}
+              onChange={handleInputChange}
             />
           </div>
         </div>

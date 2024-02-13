@@ -119,7 +119,7 @@ export default function TradesTable({ headers }) {
       }
     });
 
-    return { day, week, month };
+    return { day: day.toFixed(2), week: week.toFixed(2), month: month.toFixed(2) };
   };
 
   const _equityPercentageValue = (value) => {
