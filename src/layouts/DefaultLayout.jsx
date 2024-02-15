@@ -5,7 +5,6 @@ import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import MuiAppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import Button from '@mui/material/Button';
 import MenuIcon from '@mui/icons-material/Menu';
@@ -14,10 +13,8 @@ import HelpIcon from '@mui/icons-material/Help';
 import ListSubheader from '@mui/material/ListSubheader';
 import MainListItems from '../components/MainListItems';
 import useAuth from '../hooks/useAuth';
-// import Orders from './Orders';
 import Header from '../components/Header';
 import { Outlet } from 'react-router-dom';
-import coreRoutes from '../routes/CoreRoutes';
 
 import BreadCrumb from '../components/BreadCrumb';
 
@@ -103,7 +100,7 @@ const DefaultLayout = () => {
                 <AppBar position="absolute" open={open}>
                   <Toolbar
                     sx={{
-                      pr: '24px', // keep right padding when drawer closed, 
+                      pr: '24px', // keep right padding when drawer closed,
                       display: 'flex',
                       justifyContent: 'space-between',
                       alignItems: 'center'

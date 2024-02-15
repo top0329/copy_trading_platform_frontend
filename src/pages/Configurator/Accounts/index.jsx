@@ -24,12 +24,15 @@ import Stack from '@mui/material/Stack';
 import PriorityHighIcon from '@mui/icons-material/PriorityHigh';
 import IconButton from '@mui/material/IconButton';
 import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
+import { LoadingButton } from '@mui/lab';
 
 import DeleteAccountModal from '../../../components/modals/DeleteAccountModal';
 import InfoModal from '../../../components/modals/InfoModal';
 
 import useToast from '../../../hooks/useToast';
+import useAuth from '../../../hooks/useAuth';
 import api from '../../../utils/api';
+import useSocket from '../../../hooks/useSocket';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -106,7 +109,10 @@ const headers = [
 ];
 
 export default function TradesTable() {
+  const classes = useStyles();
   const { showToast } = useToast();
+  const { socket } = useSocket();
+  const { user } = useAuth();
   const navigate = useNavigate();
 
   const [sort, setSort] = React.useState({
@@ -133,8 +139,6 @@ export default function TradesTable() {
     handlePageChange(null, 1);
   };
 
-  const classes = useStyles();
-
   const handlePageChange = async (e, value) => {
     setPage(value);
 
@@ -144,14 +148,13 @@ export default function TradesTable() {
       sessionStorage.setItem('accounts', JSON.stringify(config));
 
       const { page, pagecount, sort, type } = config;
-      console.log(page, pagecount, sort, type);
       const res = await api.get(
         `/account/my-accounts?page=${page}&pagecount=${pagecount}&sort=${sort}&type=${type}`
       );
       setData(res.data.data);
       setCount(res.data.count);
-    } catch (e) {
-      console.log(e);
+    } catch (err) {
+      console.log(err);
     }
   };
 
@@ -175,6 +178,25 @@ export default function TradesTable() {
       console.log(err);
     } finally {
       setDeleteAccountModalShow(false);
+      setIsLoading(false);
+    }
+  };
+
+  const handleSendProviderRequest = async () => {
+    try {
+      setIsLoading(true);
+      socket.emit('message', {
+        type: 'provider-request',
+        payload: { user: user._id },
+      });
+      socket.once('result', (msg) => {
+        if (msg.type === 'error') showToast(msg.payload.msg, 'error');
+        else if (msg.type === 'success') showToast(msg.payload.msg, 'success');
+      });
+    } catch (err) {
+      showToast('Send request failed!', 'error');
+      console.log(err);
+    } finally {
       setIsLoading(false);
     }
   };
@@ -205,7 +227,6 @@ export default function TradesTable() {
       const res = await api.get(
         `/account/my-accounts?page=${page}&pagecount=${pagecount}&sort=${sort}&type=${type}`
       );
-      console.log(res.data.data);
       setData(res.data.data);
       setCount(res.data.count);
     }
@@ -260,14 +281,15 @@ export default function TradesTable() {
             </Button>
           </Link>
         </div>
-        <Button
+        <LoadingButton
           variant="contained"
           size="small"
-          startIcon={<AccountBalanceIcon />}
           sx={{ textTransform: 'none', backgroundColor: '#0088CC!important' }}
+          onClick={handleSendProviderRequest}
+          loading={isLoading}
         >
-          Account Hosting
-        </Button>
+          Send Provider Request
+        </LoadingButton>
         {/* </div> */}
       </Stack>
       <div className="mt-2 text-[#ccc] bg-[#2E353E] p-5 rounded pb-[10px]">
@@ -397,93 +419,89 @@ export default function TradesTable() {
                   },
                 }}
               >
-                {
-                  data &&
-                    data.length > 0 &&
-                    data.map((row, index) => {
-                      console.log(row)
-                      return (
-                        <TableRow
-                          hover
-                          role="checkbox"
-                          tabIndex={-1}
-                          key={`accounts_table_row_${index}`}
+                {data &&
+                  data.length > 0 &&
+                  data.map((row, index) => {
+                    return (
+                      <TableRow
+                        hover
+                        role="checkbox"
+                        tabIndex={-1}
+                        key={`accounts_table_row_${index}`}
+                      >
+                        {headers.map(({ id }) => {
+                          let value = row[id];
+                          if (id === 'copyFactoryRoles') {
+                            // console.log(row[id]);
+                            value = '';
+                            row[id].forEach((item) => {
+                              value += item + ', ';
+                            });
+                            value = value.substr(0, value.length - 2);
+                          }
+                          return (
+                            <TableCell
+                              key={id + row.id}
+                              align="left"
+                              sx={{
+                                padding: '5px',
+                                paddingLeft: 2,
+                              }}
+                            >
+                              <div className="truncate">{value}</div>
+                            </TableCell>
+                          );
+                        })}
+                        <TableCell
+                          key={row.id + 'option'}
+                          align="left"
+                          sx={{
+                            width: '0',
+                            padding: '5px',
+                          }}
                         >
-                          {headers.map(({ id }) => {
-                            let value = row[id];
-                            if (id === 'copyFactoryRoles') {
-                              // console.log(row[id]);
-                              value = '';
-                              row[id].forEach((item) => {
-                                value += item + ', ';
-                              });
-                              value = value.substr(0, value.length - 2);
-                            }
-                            return (
-                              <TableCell
-                                key={id + row.id}
-                                align="left"
-                                sx={{
-                                  padding: '5px',
-                                  paddingLeft: 2,
-                                }}
-                              >
-                                <div className="truncate">{value}</div>
-                              </TableCell>
-                            );
-                          })}
-                          <TableCell
-                            key={row.id + 'option'}
-                            align="left"
-                            sx={{
-                              width: '0',
-                              padding: '5px',
-                            }}
-                          >
-                            <div className="flex gap-1">
-     
-                              <IconButton
-                                size="small"
-                                color="inherit"
-                                sx={{
-                                  backgroundColor: '#0099E6',
-                                  borderRadius: '4px',
-                                  fontSize: 13,
-                                  paddingX: '11px',
-                                }}
-                                className={classes.infoButton}
-                                onClick={() =>
-                                  handleConfigButtonClicked(row.accountId)
-                                }
-                              >
-                                <Icon icon="fa:cogs" color="white" />
-                              </IconButton>
-                              <IconButton
-                                size="small"
-                                color="inherit"
-                                sx={{
-                                  backgroundColor: '#D64742',
-                                  borderRadius: '4px',
-                                  fontSize: 13,
+                          <div className="flex gap-1">
+                            <IconButton
+                              size="small"
+                              color="inherit"
+                              sx={{
+                                backgroundColor: '#0099E6',
+                                borderRadius: '4px',
+                                fontSize: 13,
+                                paddingX: '11px',
+                              }}
+                              className={classes.infoButton}
+                              onClick={() =>
+                                handleConfigButtonClicked(row.accountId)
+                              }
+                            >
+                              <Icon icon="fa:cogs" color="white" />
+                            </IconButton>
+                            <IconButton
+                              size="small"
+                              color="inherit"
+                              sx={{
+                                backgroundColor: '#D64742',
+                                borderRadius: '4px',
+                                fontSize: 13,
 
-                                  padding: '10px 11px!important',
-                                }}
-                                className={classes.infoButton}
-                                onClick={() =>
-                                  handleDeleteAccountButtonClicked({
-                                    accountName: `${row.name}(${row.login})`,
-                                    accountId: row.accountId,
-                                  })
-                                }
-                              >
-                                <Icon icon="ion:trash-sharp" color="white" />
-                              </IconButton>
-                            </div>
-                          </TableCell>
-                        </TableRow>
-                      );
-                    })
-                }
+                                padding: '10px 11px!important',
+                              }}
+                              className={classes.infoButton}
+                              onClick={() =>
+                                handleDeleteAccountButtonClicked({
+                                  accountName: `${row.name}(${row.login})`,
+                                  accountId: row.accountId,
+                                })
+                              }
+                            >
+                              <Icon icon="ion:trash-sharp" color="white" />
+                            </IconButton>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })}
               </TableBody>
             </Table>
           </TableContainer>

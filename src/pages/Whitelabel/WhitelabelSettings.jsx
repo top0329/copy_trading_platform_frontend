@@ -9,13 +9,11 @@ import { Icon } from '@iconify/react';
 function WhitelabelHomepage() {
 
   const { showToast } = useToast();
-  
+
   const [isSiteSettingUpdateButtonLoading, setIsSiteSettingUpdateButtonLoading] = React.useState(false);
   const [isAddBrokerButtonLoading, setIsAddBrokerButtonLoading] = React.useState(false);
-  // const [is, setIsSiteSettingUpdateButtonLoading] = React.useState(false);
   const [siteSettingUpdatedButtonClicked, setSiteSettingUpdatedButtonClicked] = React.useState(false);
   const [addBrokerButtonClicked, setAddBrokerButtonClicked] = React.useState(false);
-  // const []
 
   const [userRegistration, setUserRegistration] = React.useState(true);
   const [maxAccount, setMaxAccount] = React.useState(10);
@@ -45,9 +43,7 @@ function WhitelabelHomepage() {
 
   React.useEffect(() => {
     api.get("/settings/site-setting").then(res => {
-      console.log(res.data);
       if (res.data.status === "OK") {
-        console.log(res.data.data)
         const _userRegistration = res.data.data.find(({key, value}) => key === "userRegistration");
         const _maxAccount = res.data.data.find(({key, value}) => key ===  "maxAccount");
         if (_userRegistration) {
@@ -56,7 +52,6 @@ function WhitelabelHomepage() {
         if (_maxAccount) {
           setMaxAccount(_maxAccount.value);
         }
-        console.log(userRegistration)
       }
     }).catch(err => {
       console.log(err)
@@ -66,7 +61,6 @@ function WhitelabelHomepage() {
   React.useEffect(() => {
     api.get("/settings/brokers").then(res => {
       if (res.data.status === "OK") {
-        console.log(res.data.data)
         setBrokers(res.data.data);
       }
     }).catch(err => {
@@ -83,7 +77,6 @@ function WhitelabelHomepage() {
         const res = await api.post("/settings/brokers", { broker: broker });
         if ( res.data.status === "OK" ) {
           showToast("Successfully added", "success");
-          console.log(res.data.data);
           setBroker("");
           setBrokers(prev => [...prev, res.data.data])
         } else {
@@ -157,7 +150,7 @@ function WhitelabelHomepage() {
                   <option value={false}>No</option>
                   <option value={true}>Yes</option>
                 </select>
-                
+
               </div>
             </div>
             {/* <div className="flex justify-start border-b-[1px] border-[#242830] pb-[15px] mb-[15px]">
@@ -289,14 +282,14 @@ function WhitelabelHomepage() {
           </header>
           <div className="box-border py-3 px-4 bg-[#2E353E] max-h-[500px] overflow-y-scroll">
             {
-              brokers.length > 0 ? brokers.map((item, index) => 
+              brokers.length > 0 ? brokers.map((item, index) =>
                 <div key={`brodker_${index}`} className='flex py-1 align-middle border-b-[1px] border-[#242830]'>
                   <div className='w-3/4 text-center'>{item.broker}</div>
                   <div className='w-1/4'><Icon onClick={() => handleDelete(item._id)} className='hover:opacity-65 cursor-pointer' icon="ic:baseline-delete" /></div>
                 </div>
               ) : <div className='text-center'>No brokers</div>
             }
-            
+
 
           </div>
           <div className="px-4 py-2 flex justify-end gap-2">
@@ -323,7 +316,7 @@ function WhitelabelHomepage() {
             </LoadingButton>
           </div>
         </div>
-  
+
       </div>
     </div>
   );

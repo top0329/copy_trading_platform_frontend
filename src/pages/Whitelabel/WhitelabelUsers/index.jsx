@@ -99,6 +99,8 @@ const headers = [
   { id: 'subscribers', label: 'Copiers' },
   { id: 'accounts', label: 'Accounts' },
   { id: 'maxAccount', label: 'Max Accounts' },
+  { id: 'isPending', label: 'Status' },
+  { id: 'providerAccountLimit', label: 'Limit' },
 ];
 
 export default function WhitelabelUsers() {
@@ -141,7 +143,7 @@ export default function WhitelabelUsers() {
 
     async function fetchData() {
       const { page, pagecount, sort, type } = config;
-      console.log(page, pagecount, sort, type)
+      console.log(page, pagecount, sort, type);
       const res = await api.get(
         `/users/all?page=${page}&pagecount=${pagecount}&sort=${sort}&type=${type}`
       );
@@ -192,7 +194,7 @@ export default function WhitelabelUsers() {
 
   const handleDeleteAccountButtonClicked = (accountData) => {
     setSelectedAccountData(accountData);
-    console.log(selectedAccountData)
+    console.log(selectedAccountData);
     setDeleteUserModalShow(true);
   };
 
@@ -379,6 +381,11 @@ export default function WhitelabelUsers() {
                           key={`users_table_data_${index}`}
                         >
                           {headers.map(({ id }) => {
+                            let value = row[id];
+                            if (id === 'isPending') {
+                              // console.log(row[id]);
+                              value = value === true ? 'Pending' : 'None';
+                            }
                             return (
                               <TableCell
                                 key={id + row.id}
@@ -388,7 +395,13 @@ export default function WhitelabelUsers() {
                                   paddingLeft: 2,
                                 }}
                               >
-                                <div className="truncate">{row[id]}</div>
+                                {value === 'Pending' ? (
+                                  <div className="text-[#5ad462] font-bold">
+                                    {value}
+                                  </div>
+                                ) : (
+                                  <div className="truncate">{value}</div>
+                                )}
                               </TableCell>
                             );
                           })}

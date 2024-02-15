@@ -8,12 +8,14 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import api from '../../../utils/api';
 import useToast from '../../../hooks/useToast';
+import useAuth from '../../../hooks/useAuth';
 import useUtils from '../../../hooks/useUtils';
 
 // import utilsReducer from '../../store/reducers/utils';
 
 function AddAccount() {
   const { showToast } = useToast();
+  const { user } = useAuth();
 
   const initialValues = {
     login: '',
@@ -76,13 +78,22 @@ function AddAccount() {
         values.password == '' ||
         values.name == '' ||
         values.server == '' ||
-        values.platform == '' ||
-        values.copyFactoryRoles.length == 0
+        values.platform == ''
       ) {
         showToast('Please fill in all the information!', 'error');
+      } else if (user.providerAccountLimit === 0) {
+        showToast('The provider account limit has been exceeded.', 'error');
       } else {
         setIsLoading(true);
-        const result = await api.post('/account/register-account', values);
+        let data = {};
+        if (user.role === 'User') {
+          data = { ...values };
+          data.copyFactoryRoles = ['SUBSCRIBER'];
+        }
+        if (user.role === 'Provider' || user.role === 'Admin') {
+          data = { ...values };
+        }
+        const result = await api.post('/account/register-account', data);
 
         if (result.data.AccountRegister) {
           dispatch({
@@ -90,7 +101,7 @@ function AddAccount() {
             payload: result.data.AccountRegister.id,
           });
         } else {
-          throw new Error("null account Register");
+          throw new Error('null account Register');
         }
 
         showToast('Account created successfully!', 'success');
@@ -106,13 +117,16 @@ function AddAccount() {
   };
 
   React.useEffect(() => {
-    api.get("/settings/brokers").then(res => {
-      if (res.data.status === "OK") {
-        setBrokers(res.data.data);
-      }
-    }).catch(err => {
-      console.log(err)
-    })
+    api
+      .get('/settings/brokers')
+      .then((res) => {
+        if (res.data.status === 'OK') {
+          setBrokers(res.data.data);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }, []);
 
   return (
@@ -131,8 +145,16 @@ function AddAccount() {
           </Link>
         </div>
         <div className="mb-[20px] rounded bg-[#282D36] text-white">
-          <header className="p-[18px]">
+          <header className="flex flex-row justify-between items-center p-[18px]">
             <h2 className="mt-[5px] text-[20px] font-normal">Add Account</h2>
+            {user.role === 'Provider' ? (
+              <label>
+                Limit:{' '}
+                <span>{user.providerAccountLimit}</span>
+              </label>
+            ) : (
+              <></>
+            )}
           </header>
           <div className="p-[15px] bg-[#2E353E] box-border">
             <div className="border-b-[1px] border-[#242830] pb-[15px] mb-[15px] flex justify-start">
@@ -208,8 +230,10 @@ function AddAccount() {
                   <option value="" disabled className="hidden">
                     Select Server
                   </option>
-                  {brokers.map((item) => (
-                    <option value={item.broker}>{item.broker}</option>
+                  {brokers.map((item, idx) => (
+                    <option key={`server${idx}`} value={item.broker}>
+                      {item.broker}
+                    </option>
                   ))}
                 </select>
                 {values.server == '' && createButtonClicked && (
@@ -219,7 +243,13 @@ function AddAccount() {
                 )}
               </div>
             </div>
-            <div className="flex justify-start pb-[15px] mb-[15px] border-b-[1px] border-[#242830]">
+            <div
+              className={`flex justify-start ${
+                user.role === 'User'
+                  ? ''
+                  : 'pb-[15px] mb-[15px] border-b-[1px] border-[#242830]'
+              }`}
+            >
               <label className="text-[#ccc] text-[13px] text-right w-1/4 pt-[7px] px-[15px] inline-block relative max-w-full">
                 Platform
               </label>
@@ -244,48 +274,54 @@ function AddAccount() {
                 )}
               </div>
             </div>
-            <div className="flex justify-start">
-              <label className="text-[#ccc] text-[13px] text-right w-1/4 pt-[7px] px-[15px] inline-block relative max-w-full">
-                CopyFactoryRoles
-              </label>
-              <div className="w-1/2 px-[15px]">
-                <div className="flex items-center gap-3 pt-[7px]">
-                  <div className="flex items-center">
-                    <input
-                      name="subscriber"
-                      type="checkbox"
-                      required
-                      className="bg-[#282d36] text-[#fff] px-3 py-1.5 rounded w-4"
-                      onChange={() =>
-                        setIsSubscriberChecked(!isSubscriberChecked)
-                      }
-                    />
-                    <label className="inline-block text-right w-1/4 pr-[15px] pl-[5px] relative max-w-full text-[#ccc] text-[13px]">
-                      Subscriber
-                    </label>
+            {user.role === 'User' ? (
+              <div></div>
+            ) : (
+              <div className="flex justify-start">
+                <label className="text-[#ccc] text-[13px] text-right w-1/4 pt-[7px] px-[15px] inline-block relative max-w-full">
+                  CopyFactoryRoles
+                </label>
+                <div className="w-1/2 px-[15px]">
+                  <div className="flex items-center gap-3 pt-[7px]">
+                    <div className="flex items-center">
+                      <input
+                        name="subscriber"
+                        type="checkbox"
+                        required
+                        className="bg-[#282d36] text-[#fff] px-3 py-1.5 rounded w-4"
+                        onChange={() =>
+                          setIsSubscriberChecked(!isSubscriberChecked)
+                        }
+                      />
+                      <label className="inline-block text-right w-1/4 pr-[15px] pl-[5px] relative max-w-full text-[#ccc] text-[13px]">
+                        Subscriber
+                      </label>
+                    </div>
+                    <div className="flex items-center">
+                      <input
+                        name="provider"
+                        type="checkbox"
+                        required
+                        className="bg-[#282d36] text-[#fff] px-3 py-1.5 rounded w-4"
+                        onChange={() =>
+                          setIsProviderChecked(!isProviderChecked)
+                        }
+                      />
+                      <label className="inline-block text-right w-1/4 pr-[15px] pl-[5px] relative max-w-full text-[#ccc] text-[13px]">
+                        Provider
+                      </label>
+                    </div>
                   </div>
-                  <div className="flex items-center">
-                    <input
-                      name="provider"
-                      type="checkbox"
-                      required
-                      className="bg-[#282d36] text-[#fff] px-3 py-1.5 rounded w-4"
-                      onChange={() => setIsProviderChecked(!isProviderChecked)}
-                    />
-                    <label className="inline-block text-right w-1/4 pr-[15px] pl-[5px] relative max-w-full text-[#ccc] text-[13px]">
-                      Provider
-                    </label>
-                  </div>
+                  {!isProviderChecked &&
+                    !isSubscriberChecked &&
+                    createButtonClicked && (
+                      <p className="mt-2 text-xs text-red-600 dark:text-red-500">
+                        CopyFactoryRoles required!
+                      </p>
+                    )}
                 </div>
-                {!isProviderChecked &&
-                  !isSubscriberChecked &&
-                  createButtonClicked && (
-                    <p className="mt-2 text-xs text-red-600 dark:text-red-500">
-                      CopyFactoryRoles required!
-                    </p>
-                  )}
               </div>
-            </div>
+            )}
           </div>
           <footer className="px-[15px] py-[10px]">
             <div className="grid grid-cols-12 gap-3">

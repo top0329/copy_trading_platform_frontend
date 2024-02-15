@@ -53,7 +53,7 @@ const SearchIconWrapper = styled('div')(({ theme }) => ({
 const useStyles = makeStyles((theme) => ({
   infoButton: {
     '&:hover': {
-      backgroundColor: '#1B5E20',
+      backgroundColor: '#0088cc',
       boxShadow: 'none',
     },
   },
@@ -103,44 +103,90 @@ export default function EditUser() {
   const classes = useStyles();
   const { showToast } = useToast();
   const navigate = useNavigate();
-  const [ isLoading, setIsLoading ] = React.useState(false);
+  const [isLoading, setIsLoading] = React.useState(false);
+  const [isUpdateButtonClicked, setIsUpdateButtonClicked] =
+    React.useState(false);
   const { id } = useParams();
   const [data, setData] = React.useState({});
+  const [values, setValues] = React.useState({
+    role: '',
+    providerAccountLimit: 0,
+  });
 
-  const [ showMaxAccountModal, setShowMaxAccountModal ] = React.useState(false);
+  const [showMaxAccountModal, setShowMaxAccountModal] = React.useState(false);
 
-  const [ maxAccount, setMaxAccount ] = React.useState(0);
+  const [maxAccount, setMaxAccount] = React.useState(0);
 
   React.useEffect(() => {
-    console.log(id)
+    console.log(id);
     async function fetchData() {
       const res = await api.get(`/users/detail/${id}`);
-      if (res.data.status === "OK") {
-        console.log(res.data)
+      if (res.data.status === 'OK') {
+        console.log(res.data);
         setData(res.data.data);
         setMaxAccount(res.data.data.maxAccount);
+        setValues({
+          ...values,
+          role: res.data.data.role,
+          providerAccountLimit: res.data.data.providerAccountLimit,
+        });
       }
     }
 
     fetchData();
   }, [id]);
 
-  const handleUpdateMaxAccount = async() => {
+  const handleUpdateMaxAccount = async () => {
     try {
       await api.put(`/users/max-account/${id}`, { maxAccount: maxAccount });
       setData({
         ...data,
-        maxAccount: maxAccount
+        maxAccount: maxAccount,
       });
       setShowMaxAccountModal(false);
-      showToast("Updated successfully", "success");
+      showToast('Updated successfully', 'success');
     } catch (err) {
       console.log(err);
     }
-  }
+  };
+
+  const handleUpdateButtonClicked = async () => {
+    try {
+      setIsUpdateButtonClicked(true);
+      setIsLoading(true);
+      const res = await api.put(`/users/convert-provider/${id}`, {
+        role: values.role,
+        providerAccountLimit: values.providerAccountLimit,
+      });
+      if (res.data.status === 'OK') {
+        showToast('Updated successfully!', 'success');
+      }
+      if (res.data.status === 'EX') {
+        showToast(res.data.data, 'error');
+      }
+    } catch (err) {
+      console.log(err);
+      showToast('Update failed!', 'error');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleInputChange = (e) => {
+    try {
+      const { name, value } = e.target;
+      setValues({
+        ...values,
+        [name]: value,
+      });
+      console.log(values);
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   return (
-    <div className='mb-28'>
+    <div className="mb-28">
       <div className="pb-3">
         <Link
           to={`/whitelabel/users`}
@@ -162,8 +208,10 @@ export default function EditUser() {
             <p className="mb-2 text-sm">Profile Name</p>
             <h1 className="text-xl">{data.fullName}</h1>
             <p className="my-2 text-sm">Registered</p>
-            <h1 className="text-xl">{data.createdAt && data.createdAt.substring(0, 10)}</h1>
-            <div className="flex justify-between items-center">
+            <h1 className="text-xl">
+              {data.createdAt && data.createdAt.substring(0, 10)}
+            </h1>
+            <div className="flex justify-between items-center mb-3">
               <div>
                 <p className="my-2 text-sm">Max Accounts</p>
                 <h1 className="text-xl">{data.maxAccount}</h1>
@@ -184,6 +232,67 @@ export default function EditUser() {
                 <Icon icon="fa:cogs" color="white" />
               </IconButton>
             </div>
+            <fieldset className="grid grid-cols-12 border-2 border-[#282d36] rounded-md p-3 gap-3">
+              <div className="col-span-6">
+                <p className="mb-2 text-sm">Role</p>
+                <div>
+                  <select
+                    name="role"
+                    className="block bg-[#282d36] text-[#fff] px-3 py-1.5 rounded w-full h-[34px] text-lg"
+                    value={values.role}
+                    onChange={handleInputChange}
+                  >
+                    <option className="text-base" value={'User'}>
+                      User
+                    </option>
+                    <option className="text-base" value={'Provider'}>
+                      Provider
+                    </option>
+                  </select>
+                </div>
+              </div>
+              {values.role === 'Provider' ? (
+                <div
+                  className={`col-span-6 ${
+                    values.role === 'Provider' ? '' : 'hidden'
+                  }`}
+                >
+                  <p className="mb-2 text-sm">Account Limit</p>
+                  <div>
+                    <input
+                      name="providerAccountLimit"
+                      type="number"
+                      required
+                      className="block bg-[#282d36] text-[#fff] px-3 py-1.5 rounded w-full h-[34px] text-lg"
+                      onChange={handleInputChange}
+                      value={values.providerAccountLimit}
+                    />
+                    {values.providerAccountLimit == '' &&
+                      isUpdateButtonClicked && (
+                        <p className="mt-2 text-xs text-red-600 dark:text-red-500">
+                          Limit required!
+                        </p>
+                      )}
+                  </div>
+                </div>
+              ) : (
+                <div className="col-span-6"></div>
+              )}
+              <LoadingButton
+                className="col-start-8"
+                sx={{
+                  backgroundColor: '#0099E6',
+                  '&:hover': { backgroundColor: '#0088cc' },
+                  textTransform: 'none',
+                  color: 'white',
+                  paddingX: '40px',
+                }}
+                loading={isLoading}
+                onClick={handleUpdateButtonClicked}
+              >
+                Update
+              </LoadingButton>
+            </fieldset>
           </div>
         </div>
         <div className="col-span-9 flex flex-col gap-5">
@@ -334,7 +443,9 @@ export default function EditUser() {
                   </Table>
                 </TableContainer> */}
 
-                <Typography color='white' mb={1}>No signals have been added.</Typography>
+                <Typography color="white" mb={1}>
+                  No signals have been added.
+                </Typography>
               </Paper>
             </div>
           </div>
@@ -484,7 +595,9 @@ export default function EditUser() {
                   </Table>
                 </TableContainer> */}
 
-                <Typography color='white' mb={1}>No accounts have been added.</Typography>
+                <Typography color="white" mb={1}>
+                  No accounts have been added.
+                </Typography>
               </Paper>
             </div>
           </div>
@@ -634,21 +747,29 @@ export default function EditUser() {
                   </Table>
                 </TableContainer> */}
 
-                <Typography color='white' mb={1}>No copiers have been added.</Typography>
+                <Typography color="white" mb={1}>
+                  No copiers have been added.
+                </Typography>
               </Paper>
             </div>
           </div>
         </div>
       </div>
 
-      <div className={`fixed right-0 bottom-0 top-0 left-0 flex items-center justify-center z-[1201] ${!showMaxAccountModal && 'hidden'}`}>
+      <div
+        className={`fixed right-0 bottom-0 top-0 left-0 flex items-center justify-center z-[1201] ${
+          !showMaxAccountModal && 'hidden'
+        }`}
+      >
         <div
           className="fixed right-0 bottom-0 top-0 left-0 flex items-center justify-center z-[1202] bg-opacity-80 bg-[#1D2127]"
           onClick={() => setShowMaxAccountModal(false)}
         ></div>
         <section className="mb-[20px] bg-[#282D36] w-[500px] z-[100000]">
           <header className="p-[18px] text-white flex justify-between items-center">
-            <h2 className="mt-[5px] text-[20px] font-normal">Adjust max account limit</h2>
+            <h2 className="mt-[5px] text-[20px] font-normal">
+              Adjust max account limit
+            </h2>
             <button
               className="bg-[#0099e6] w-[33px] h-[33px] font-extrabold"
               onClick={() => setShowMaxAccountModal(false)}
@@ -657,16 +778,15 @@ export default function EditUser() {
             </button>
           </header>
           <div className="p-[15px] bg-[#2E353E] text-white text-center flex justify-center gap-2 items-center py-10">
-            <div className='text-sm'>Max account limt: </div>
+            <div className="text-sm">Max account limt: </div>
             <input
               name="fullName"
               type="number"
               required
               value={maxAccount}
               className="bg-[#282d36] text-[#fff] px-3 py-1.5 rounded block w-[40%] h-[34px] text-sm"
-              onChange={e => setMaxAccount(e.target.value)}
+              onChange={(e) => setMaxAccount(e.target.value)}
             />
-            
           </div>
           <footer className="px-4 py-3 text-white flex justify-end items-center">
             <LoadingButton
@@ -687,7 +807,6 @@ export default function EditUser() {
             >
               Update
             </LoadingButton>
-            
           </footer>
         </section>
       </div>

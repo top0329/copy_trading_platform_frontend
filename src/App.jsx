@@ -6,6 +6,7 @@ import CoreRoutes from './routes';
 import ToastProvider from './contexts/toastContext';
 import AuthProvider from './contexts/authContext';
 import UtilsProvider from './contexts/utilsContext';
+import SocketProvider from './contexts/socketContext';
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -20,7 +21,9 @@ function App() {
     <ToastProvider>
       <AuthProvider>
         <UtilsProvider>
-          <CoreRoutes />
+          <SocketProvider>
+            <CoreRoutes />
+          </SocketProvider>
         </UtilsProvider>
       </AuthProvider>
     </ToastProvider>

@@ -31,12 +31,6 @@ function RiskSettings() {
 
   const [brokers, setBrokers] = React.useState([]);
 
-  // const [utils, dispatch] = useReducer(utilsReducer);
-
-  // const { ids, setIds } = useUtils();
-  const dispatch = useDispatch();
-  const { ids } = useSelector((state) => state.utils);
-
   const navigate = useNavigate();
 
   const handleInputChange = (e) => {
