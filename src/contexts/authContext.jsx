@@ -48,7 +48,7 @@ const AuthProvider = ({ children }) => {
           const user = response.data;
           setUser(user);
           setIsAuthenticated(true);
-          console.log(user)
+          console.log(user);
         } else {
           if (token) {
             localStorage.setItem('expired', true);
