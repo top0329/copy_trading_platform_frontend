@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Avatar from '@mui/material/Avatar';
@@ -7,16 +7,19 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import { Icon } from '@iconify/react';
 import Badge from '@mui/material/Badge';
-import MailIcon from '@mui/icons-material/Mail';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 
 import Logo from '../assets/img/logo.jpeg';
 import useAuth from '../hooks/useAuth';
 import useSocket from '../hooks/useSocket';
+import api from '../utils/api';
 
 function Header() {
   const { socket } = useSocket();
   const { isAuthenticated, user, signOut } = useAuth();
+
+  const navigate = useNavigate();
+
   const [isOpen, setIsOpen] = React.useState(false);
   const [isNotificationOpen, setIsNotificationOpen] = React.useState(false);
   const [data, setData] = React.useState([]);
@@ -27,16 +30,35 @@ function Header() {
       setLastMessage(msg);
     });
   }
+
   React.useEffect(() => {
     if (lastMessage !== null) {
-      // setData((prev) => prev.concat(lastMessage));
-      console.log(lastMessage);
       setData((prev) => [...prev, lastMessage.payload]);
     }
   }, [lastMessage]);
+
   React.useEffect(() => {
-    console.log(data);
-  }, [data]);
+    async function fetchNotificationData() {
+      const notificationData = await api.get('/notification');
+      setData(notificationData.data.data);
+      console.log(notificationData.data.data);
+    }
+
+    fetchNotificationData();
+  }, []);
+
+  const handleNotificationUserClicked = (userId) => {
+    navigate(`/whitelabel/users/edit/${userId}`);
+  };
+
+  const handleNotificationButtonClicked = async () => {
+    try {
+      setIsNotificationOpen(true);
+      const res = await api.put('/notification');
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   return (
     <div className="flex flex-row items-center justify-between h-[70px] text-[#EEE] p-[15px] bg-[#1D2127]">
@@ -63,7 +85,7 @@ function Header() {
               badgeContent={data.length}
               color="error"
               sx={{ mr: '5px' }}
-              onClick={() => setIsNotificationOpen(!isNotificationOpen)}
+              onClick={handleNotificationButtonClicked}
             >
               <NotificationsIcon sx={{ fontSize: 30 }} />
             </Badge>
@@ -73,17 +95,38 @@ function Header() {
                 !isNotificationOpen && 'hidden'
               }`}
             >
-              {/* <div className="px-4 py-3 text-sm dark:text-white">
-                <div className="font-medium text-[#ccc] truncate">
-                  {user.email}
-                </div>
-              </div>
-              <hr className="bg-[#1D2127] h-[1px] border-0 my-0 mx-1" /> */}
               <ul
                 className="py-1 text-sm text-[#ccc] dark:text-gray-200"
                 aria-labelledby="avatarButton"
               >
-                <li>aoisjdfiosd</li>
+                {data.length > 0 ? (
+                  data.map((item, idx) => {
+                    return (
+                      <li
+                        key={idx}
+                        className="flex justify-between font-medium text-[#ccc] truncate p-2 text-right text-base rounded cursor-pointer hover:bg-[#0088CC]"
+                        onClick={() =>
+                          handleNotificationUserClicked(item.user._id)
+                        }
+                      >
+                        <Avatar
+                          alt="Remy Sharp"
+                          src="/static/images/avatar/2.jpg"
+                          sx={{
+                            position: 'relative',
+                            width: 26,
+                            height: 26,
+                          }}
+                        />
+                        {item.user.fullName}
+                      </li>
+                    );
+                  })
+                ) : (
+                  <li className="flex justify-center font-medium text-[#ccc] truncate p-2 text-base rounded">
+                    No Notifications
+                  </li>
+                )}
                 {/* <li>
                   <Link
                     to={'/profile'}
@@ -109,7 +152,10 @@ function Header() {
             />
             <Typography sx={{ color: '#ccc' }}>{user.fullName}</Typography>
             <Box
-              onClick={() => setIsOpen(!isOpen)}
+              onClick={() => {
+                if (isNotificationOpen) setIsNotificationOpen(false);
+                setIsOpen(!isOpen);
+              }}
               className="cursor-pointer text-[#ccc] z-[1204]"
             >
               {isOpen ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
@@ -121,6 +167,7 @@ function Header() {
               onClick={() => {
                 setIsOpen(false);
                 setIsNotificationOpen(false);
+                setData({});
               }}
             ></div>
             <div

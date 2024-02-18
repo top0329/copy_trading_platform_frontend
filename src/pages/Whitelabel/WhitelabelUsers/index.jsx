@@ -142,14 +142,17 @@ export default function WhitelabelUsers() {
     });
 
     async function fetchData() {
-      const { page, pagecount, sort, type } = config;
-      console.log(page, pagecount, sort, type);
-      const res = await api.get(
-        `/users/all?page=${page}&pagecount=${pagecount}&sort=${sort}&type=${type}`
-      );
-      console.log(res.data.data);
-      setData(res.data.data);
-      setCount(res.data.count);
+      try {
+        const { page, pagecount, sort, type } = config;
+        console.log(page, pagecount, sort, type);
+        const res = await api.get(
+          `/users/all?page=${page}&pagecount=${pagecount}&sort=${sort}&type=${type}`
+        );
+        setData(res.data.data);
+        setCount(res.data.count);
+      } catch (err) {
+        console.log(err);
+      }
     }
 
     fetchData();
